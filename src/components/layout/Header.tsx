@@ -12,6 +12,7 @@ const menuItems = [
   { label: "Financiera", href: "/financiera" },
   { label: "Gestión Humana", href: "/gestion-humana" },
   { label: "Diseño y Desarrollo", href: "/diseno-desarrollo" },
+  { label: "Configuración", href: "/configuracion" },
 ];
 
 export default function Header() {

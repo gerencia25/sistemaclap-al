@@ -29,7 +29,7 @@ export default function CommercialPage() {
   return (
     <div className="space-y-10">
       <section className="max-w-4xl">
-        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.22em] text-gray-400">
+        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.15em] text-gray-400">
           Módulo
         </p>
 
@@ -45,7 +45,7 @@ export default function CommercialPage() {
 
       <section>
         <div className="mb-4">
-          <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-gray-400">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.15em] text-gray-400">
             Acciones comerciales
           </h2>
         </div>
