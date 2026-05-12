@@ -8,12 +8,20 @@ const commercialOptions = [
     status: "Disponible",
   },
   {
+    code: "HC",
+    title: "Historial de Cotizaciones",
+    description:
+      "Consultar cotizaciones generadas, revisar consecutivos, clientes, valores y estados comerciales.",
+    href: "/comercial/cotizaciones",
+    status: "Disponible",
+  },
+  {
     code: "NP",
     title: "Nuevo Pedido",
     description:
       "Registrar pedidos comerciales confirmados y preparar su seguimiento operativo.",
     href: "/comercial/pedidos/nuevo",
-    status: "Disponible",
+    status: "En construcción",
   },
   {
     code: "SP",
@@ -21,7 +29,7 @@ const commercialOptions = [
     description:
       "Consultar el estado, avance y trazabilidad de los pedidos registrados en el sistema.",
     href: "/comercial/pedidos",
-    status: "Disponible",
+    status: "En construcción",
   },
 ];
 
@@ -80,7 +88,7 @@ export default function CommercialPage() {
                 href={option.href}
                 className="mt-5 inline-flex text-sm font-medium text-[#07076b] transition group-hover:translate-x-1"
               >
-                Ir a la acción →
+                Ingresar →
               </a>
             </div>
           ))}

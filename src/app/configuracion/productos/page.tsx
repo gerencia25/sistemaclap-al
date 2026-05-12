@@ -40,6 +40,9 @@ export default function ProductosPage() {
   const [newProduct, setNewProduct] = useState(emptyProduct);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [editingProductId, setEditingProductId] = useState<string | null>(null);
+
+  const isEditing = editingProductId !== null;
 
   const inputClassName =
     "w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-[#07076b] focus:ring-2 focus:ring-[#07076b]/10";
@@ -96,7 +99,23 @@ export default function ProductosPage() {
     }));
   };
 
-  const handleCreateProduct = async () => {
+  const handleEditProduct = (product: Product) => {
+    setEditingProductId(product.id);
+
+    setNewProduct({
+      reference: product.reference,
+      name: product.name,
+      category: product.category,
+      color: product.color ?? "",
+      unit: product.unit,
+      suggested_price: Number(product.suggested_price),
+      status: product.status,
+    });
+
+    setIsModalOpen(true);
+  };
+
+  const handleSaveProduct = async () => {
     if (!newProduct.reference || !newProduct.name) {
       alert("Debes ingresar al menos la referencia y el nombre del producto.");
       return;
@@ -104,29 +123,59 @@ export default function ProductosPage() {
 
     setIsSaving(true);
 
-    const { error } = await supabase.from("products").insert({
-      reference: newProduct.reference,
-      name: newProduct.name,
-      category: newProduct.category,
-      color: newProduct.color || null,
-      unit: newProduct.unit,
-      suggested_price: newProduct.suggested_price,
-      status: newProduct.status,
-    });
+    if (isEditing) {
+      const { error } = await supabase
+        .from("products")
+        .update({
+          reference: newProduct.reference,
+          name: newProduct.name,
+          category: newProduct.category,
+          color: newProduct.color || null,
+          unit: newProduct.unit,
+          suggested_price: newProduct.suggested_price,
+          status: newProduct.status,
+        })
+        .eq("id", editingProductId);
 
-    if (error) {
-      alert(`Error creando producto: ${error.message}`);
-      setIsSaving(false);
-      return;
+      if (error) {
+        alert(`Error actualizando producto: ${error.message}`);
+        setIsSaving(false);
+        return;
+      }
+
+      alert("Producto actualizado correctamente");
+    } else {
+      const { error } = await supabase.from("products").insert({
+        reference: newProduct.reference,
+        name: newProduct.name,
+        category: newProduct.category,
+        color: newProduct.color || null,
+        unit: newProduct.unit,
+        suggested_price: newProduct.suggested_price,
+        status: newProduct.status,
+      });
+
+      if (error) {
+        alert(`Error creando producto: ${error.message}`);
+        setIsSaving(false);
+        return;
+      }
+
+      alert("Producto creado correctamente");
     }
 
     await fetchProducts();
 
     setNewProduct(emptyProduct);
+    setEditingProductId(null);
     setIsModalOpen(false);
     setIsSaving(false);
+  };
 
-    alert("Producto creado correctamente");
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEditingProductId(null);
+    setNewProduct(emptyProduct);
   };
 
   return (
@@ -171,7 +220,7 @@ export default function ProductosPage() {
         </div>
 
         <div className="overflow-x-auto rounded-xl border border-gray-200">
-          <table className="w-full min-w-[1000px] text-left text-sm">
+          <table className="w-full min-w-[1100px] text-left text-sm">
             <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-500">
               <tr>
                 <th className="px-4 py-3">Referencia</th>
@@ -181,6 +230,7 @@ export default function ProductosPage() {
                 <th className="px-4 py-3">Unidad</th>
                 <th className="px-4 py-3">Precio sugerido</th>
                 <th className="px-4 py-3">Estado</th>
+                <th className="px-4 py-3">Acciones</th>
               </tr>
             </thead>
 
@@ -188,7 +238,7 @@ export default function ProductosPage() {
               {isLoading && (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={8}
                     className="px-4 py-8 text-center text-sm text-gray-500"
                   >
                     Cargando productos...
@@ -234,13 +284,22 @@ export default function ProductosPage() {
                         {product.status}
                       </span>
                     </td>
+
+                    <td className="px-4 py-4">
+                      <button
+                        onClick={() => handleEditProduct(product)}
+                        className="rounded-lg bg-[#07076b]/10 px-3 py-2 text-xs font-medium text-[#07076b] transition hover:bg-[#07076b]/20"
+                      >
+                        Editar
+                      </button>
+                    </td>
                   </tr>
                 ))}
 
               {!isLoading && filteredProducts.length === 0 && (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={8}
                     className="px-4 py-8 text-center text-sm text-gray-500"
                   >
                     No se encontraron productos con ese criterio.
@@ -262,16 +321,18 @@ export default function ProductosPage() {
                 </p>
 
                 <h2 className="text-2xl font-bold text-[#07076b]">
-                  Nuevo producto
+                  {isEditing ? "Editar producto" : "Nuevo producto"}
                 </h2>
 
                 <p className="mt-1 text-sm text-gray-500">
-                  Registra la información comercial básica del producto.
+                  {isEditing
+                    ? "Actualiza la información comercial del producto."
+                    : "Registra la información comercial básica del producto."}
                 </p>
               </div>
 
               <button
-                onClick={() => setIsModalOpen(false)}
+                onClick={closeModal}
                 className="rounded-full px-3 py-1 text-2xl text-gray-400 transition hover:bg-gray-100 hover:text-gray-700"
                 aria-label="Cerrar modal"
               >
@@ -393,10 +454,7 @@ export default function ProductosPage() {
 
             <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
               <button
-                onClick={() => {
-                  setNewProduct(emptyProduct);
-                  setIsModalOpen(false);
-                }}
+                onClick={closeModal}
                 disabled={isSaving}
                 className="rounded-xl border border-gray-300 px-5 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
               >
@@ -404,11 +462,15 @@ export default function ProductosPage() {
               </button>
 
               <button
-                onClick={handleCreateProduct}
+                onClick={handleSaveProduct}
                 disabled={isSaving}
                 className="rounded-xl bg-[#07076b] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isSaving ? "Guardando..." : "Guardar producto"}
+                {isSaving
+                  ? "Guardando..."
+                  : isEditing
+                  ? "Actualizar producto"
+                  : "Guardar producto"}
               </button>
             </div>
           </div>

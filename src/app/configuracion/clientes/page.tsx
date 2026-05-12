@@ -46,6 +46,12 @@ export default function ClientesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
+  const [editingCustomerId, setEditingCustomerId] = useState<string | null>(
+    null
+  );
+
+  const isEditing = editingCustomerId !== null;
+
   const inputClassName =
     "w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-[#07076b] focus:ring-2 focus:ring-[#07076b]/10";
 
@@ -103,7 +109,25 @@ export default function ClientesPage() {
     }));
   };
 
-  const handleCreateCustomer = async () => {
+  const handleEditCustomer = (customer: Customer) => {
+    setEditingCustomerId(customer.id);
+
+    setNewCustomer({
+      name: customer.name,
+      nit: customer.nit,
+      category: customer.category,
+      contact: customer.contact ?? "",
+      email: customer.email ?? "",
+      phone: customer.phone ?? "",
+      address: customer.address ?? "",
+      city: customer.city ?? "",
+      status: customer.status,
+    });
+
+    setIsModalOpen(true);
+  };
+
+  const handleSaveCustomer = async () => {
     if (!newCustomer.name || !newCustomer.nit) {
       alert("Debes ingresar al menos el nombre del cliente y el NIT.");
       return;
@@ -111,31 +135,63 @@ export default function ClientesPage() {
 
     setIsSaving(true);
 
-    const { error } = await supabase.from("customers").insert({
-      name: newCustomer.name,
-      nit: newCustomer.nit,
-      category: newCustomer.category,
-      contact: newCustomer.contact || null,
-      email: newCustomer.email || null,
-      phone: newCustomer.phone || null,
-      address: newCustomer.address || null,
-      city: newCustomer.city || null,
-      status: newCustomer.status,
-    });
+    if (isEditing) {
+      const { error } = await supabase
+        .from("customers")
+        .update({
+          name: newCustomer.name,
+          nit: newCustomer.nit,
+          category: newCustomer.category,
+          contact: newCustomer.contact || null,
+          email: newCustomer.email || null,
+          phone: newCustomer.phone || null,
+          address: newCustomer.address || null,
+          city: newCustomer.city || null,
+          status: newCustomer.status,
+        })
+        .eq("id", editingCustomerId);
 
-    if (error) {
-      alert(`Error creando cliente: ${error.message}`);
-      setIsSaving(false);
-      return;
+      if (error) {
+        alert(`Error actualizando cliente: ${error.message}`);
+        setIsSaving(false);
+        return;
+      }
+
+      alert("Cliente actualizado correctamente");
+    } else {
+      const { error } = await supabase.from("customers").insert({
+        name: newCustomer.name,
+        nit: newCustomer.nit,
+        category: newCustomer.category,
+        contact: newCustomer.contact || null,
+        email: newCustomer.email || null,
+        phone: newCustomer.phone || null,
+        address: newCustomer.address || null,
+        city: newCustomer.city || null,
+        status: newCustomer.status,
+      });
+
+      if (error) {
+        alert(`Error creando cliente: ${error.message}`);
+        setIsSaving(false);
+        return;
+      }
+
+      alert("Cliente creado correctamente");
     }
 
     await fetchCustomers();
 
     setNewCustomer(emptyCustomer);
+    setEditingCustomerId(null);
     setIsModalOpen(false);
     setIsSaving(false);
+  };
 
-    alert("Cliente creado correctamente");
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEditingCustomerId(null);
+    setNewCustomer(emptyCustomer);
   };
 
   return (
@@ -143,7 +199,7 @@ export default function ClientesPage() {
       <section className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div>
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.15em] text-gray-400">
-            Comercial · Clientes
+            Configuración · Clientes
           </p>
 
           <h1 className="text-4xl font-bold tracking-tight text-[#07076b]">
@@ -180,7 +236,7 @@ export default function ClientesPage() {
         </div>
 
         <div className="overflow-x-auto rounded-xl border border-gray-200">
-          <table className="w-full min-w-[1000px] text-left text-sm">
+          <table className="w-full min-w-[1100px] text-left text-sm">
             <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-500">
               <tr>
                 <th className="px-4 py-3">Cliente</th>
@@ -191,6 +247,7 @@ export default function ClientesPage() {
                 <th className="px-4 py-3">Teléfono</th>
                 <th className="px-4 py-3">Ciudad</th>
                 <th className="px-4 py-3">Estado</th>
+                <th className="px-4 py-3">Acciones</th>
               </tr>
             </thead>
 
@@ -198,7 +255,7 @@ export default function ClientesPage() {
               {isLoading && (
                 <tr>
                   <td
-                    colSpan={8}
+                    colSpan={9}
                     className="px-4 py-8 text-center text-sm text-gray-500"
                   >
                     Cargando clientes...
@@ -248,13 +305,22 @@ export default function ClientesPage() {
                         {customer.status}
                       </span>
                     </td>
+
+                    <td className="px-4 py-4">
+                      <button
+                        onClick={() => handleEditCustomer(customer)}
+                        className="rounded-lg bg-[#07076b]/10 px-3 py-2 text-xs font-medium text-[#07076b] transition hover:bg-[#07076b]/20"
+                      >
+                        Editar
+                      </button>
+                    </td>
                   </tr>
                 ))}
 
               {!isLoading && filteredCustomers.length === 0 && (
                 <tr>
                   <td
-                    colSpan={8}
+                    colSpan={9}
                     className="px-4 py-8 text-center text-sm text-gray-500"
                   >
                     No se encontraron clientes con ese criterio.
@@ -272,20 +338,22 @@ export default function ClientesPage() {
             <div className="mb-6 flex items-start justify-between gap-4">
               <div>
                 <p className="mb-2 text-sm font-semibold uppercase tracking-[0.15em] text-gray-400">
-                  Comercial · Clientes
+                  Configuración · Clientes
                 </p>
 
                 <h2 className="text-2xl font-bold text-[#07076b]">
-                  Nuevo cliente
+                  {isEditing ? "Editar cliente" : "Nuevo cliente"}
                 </h2>
 
                 <p className="mt-1 text-sm text-gray-500">
-                  Registra la información comercial básica del cliente.
+                  {isEditing
+                    ? "Actualiza la información comercial del cliente."
+                    : "Registra la información comercial básica del cliente."}
                 </p>
               </div>
 
               <button
-                onClick={() => setIsModalOpen(false)}
+                onClick={closeModal}
                 className="rounded-full px-3 py-1 text-2xl text-gray-400 transition hover:bg-gray-100 hover:text-gray-700"
                 aria-label="Cerrar modal"
               >
@@ -397,26 +465,6 @@ export default function ClientesPage() {
 
               <div>
                 <label className="mb-2 block text-sm font-medium text-gray-700">
-                  Estado
-                </label>
-
-                <select
-                  value={newCustomer.status}
-                  onChange={(e) =>
-                    updateNewCustomer(
-                      "status",
-                      e.target.value as Customer["status"]
-                    )
-                  }
-                  className={inputClassName}
-                >
-                  <option value="Activo">Activo</option>
-                  <option value="Inactivo">Inactivo</option>
-                </select>
-              </div>
-
-              <div className="md:col-span-2">
-                <label className="mb-2 block text-sm font-medium text-gray-700">
                   Dirección
                 </label>
 
@@ -425,30 +473,45 @@ export default function ClientesPage() {
                   onChange={(e) =>
                     updateNewCustomer("address", e.target.value)
                   }
-                  placeholder="Dirección comercial"
+                  placeholder="Dirección"
                   className={inputClassName}
                 />
               </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Estado
+                </label>
+
+                <select
+                  value={newCustomer.status}
+                  onChange={(e) => updateNewCustomer("status", e.target.value)}
+                  className={inputClassName}
+                >
+                  <option value="Activo">Activo</option>
+                  <option value="Inactivo">Inactivo</option>
+                </select>
+              </div>
             </div>
 
-            <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+            <div className="mt-8 flex items-center justify-end gap-4">
               <button
-                onClick={() => {
-                  setNewCustomer(emptyCustomer);
-                  setIsModalOpen(false);
-                }}
-                disabled={isSaving}
-                className="rounded-xl border border-gray-300 px-5 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+                onClick={closeModal}
+                className="rounded-xl border border-gray-300 px-5 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
               >
                 Cancelar
               </button>
 
               <button
-                onClick={handleCreateCustomer}
+                onClick={handleSaveCustomer}
                 disabled={isSaving}
                 className="rounded-xl bg-[#07076b] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isSaving ? "Guardando..." : "Guardar cliente"}
+                {isSaving
+                  ? "Guardando..."
+                  : isEditing
+                  ? "Actualizar cliente"
+                  : "Guardar cliente"}
               </button>
             </div>
           </div>

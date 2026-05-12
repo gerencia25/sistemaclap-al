@@ -54,7 +54,7 @@ export default function ConfiguracionPage() {
     <div className="space-y-10">
       <section className="max-w-4xl">
         <p className="mb-3 text-sm font-semibold uppercase tracking-[0.15em] text-gray-400">
-          Sistema CLAP
+          Módulo
         </p>
 
         <h1 className="text-4xl font-bold tracking-tight text-[#07076b]">

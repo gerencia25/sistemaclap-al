@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const menuItems = [
@@ -18,10 +19,25 @@ const menuItems = [
 export default function Header() {
   const [open, setOpen] = useState(false);
 
+  const pathname = usePathname();
+
+  const isActive = (href: string) => {
+    if (href === "/") {
+      return pathname === "/";
+    }
+
+    return pathname.startsWith(href);
+  };
+
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200/70 bg-white/80 shadow-sm backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-        <Link href="/" className="flex items-center gap-3 transition hover:opacity-80">
+        
+        {/* Logo */}
+        <Link
+          href="/"
+          className="flex items-center gap-3 transition hover:opacity-80"
+        >
           <Image
             src="/logo.png"
             alt="AL Multiformas"
@@ -32,27 +48,38 @@ export default function Header() {
           />
 
           <div className="leading-tight">
-            <p className="text-sm font-bold text-[#07076b]">Sistema CLAP</p>
-            <p className="text-xs text-gray-500">A&L Multiformas</p>
+            <p className="text-sm font-bold text-[#07076b]">
+              Sistema CLAP
+            </p>
+
+            <p className="text-xs text-gray-500">
+              A&L Multiformas
+            </p>
           </div>
         </Link>
 
+        {/* Desktop menu */}
         <nav className="hidden items-center gap-7 lg:flex">
-          {menuItems.map((item, index) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`border-b-2 pb-1 text-sm font-medium transition-all duration-200 ${
-                index === 0
-                  ? "border-[#07076b] text-[#07076b]"
-                  : "border-transparent text-gray-500 hover:border-[#07076b] hover:text-[#07076b]"
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {menuItems.map((item) => {
+            const active = isActive(item.href);
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`border-b-2 pb-1 text-sm font-medium transition-all duration-200 ${
+                  active
+                    ? "border-[#07076b] text-[#07076b]"
+                    : "border-transparent text-gray-500 hover:border-[#07076b] hover:text-[#07076b]"
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
+        {/* Login button */}
         <div className="hidden lg:block">
           <Link
             href="/login"
@@ -62,32 +89,40 @@ export default function Header() {
           </Link>
         </div>
 
+        {/* Mobile button */}
         <button
           onClick={() => setOpen(!open)}
           className="flex h-10 w-10 items-center justify-center rounded-full text-[#07076b] transition hover:bg-gray-100 lg:hidden"
           aria-label="Abrir menú"
         >
-          <span className="text-3xl leading-none">{open ? "×" : "≡"}</span>
+          <span className="text-3xl leading-none">
+            {open ? "×" : "≡"}
+          </span>
         </button>
       </div>
 
+      {/* Mobile menu */}
       {open && (
         <div className="border-t border-gray-100 bg-white/95 shadow-lg backdrop-blur-xl lg:hidden">
           <nav className="mx-auto flex max-w-7xl flex-col px-6 py-4">
-            {menuItems.map((item, index) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className={`border-b border-gray-100 py-4 text-base font-medium transition ${
-                  index === 0
-                    ? "text-[#07076b] underline underline-offset-8"
-                    : "text-gray-500 hover:text-[#07076b]"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {menuItems.map((item) => {
+              const active = isActive(item.href);
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className={`border-b border-gray-100 py-4 text-base font-medium transition ${
+                    active
+                      ? "text-[#07076b] underline underline-offset-8"
+                      : "text-gray-500 hover:text-[#07076b]"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
 
             <Link
               href="/login"
