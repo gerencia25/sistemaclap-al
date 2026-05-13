@@ -25,17 +25,27 @@ type QuotationDetail = {
   delivery_time: string | null;
   validity: string | null;
   observations: string | null;
-  customers:
-    | {
-        name: string;
-        nit: string;
-        contact: string;
-        email: string;
-        phone: string;
-        city: string;
-        address: string;
-      }[]
-    | null;
+customers:
+  | {
+      name: string;
+      nit: string;
+      contact: string | null;
+      email: string | null;
+      phone: string | null;
+      city: string | null;
+      address: string | null;
+    }
+  | {
+      name: string;
+      nit: string;
+      contact: string | null;
+      email: string | null;
+      phone: string | null;
+      city: string | null;
+      address: string | null;
+    }[]
+  | null;
+    sheet_url: string | null;
 };
 
 export default function QuotationDetailPage() {
@@ -47,9 +57,15 @@ export default function QuotationDetailPage() {
   const [items, setItems] = useState<ProductItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const customer = useMemo(() => {
-    return quotation?.customers?.[0] ?? null;
-  }, [quotation]);
+const customer = useMemo(() => {
+  if (!quotation?.customers) return null;
+
+  if (Array.isArray(quotation.customers)) {
+    return quotation.customers[0] ?? null;
+  }
+
+  return quotation.customers;
+}, [quotation]);
 
   const fetchQuotation = async () => {
     setIsLoading(true);
@@ -160,9 +176,18 @@ useEffect(() => {
             Volver
           </Link>
 
-          <button className="rounded-xl bg-[#07076b] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:opacity-95">
-            Abrir Sheet
-          </button>
+<a
+  href={quotation.sheet_url ?? "#"}
+  target="_blank"
+  rel="noreferrer"
+  className={`rounded-xl px-5 py-3 text-sm font-semibold shadow-sm transition ${
+    quotation.sheet_url
+      ? "bg-[#07076b] text-white hover:opacity-95"
+      : "cursor-not-allowed bg-gray-200 text-gray-400"
+  }`}
+>
+  Abrir Sheet
+</a>
         </div>
       </section>
 

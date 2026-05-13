@@ -78,6 +78,7 @@ export default function NuevaCotizacionPage() {
   const [observations, setObservations] = useState("");
   const [items, setItems] = useState<QuoteItem[]>([emptyItem]);
 
+  const [quoteNumber, setQuoteNumber] = useState("COT-000000");
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -92,7 +93,9 @@ export default function NuevaCotizacionPage() {
     );
   }, [items]);
 
-const [quoteNumber, setQuoteNumber] = useState("COT-000000");
+  useEffect(() => {
+    setQuoteNumber(`COT-${Date.now().toString().slice(-6)}`);
+  }, []);
 
   useEffect(() => {
     async function loadData() {
@@ -178,73 +181,128 @@ const [quoteNumber, setQuoteNumber] = useState("COT-000000");
     setItems((current) => current.filter((_, itemIndex) => itemIndex !== index));
   };
 
-  const handleGenerateQuote = async () => {
-    if (!selectedCustomerId) {
-      alert("Debes seleccionar un cliente.");
-      return;
-    }
+const handleGenerateQuote = async () => {
+  if (!selectedCustomerId) {
+    alert("Debes seleccionar un cliente.");
+    return;
+  }
 
-    const validItems = items.filter((item) => item.product_id);
+  if (!selectedCustomer) {
+    alert("No se encontró la información del cliente seleccionado.");
+    return;
+  }
 
-    if (validItems.length === 0) {
-      alert("Debes agregar al menos un producto.");
-      return;
-    }
+  const validItems = items.filter((item) => item.product_id);
 
-    setIsSaving(true);
+  if (validItems.length === 0) {
+    alert("Debes agregar al menos un producto.");
+    return;
+  }
 
-    const { data: quotation, error: quotationError } = await supabase
-      .from("quotations")
-      .insert({
-        quote_number: quoteNumber,
-        customer_id: selectedCustomerId,
-        category,
-        seller_name: sellerName,
-        seller_role: sellerRole,
-        seller_phone: sellerPhone,
-        quote_date: date || null,
-        payment_terms: paymentTerms,
-        delivery_time: deliveryTime,
-        validity,
-        tax_condition: taxCondition,
-        observations,
-        subtotal,
-        total: subtotal,
-        status: "Generada",
-      })
-      .select()
-      .single();
+  const generatedQuoteNumber = `COT-${Date.now().toString().slice(-6)}`;
+  setQuoteNumber(generatedQuoteNumber);
+  setIsSaving(true);
 
-    if (quotationError) {
-      alert(`Error creando cotización: ${quotationError.message}`);
-      setIsSaving(false);
-      return;
-    }
+  const { data: quotation, error: quotationError } = await supabase
+    .from("quotations")
+    .insert({
+      quote_number: generatedQuoteNumber,
+      customer_id: selectedCustomerId,
+      category,
+      seller_name: sellerName,
+      seller_role: sellerRole,
+      seller_phone: sellerPhone,
+      quote_date: date || null,
+      payment_terms: paymentTerms,
+      delivery_time: deliveryTime,
+      validity,
+      tax_condition: taxCondition,
+      observations,
+      subtotal,
+      total: subtotal,
+      status: "Generada",
+    })
+    .select()
+    .single();
 
-    const quotationItems = validItems.map((item) => ({
-      quotation_id: quotation.id,
-      product_id: item.product_id,
-      product_name: item.product_name,
-      color: item.color,
-      suggested_price: item.suggested_price,
-      unit_price: item.unit_price,
-      quantity: item.quantity,
-      total: item.unit_price * item.quantity,
-    }));
-
-    const { error: itemsError } = await supabase
-      .from("quotation_items")
-      .insert(quotationItems);
-
-    if (itemsError) {
-      alert(`Error guardando productos: ${itemsError.message}`);
-      setIsSaving(false);
-      return;
-    }
-
+  if (quotationError) {
+    alert(`Error creando cotización: ${quotationError.message}`);
     setIsSaving(false);
-    alert(`Cotización generada correctamente: ${quoteNumber}`);
-  };
+    return;
+  }
+
+  const quotationItems = validItems.map((item) => ({
+    quotation_id: quotation.id,
+    product_id: item.product_id,
+    product_name: item.product_name,
+    color: item.color,
+    suggested_price: item.suggested_price,
+    unit_price: item.unit_price,
+    quantity: item.quantity,
+    total: item.unit_price * item.quantity,
+  }));
+
+  const { error: itemsError } = await supabase
+    .from("quotation_items")
+    .insert(quotationItems);
+
+  if (itemsError) {
+    alert(`Error guardando productos: ${itemsError.message}`);
+    setIsSaving(false);
+    return;
+  }
+
+  const sheetResponse = await fetch("/api/cotizaciones/generar-sheet", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      quotationId: quotation.id,
+sheetData: {
+  quoteNumber: generatedQuoteNumber,
+
+  customer: {
+    category,
+    name: selectedCustomer.name ?? "",
+    nit: selectedCustomer.nit ?? "",
+    contact: selectedCustomer.contact ?? "",
+    email: selectedCustomer.email ?? "",
+    phone: selectedCustomer.phone ?? "",
+    address: selectedCustomer.address ?? "",
+    city: selectedCustomer.city ?? "",
+  },
+
+  commercial: {
+    date,
+    paymentTerms,
+    deliveryTime,
+    validity,
+    taxCondition,
+  },
+
+  observations,
+
+  items: validItems.map((item) => ({
+    product: item.product_name,
+    color: item.color,
+    unitPrice: item.unit_price,
+    quantity: item.quantity,
+    total: item.unit_price * item.quantity,
+  })),
+},
+    }),
+  });
+
+  if (!sheetResponse.ok) {
+    alert("La cotización se guardó, pero hubo un error creando el Sheet.");
+    setIsSaving(false);
+    return;
+  }
+
+  setIsSaving(false);
+  window.location.href = `/comercial/cotizaciones/${quotation.id}`;
+};
 
   return (
     <div className="space-y-8">
