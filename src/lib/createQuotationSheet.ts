@@ -3,6 +3,7 @@ import { drive, sheets } from "./google";
 type QuotationSheetItem = {
   product: string;
   color: string;
+  image_url?: string | null;
   unitPrice: number;
   quantity: number;
   total: number;
@@ -61,7 +62,9 @@ const productRows = data.items.map((item, index) => [
   item.product,     // C = Producto
   "",               // D
   "",               // E
-  "",               // F = Imagen
+item.image_url
+  ? `=IMAGE("${item.image_url}", 1)`
+  : "",             // F = Imagen
   item.color,       // G = Color
   item.unitPrice,   // H = Precio
   item.quantity,    // I = Cant.

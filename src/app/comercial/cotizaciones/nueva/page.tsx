@@ -32,6 +32,7 @@ type Product = {
   name: string;
   category: string;
   color: string | null;
+  image_url: string | null;
   unit: string;
   suggested_price: number;
   status: string;
@@ -41,6 +42,7 @@ type QuoteItem = {
   product_id: string;
   product_name: string;
   color: string;
+  image_url: string | null;
   suggested_price: number;
   unit_price: number;
   quantity: number;
@@ -50,6 +52,7 @@ const emptyItem: QuoteItem = {
   product_id: "",
   product_name: "",
   color: "",
+  image_url: "",
   suggested_price: 0,
   unit_price: 0,
   quantity: 1,
@@ -150,6 +153,7 @@ export default function NuevaCotizacionPage() {
       product_id: product.id,
       product_name: product.name,
       color: product.color ?? "",
+      image_url: product.image_url ?? "",
       suggested_price: Number(product.suggested_price),
       unit_price: Number(product.suggested_price),
       quantity: updatedItems[index].quantity || 1,
@@ -295,6 +299,7 @@ sheetData: {
   items: validItems.map((item) => ({
     product: item.product_name,
     color: item.color,
+    image_url: item.image_url,
     unitPrice: item.unit_price,
     quantity: item.quantity,
     total: item.unit_price * item.quantity,
