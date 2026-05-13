@@ -1,16 +1,20 @@
 import { google } from "googleapis";
+import path from "path";
 
-const credentials = JSON.parse(
-  process.env.GOOGLE_SERVICE_ACCOUNT_JSON!
-);
+const scopes = [
+  "https://www.googleapis.com/auth/drive",
+  "https://www.googleapis.com/auth/spreadsheets",
+];
 
-const auth = new google.auth.GoogleAuth({
-  credentials,
-  scopes: [
-    "https://www.googleapis.com/auth/drive",
-    "https://www.googleapis.com/auth/spreadsheets",
-  ],
-});
+const auth = process.env.GOOGLE_SERVICE_ACCOUNT_JSON
+  ? new google.auth.GoogleAuth({
+      credentials: JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON),
+      scopes,
+    })
+  : new google.auth.GoogleAuth({
+      keyFile: path.join(process.cwd(), "secrets/google-service-account.json"),
+      scopes,
+    });
 
 export const drive = google.drive({
   version: "v3",

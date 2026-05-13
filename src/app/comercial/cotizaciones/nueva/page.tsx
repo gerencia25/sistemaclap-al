@@ -199,7 +199,16 @@ const handleGenerateQuote = async () => {
     return;
   }
 
-  const generatedQuoteNumber = `COT-${Date.now().toString().slice(-6)}`;
+  const quoteNumberResponse = await fetch("/api/cotizaciones/next-number");
+
+if (!quoteNumberResponse.ok) {
+  alert("No se pudo generar el consecutivo de la cotización.");
+  setIsSaving(false);
+  return;
+}
+
+const quoteNumberData = await quoteNumberResponse.json();
+const generatedQuoteNumber = quoteNumberData.quoteNumber;
   setQuoteNumber(generatedQuoteNumber);
   setIsSaving(true);
 
