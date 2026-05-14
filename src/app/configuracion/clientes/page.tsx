@@ -7,9 +7,8 @@ const categories = [
   "Alimentos",
   "Farmacéutica",
   "Cosmética",
-  "Industrial",
-  "Aseo",
-  "Veterinaria",
+  "Retail",
+  "Especiales",
   "Otra",
 ];
 
