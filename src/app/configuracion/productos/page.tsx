@@ -1,15 +1,29 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 const categories = [
   "Envases",
   "Tapas",
+  "Perfiles",
   "Complementos",
   "Servicios",
   "Materia prima",
   "Otra",
+];
+
+const productTypes = ["Simple", "Compuesto", "Servicio", "Materia prima"];
+
+const supplyTypes = ["Fabricado", "Comprado", "Mixto", "Servicio"];
+
+const productionProcesses = [
+  "Inyección",
+  "Soplado",
+  "Extrusión",
+  "Comprado",
+  "Servicio",
 ];
 
 type Product = {
@@ -17,9 +31,20 @@ type Product = {
   reference: string;
   name: string;
   category: string;
+  product_type: string;
+  supply_type: string;
+  production_process: string | null;
   color: string | null;
   unit: string;
+  material: string | null;
+  mouth_size: string | null;
+  capacity_ml: number | null;
+  width_cm: number | null;
+  length_m: number | null;
+  finish: string | null;
+  technical_description: string | null;
   suggested_price: number;
+  image_url: string | null;
   status: "Activo" | "Inactivo";
 };
 
@@ -27,9 +52,20 @@ const emptyProduct: Omit<Product, "id"> = {
   reference: "",
   name: "",
   category: "Envases",
+  product_type: "Simple",
+  supply_type: "Fabricado",
+  production_process: "Inyección",
   color: "",
   unit: "Unidad",
+  material: "",
+  mouth_size: "",
+  capacity_ml: null,
+  width_cm: null,
+  length_m: null,
+  finish: "",
+  technical_description: "",
   suggested_price: 0,
+  image_url: "",
   status: "Activo",
 };
 
@@ -79,8 +115,12 @@ export default function ProductosPage() {
         product.reference,
         product.name,
         product.category,
+        product.product_type,
+        product.supply_type,
+        product.production_process ?? "",
         product.color ?? "",
-        product.unit,
+        product.material ?? "",
+        product.finish ?? "",
         product.status,
       ]
         .join(" ")
@@ -91,7 +131,7 @@ export default function ProductosPage() {
 
   const updateNewProduct = (
     field: keyof Omit<Product, "id">,
-    value: string | number
+    value: string | number | null
   ) => {
     setNewProduct((current) => ({
       ...current,
@@ -106,9 +146,20 @@ export default function ProductosPage() {
       reference: product.reference,
       name: product.name,
       category: product.category,
+      product_type: product.product_type ?? "Simple",
+      supply_type: product.supply_type ?? "Fabricado",
+      production_process: product.production_process ?? "Inyección",
       color: product.color ?? "",
       unit: product.unit,
+      material: product.material ?? "",
+      mouth_size: product.mouth_size ?? "",
+      capacity_ml: product.capacity_ml,
+      width_cm: product.width_cm,
+      length_m: product.length_m,
+      finish: product.finish ?? "",
+      technical_description: product.technical_description ?? "",
       suggested_price: Number(product.suggested_price),
+      image_url: product.image_url ?? "",
       status: product.status,
     });
 
@@ -123,18 +174,31 @@ export default function ProductosPage() {
 
     setIsSaving(true);
 
+    const productData = {
+      reference: newProduct.reference,
+      name: newProduct.name,
+      category: newProduct.category,
+      product_type: newProduct.product_type,
+      supply_type: newProduct.supply_type,
+      production_process: newProduct.production_process || null,
+      color: newProduct.color || null,
+      unit: newProduct.unit,
+      material: newProduct.material || null,
+      mouth_size: newProduct.mouth_size || null,
+      capacity_ml: newProduct.capacity_ml,
+      width_cm: newProduct.width_cm,
+      length_m: newProduct.length_m,
+      finish: newProduct.finish || null,
+      technical_description: newProduct.technical_description || null,
+      suggested_price: newProduct.suggested_price,
+      image_url: newProduct.image_url || null,
+      status: newProduct.status,
+    };
+
     if (isEditing) {
       const { error } = await supabase
         .from("products")
-        .update({
-          reference: newProduct.reference,
-          name: newProduct.name,
-          category: newProduct.category,
-          color: newProduct.color || null,
-          unit: newProduct.unit,
-          suggested_price: newProduct.suggested_price,
-          status: newProduct.status,
-        })
+        .update(productData)
         .eq("id", editingProductId);
 
       if (error) {
@@ -145,15 +209,7 @@ export default function ProductosPage() {
 
       alert("Producto actualizado correctamente");
     } else {
-      const { error } = await supabase.from("products").insert({
-        reference: newProduct.reference,
-        name: newProduct.name,
-        category: newProduct.category,
-        color: newProduct.color || null,
-        unit: newProduct.unit,
-        suggested_price: newProduct.suggested_price,
-        status: newProduct.status,
-      });
+      const { error } = await supabase.from("products").insert(productData);
 
       if (error) {
         alert(`Error creando producto: ${error.message}`);
@@ -178,6 +234,10 @@ export default function ProductosPage() {
     setNewProduct(emptyProduct);
   };
 
+  const showInjectionFields = newProduct.production_process === "Inyección";
+  const showBlowingFields = newProduct.production_process === "Soplado";
+  const showExtrusionFields = newProduct.production_process === "Extrusión";
+
   return (
     <div className="space-y-8">
       <section className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
@@ -191,8 +251,8 @@ export default function ProductosPage() {
           </h1>
 
           <p className="mt-3 max-w-3xl text-base leading-7 text-gray-600">
-            Administra referencias, precios sugeridos y características
-            comerciales de los productos de A&L Multiformas.
+            Administra productos comerciales, compuestos, servicios, compras y
+            fichas técnicas por proceso productivo.
           </p>
         </div>
 
@@ -212,7 +272,7 @@ export default function ProductosPage() {
 
           <input
             type="text"
-            placeholder="Buscar producto, referencia o categoría..."
+            placeholder="Buscar producto, referencia, proceso o categoría..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className={`${inputClassName} md:max-w-sm`}
@@ -220,15 +280,19 @@ export default function ProductosPage() {
         </div>
 
         <div className="overflow-x-auto rounded-xl border border-gray-200">
-          <table className="w-full min-w-[1100px] text-left text-sm">
+          <table className="w-full min-w-[1400px] text-left text-sm">
             <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-500">
               <tr>
                 <th className="px-4 py-3">Referencia</th>
                 <th className="px-4 py-3">Producto</th>
+                <th className="px-4 py-3">Tipo</th>
+                <th className="px-4 py-3">Origen</th>
+                <th className="px-4 py-3">Proceso</th>
                 <th className="px-4 py-3">Categoría</th>
                 <th className="px-4 py-3">Color</th>
-                <th className="px-4 py-3">Unidad</th>
+                <th className="px-4 py-3">Material</th>
                 <th className="px-4 py-3">Precio sugerido</th>
+                <th className="px-4 py-3">Imagen</th>
                 <th className="px-4 py-3">Estado</th>
                 <th className="px-4 py-3">Acciones</th>
               </tr>
@@ -238,7 +302,7 @@ export default function ProductosPage() {
               {isLoading && (
                 <tr>
                   <td
-                    colSpan={8}
+                    colSpan={12}
                     className="px-4 py-8 text-center text-sm text-gray-500"
                   >
                     Cargando productos...
@@ -258,6 +322,18 @@ export default function ProductosPage() {
                     </td>
 
                     <td className="px-4 py-4 text-gray-600">
+                      {product.product_type}
+                    </td>
+
+                    <td className="px-4 py-4 text-gray-600">
+                      {product.supply_type}
+                    </td>
+
+                    <td className="px-4 py-4 text-gray-600">
+                      {product.production_process || "—"}
+                    </td>
+
+                    <td className="px-4 py-4 text-gray-600">
                       {product.category}
                     </td>
 
@@ -266,11 +342,15 @@ export default function ProductosPage() {
                     </td>
 
                     <td className="px-4 py-4 text-gray-600">
-                      {product.unit}
+                      {product.material || "—"}
                     </td>
 
                     <td className="px-4 py-4 font-semibold text-gray-900">
                       ${Number(product.suggested_price).toLocaleString("es-CO")}
+                    </td>
+
+                    <td className="px-4 py-4 text-gray-600">
+                      {product.image_url ? "Sí" : "—"}
                     </td>
 
                     <td className="px-4 py-4">
@@ -292,6 +372,15 @@ export default function ProductosPage() {
                       >
                         Editar
                       </button>
+
+                      {product.product_type === "Compuesto" && (
+                        <Link
+                          href={`/configuracion/productos/${product.id}/componentes`}
+                          className="ml-2 rounded-lg bg-indigo-50 px-3 py-2 text-xs font-medium text-indigo-700 transition hover:bg-indigo-100"
+                        >
+                          Componentes
+                        </Link>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -299,7 +388,7 @@ export default function ProductosPage() {
               {!isLoading && filteredProducts.length === 0 && (
                 <tr>
                   <td
-                    colSpan={8}
+                    colSpan={12}
                     className="px-4 py-8 text-center text-sm text-gray-500"
                   >
                     No se encontraron productos con ese criterio.
@@ -313,7 +402,7 @@ export default function ProductosPage() {
 
       {isModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
-          <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl">
+          <div className="max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl">
             <div className="mb-6 flex items-start justify-between gap-4">
               <div>
                 <p className="mb-2 text-sm font-semibold uppercase tracking-[0.15em] text-gray-400">
@@ -325,9 +414,7 @@ export default function ProductosPage() {
                 </h2>
 
                 <p className="mt-1 text-sm text-gray-500">
-                  {isEditing
-                    ? "Actualiza la información comercial del producto."
-                    : "Registra la información comercial básica del producto."}
+                  Registra la información comercial y técnica del producto.
                 </p>
               </div>
 
@@ -358,6 +445,66 @@ export default function ProductosPage() {
 
               <div>
                 <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Tipo de producto
+                </label>
+
+                <select
+                  value={newProduct.product_type}
+                  onChange={(e) =>
+                    updateNewProduct("product_type", e.target.value)
+                  }
+                  className={inputClassName}
+                >
+                  {productTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Origen / abastecimiento
+                </label>
+
+                <select
+                  value={newProduct.supply_type}
+                  onChange={(e) =>
+                    updateNewProduct("supply_type", e.target.value)
+                  }
+                  className={inputClassName}
+                >
+                  {supplyTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Proceso
+                </label>
+
+                <select
+                  value={newProduct.production_process ?? ""}
+                  onChange={(e) =>
+                    updateNewProduct("production_process", e.target.value)
+                  }
+                  className={inputClassName}
+                >
+                  {productionProcesses.map((process) => (
+                    <option key={process} value={process}>
+                      {process}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
                   Categoría
                 </label>
 
@@ -373,6 +520,26 @@ export default function ProductosPage() {
                       {category}
                     </option>
                   ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Estado
+                </label>
+
+                <select
+                  value={newProduct.status}
+                  onChange={(e) =>
+                    updateNewProduct(
+                      "status",
+                      e.target.value as Product["status"]
+                    )
+                  }
+                  className={inputClassName}
+                >
+                  <option value="Activo">Activo</option>
+                  <option value="Inactivo">Inactivo</option>
                 </select>
               </div>
 
@@ -397,7 +564,7 @@ export default function ProductosPage() {
                 <input
                   value={newProduct.color ?? ""}
                   onChange={(e) => updateNewProduct("color", e.target.value)}
-                  placeholder="Ej: Blanco"
+                  placeholder="Ej: Blanco, Natural, Rojo"
                   className={inputClassName}
                 />
               </div>
@@ -414,6 +581,118 @@ export default function ProductosPage() {
                   className={inputClassName}
                 />
               </div>
+
+              {(showInjectionFields || showBlowingFields) && (
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                    Material
+                  </label>
+
+                  <input
+                    value={newProduct.material ?? ""}
+                    onChange={(e) =>
+                      updateNewProduct("material", e.target.value)
+                    }
+                    placeholder="Ej: PP, PET, PEAD"
+                    className={inputClassName}
+                  />
+                </div>
+              )}
+
+              {showBlowingFields && (
+                <>
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      Boca
+                    </label>
+
+                    <input
+                      value={newProduct.mouth_size ?? ""}
+                      onChange={(e) =>
+                        updateNewProduct("mouth_size", e.target.value)
+                      }
+                      placeholder="Ej: 20, 24, 120"
+                      className={inputClassName}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      Capacidad ml
+                    </label>
+
+                    <input
+                      type="number"
+                      value={newProduct.capacity_ml ?? ""}
+                      onChange={(e) =>
+                        updateNewProduct(
+                          "capacity_ml",
+                          e.target.value ? Number(e.target.value) : null
+                        )
+                      }
+                      placeholder="Ej: 1000"
+                      className={inputClassName}
+                    />
+                  </div>
+                </>
+              )}
+
+              {showExtrusionFields && (
+                <>
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      Ancho cm
+                    </label>
+
+                    <input
+                      type="number"
+                      value={newProduct.width_cm ?? ""}
+                      onChange={(e) =>
+                        updateNewProduct(
+                          "width_cm",
+                          e.target.value ? Number(e.target.value) : null
+                        )
+                      }
+                      placeholder="Ej: 4"
+                      className={inputClassName}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      Largo m
+                    </label>
+
+                    <input
+                      type="number"
+                      value={newProduct.length_m ?? ""}
+                      onChange={(e) =>
+                        updateNewProduct(
+                          "length_m",
+                          e.target.value ? Number(e.target.value) : null
+                        )
+                      }
+                      placeholder="Ej: 1.2"
+                      className={inputClassName}
+                    />
+                  </div>
+                </>
+              )}
+
+              {(showInjectionFields || showBlowingFields || showExtrusionFields) && (
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                    Acabado
+                  </label>
+
+                  <input
+                    value={newProduct.finish ?? ""}
+                    onChange={(e) => updateNewProduct("finish", e.target.value)}
+                    placeholder='Ej: N/A, Marca, Adhesivo 1/2"'
+                    className={inputClassName}
+                  />
+                </div>
+              )}
 
               <div>
                 <label className="mb-2 block text-sm font-medium text-gray-700">
@@ -433,24 +712,42 @@ export default function ProductosPage() {
 
               <div>
                 <label className="mb-2 block text-sm font-medium text-gray-700">
-                  Estado
+                  URL imagen
                 </label>
 
-                <select
-                  value={newProduct.status}
+                <input
+                  value={newProduct.image_url ?? ""}
                   onChange={(e) =>
-                    updateNewProduct(
-                      "status",
-                      e.target.value as Product["status"]
-                    )
+                    updateNewProduct("image_url", e.target.value)
                   }
+                  placeholder="https://..."
                   className={inputClassName}
-                >
-                  <option value="Activo">Activo</option>
-                  <option value="Inactivo">Inactivo</option>
-                </select>
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Descripción técnica
+                </label>
+
+                <textarea
+                  rows={3}
+                  value={newProduct.technical_description ?? ""}
+                  onChange={(e) =>
+                    updateNewProduct("technical_description", e.target.value)
+                  }
+                  placeholder="Notas técnicas adicionales del producto..."
+                  className={inputClassName}
+                />
               </div>
             </div>
+
+            {newProduct.product_type === "Compuesto" && (
+              <div className="mt-6 rounded-2xl border border-indigo-100 bg-indigo-50 p-4 text-sm text-indigo-800">
+                Este producto se venderá como un conjunto. Después de guardarlo,
+                podrás configurar sus componentes desde el botón Componentes.
+              </div>
+            )}
 
             <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
               <button
