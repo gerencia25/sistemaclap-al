@@ -8,9 +8,10 @@ const categories = [
   "Envases",
   "Tapas",
   "Perfiles",
-  "Complementos",
+  "Especiales",
   "Servicios",
   "Materia prima",
+  "Complememtos",
   "Otra",
 ];
 
