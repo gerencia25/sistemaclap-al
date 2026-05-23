@@ -8,18 +8,26 @@ const configOptions = [
     status: "Activo",
   },
   {
-    code: "PR",
-    title: "Productos",
+    code: "IT",
+    title: "Items",
     description:
-      "Gestionar referencias, categorías, colores, unidades y precios sugeridos.",
+      "Gestionar productos, materias primas, insumos, repuestos, activos, servicios y su comportamiento operativo.",
     href: "/configuracion/productos",
+    status: "Activo",
+  },
+  {
+    code: "PV",
+    title: "Proveedores",
+    description:
+      "Administrar proveedores, contactos, datos fiscales y condiciones de pago para compras y recepción de materiales.",
+    href: "/configuracion/proveedores",
     status: "Activo",
   },
   {
     code: "CA",
     title: "Categorías",
     description:
-      "Configurar categorías comerciales utilizadas en clientes, productos y cotizaciones.",
+      "Configurar categorías comerciales utilizadas en clientes, items y cotizaciones.",
     href: "/configuracion/categorias",
     status: "En construcción",
   },
@@ -27,8 +35,24 @@ const configOptions = [
     code: "VE",
     title: "Vendedores",
     description:
-      "Administrar usuarios comerciales, cargos y datos de contacto para cotizaciones.",
+      "Administrar usuarios comerciales, cargos y datos de contacto para cotizaciones y pedidos.",
     href: "/configuracion/vendedores",
+    status: "En construcción",
+  },
+  {
+    code: "BO",
+    title: "Bodegas",
+    description:
+      "Configurar bodegas, ubicaciones y centros de almacenamiento para inventarios, producción y despachos.",
+    href: "/configuracion/bodegas",
+    status: "En construcción",
+  },
+  {
+    code: "AC",
+    title: "Acabados",
+    description:
+      "Administrar acabados disponibles por proceso productivo: soplado, inyección y extrusión.",
+    href: "/configuracion/acabados",
     status: "En construcción",
   },
   {
