@@ -205,19 +205,46 @@ export default function ProductosPage() {
   const inputClassName =
     "w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-[#07076b] focus:ring-2 focus:ring-[#07076b]/10 disabled:bg-gray-50 disabled:text-gray-400";
 
-  const filteredGroups = groups.filter(
-    (group) => group.category_id === newProduct.category_id,
-  );
-  const filteredSubgroups = subgroups.filter(
-    (subgroup) => subgroup.group_id === newProduct.group_id,
-  );
+const selectedCategory = categories.find(
+  (category) => category.id === newProduct.category_id
+);
 
-  const selectedCategory = categories.find(
-    (category) => category.id === newProduct.category_id,
-  );
-  const selectedGroup = groups.find(
-    (group) => group.id === newProduct.group_id,
-  );
+const selectedGroup = groups.find(
+  (group) => group.id === newProduct.group_id
+);
+
+const availableGroupCodes = Array.from(
+  new Set(
+    templates
+      .filter((template) => template.category_code === selectedCategory?.code)
+      .map((template) => template.group_code)
+  )
+);
+
+const filteredGroups = groups.filter(
+  (group) =>
+    group.category_id === newProduct.category_id &&
+    availableGroupCodes.includes(group.code)
+);
+
+const availableSubgroupCodes = Array.from(
+  new Set(
+    templates
+      .filter(
+        (template) =>
+          template.category_code === selectedCategory?.code &&
+          template.group_code === selectedGroup?.code
+      )
+      .map((template) => template.subgroup_code)
+  )
+);
+
+const filteredSubgroups = subgroups.filter(
+  (subgroup) =>
+    subgroup.group_id === newProduct.group_id &&
+    availableSubgroupCodes.includes(subgroup.code)
+);
+
   const selectedSubgroup = subgroups.find(
     (subgroup) => subgroup.id === newProduct.subgroup_id,
   );
@@ -350,7 +377,23 @@ export default function ProductosPage() {
 
   async function fetchInitialData() {
     setIsLoading(true);
+const { data: templateCategoriesData, error: templateCategoriesError } =
+  await supabase
+    .from("item_classification_templates")
+    .select("category_code")
+    .eq("status", "Activo");
 
+if (templateCategoriesError) {
+  throw templateCategoriesError;
+}
+
+const uniqueCategoryCodes = Array.from(
+  new Set(
+    (templateCategoriesData || []).map(
+      (item) => item.category_code
+    )
+  )
+);
     const [
       { data: productsData, error: productsError },
       { data: categoriesData },
@@ -359,16 +402,18 @@ export default function ProductosPage() {
       { data: templatesData },
       { data: templateFieldsData },
       { data: optionsData },
+      
     ] = await Promise.all([
       supabase
         .from("products")
         .select("*")
         .order("created_at", { ascending: false }),
       supabase
-        .from("item_categories")
-        .select("id, code, name")
-        .eq("status", "Activo")
-        .order("code"),
+  .from("item_categories")
+  .select("id, code, name")
+  .in("code", uniqueCategoryCodes)
+  .eq("status", "Activo")
+  .order("code"),
       supabase
         .from("item_groups")
         .select("id, category_id, code, name")
