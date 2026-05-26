@@ -16,6 +16,8 @@ const productionProcesses = [
   "No aplica",
 ];
 
+const siigoTypes = ["Producto", "Servicio"];
+
 type ItemCategory = { id: string; code: string; name: string };
 type ItemGroup = {
   id: string;
@@ -67,6 +69,42 @@ type ClassificationOption = {
   status: string;
 };
 
+type SiigoTaxCharge = {
+  id: string;
+  code: string;
+  name: string;
+  percentage: number | null;
+  status: string;
+};
+
+type SiigoWithholdingTax = {
+  id: string;
+  code: string;
+  name: string;
+  percentage: number | null;
+  status: string;
+};
+
+type SiigoDianUnit = {
+  id: string;
+  code: string;
+  name: string;
+  status: string;
+};
+
+
+type ItemMasterField = {
+  id: string;
+  category_code: string;
+  field_key: string;
+  field_label: string;
+  field_type: "text" | "textarea" | "select" | "number" | "image" | "pdf";
+  required: boolean;
+  display_order: number;
+  options: string[] | null;
+  status: string;
+};
+
 type Product = {
   id: string;
   reference: string;
@@ -109,6 +147,23 @@ type Product = {
   final_code: string | null;
   technical_sheet_url?: string | null;
   technical_sheet_filename?: string | null;
+  item_master_data?: Record<string, string> | null;
+  siigo_type?: string | null;
+  dian_unit?: string | null;
+  tax_charge?: string | null;
+  withholding_tax?: string | null;
+  tax_charge_two?: string | null;
+  visible_in_sales?: boolean;
+  visible_in_purchases?: boolean;
+  siigo_inventory_product?: boolean;
+  price_list_1_name?: string | null;
+  price_list_1_value?: number;
+  price_list_2_name?: string | null;
+  price_list_2_value?: number;
+  include_iva_in_price?: boolean;
+  siigo_sync_enabled?: boolean;
+  siigo_product_id?: string | null;
+  siigo_sync_status?: string | null;
 };
 
 const emptyProduct: Omit<Product, "id"> = {
@@ -152,6 +207,23 @@ const emptyProduct: Omit<Product, "id"> = {
   final_code: null,
   technical_sheet_url: null,
   technical_sheet_filename: null,
+  item_master_data: {},
+  siigo_type: "Producto",
+  dian_unit: "94 - Unidad",
+  tax_charge: "IVA 19%",
+  withholding_tax: "No aplica",
+  tax_charge_two: "No aplica",
+  visible_in_sales: true,
+  visible_in_purchases: true,
+  siigo_inventory_product: true,
+  price_list_1_name: "Precio de venta 1",
+  price_list_1_value: 0,
+  price_list_2_name: "Precio de venta 2",
+  price_list_2_value: 0,
+  include_iva_in_price: false,
+  siigo_sync_enabled: true,
+  siigo_product_id: null,
+  siigo_sync_status: "Pendiente",
 };
 
 function normalizeText(value: string) {
@@ -190,6 +262,14 @@ export default function ProductosPage() {
   const [classificationOptions, setClassificationOptions] = useState<
     ClassificationOption[]
   >([]);
+  const [masterFields, setMasterFields] = useState<ItemMasterField[]>([]);
+  const [siigoTaxCharges, setSiigoTaxCharges] = useState<SiigoTaxCharge[]>([]);
+  const [siigoWithholdingTaxes, setSiigoWithholdingTaxes] = useState<
+    SiigoWithholdingTax[]
+  >([]);
+  const [siigoDianUnits, setSiigoDianUnits] = useState<SiigoDianUnit[]>([]);
+  const [masterData, setMasterData] = useState<Record<string, string>>({});
+  const [masterFiles, setMasterFiles] = useState<Record<string, File | null>>({});
   const [technicalSheetFile, setTechnicalSheetFile] = useState<File | null>(
     null,
   );
@@ -258,6 +338,10 @@ const filteredSubgroups = subgroups.filter(
 
   const selectedTemplateFields = templateFields
     .filter((field) => field.template_id === selectedTemplate?.id)
+    .sort((a, b) => a.display_order - b.display_order);
+
+  const selectedMasterFields = masterFields
+    .filter((field) => field.category_code === selectedCategory?.code)
     .sort((a, b) => a.display_order - b.display_order);
 
   const generatedPreview = useMemo(() => {
@@ -402,7 +486,10 @@ const uniqueCategoryCodes = Array.from(
       { data: templatesData },
       { data: templateFieldsData },
       { data: optionsData },
-      
+      { data: masterFieldsData },
+      { data: taxChargesData },
+      { data: withholdingTaxesData },
+      { data: dianUnitsData },
     ] = await Promise.all([
       supabase
         .from("products")
@@ -438,6 +525,26 @@ const uniqueCategoryCodes = Array.from(
         .select("*")
         .eq("status", "Activo")
         .order("code"),
+      supabase
+        .from("item_master_fields")
+        .select("*")
+        .eq("status", "Activo")
+        .order("display_order"),
+      supabase
+        .from("siigo_tax_charges")
+        .select("*")
+        .eq("status", "Activo")
+        .order("name"),
+      supabase
+        .from("siigo_withholding_taxes")
+        .select("*")
+        .eq("status", "Activo")
+        .order("name"),
+      supabase
+        .from("siigo_dian_units")
+        .select("*")
+        .eq("status", "Activo")
+        .order("code"),
     ]);
 
     if (productsError) {
@@ -455,6 +562,12 @@ const uniqueCategoryCodes = Array.from(
       (templateFieldsData ?? []) as ClassificationTemplateField[],
     );
     setClassificationOptions((optionsData ?? []) as ClassificationOption[]);
+    setMasterFields((masterFieldsData ?? []) as ItemMasterField[]);
+    setSiigoTaxCharges((taxChargesData ?? []) as SiigoTaxCharge[]);
+    setSiigoWithholdingTaxes(
+      (withholdingTaxesData ?? []) as SiigoWithholdingTax[],
+    );
+    setSiigoDianUnits((dianUnitsData ?? []) as SiigoDianUnit[]);
     setIsLoading(false);
   }
 
@@ -490,6 +603,18 @@ const uniqueCategoryCodes = Array.from(
 
   function handleDynamicFieldChange(fieldKey: string, value: string) {
     setDynamicData((current) => ({ ...current, [fieldKey]: value }));
+  }
+
+  function handleMasterFieldChange(fieldKey: string, value: string) {
+    setMasterData((current) => ({ ...current, [fieldKey]: value }));
+  }
+
+  function handleMasterFileChange(fieldKey: string, file: File | null) {
+    setMasterFiles((current) => ({ ...current, [fieldKey]: file }));
+  }
+
+  function getMasterFieldOptions(field: ItemMasterField) {
+    return Array.isArray(field.options) ? field.options : [];
   }
 
   function getOptionsForField(field: ClassificationTemplateField) {
@@ -531,6 +656,8 @@ const uniqueCategoryCodes = Array.from(
   function handleCategoryChange(categoryId: string) {
     const category = categories.find((item) => item.id === categoryId);
     setDynamicData({});
+    setMasterData({});
+    setMasterFiles({});
     setNewProduct((current) => ({
       ...current,
       category_id: categoryId || null,
@@ -550,6 +677,8 @@ const uniqueCategoryCodes = Array.from(
 
   function handleGroupChange(groupId: string) {
     setDynamicData({});
+    setMasterData({});
+    setMasterFiles({});
     setNewProduct((current) => ({
       ...current,
       group_id: groupId || null,
@@ -566,6 +695,8 @@ const uniqueCategoryCodes = Array.from(
 
   function handleSubgroupChange(subgroupId: string) {
     setDynamicData({});
+    setMasterData({});
+    setMasterFiles({});
     setNewProduct((current) => ({
       ...current,
       subgroup_id: subgroupId || null,
@@ -581,6 +712,8 @@ const uniqueCategoryCodes = Array.from(
   function handleEditProduct(product: Product) {
     setEditingProductId(product.id);
     setDynamicData(product.dynamic_code_data ?? {});
+    setMasterData(product.item_master_data ?? {});
+    setMasterFiles({});
     setTechnicalSheetFile(null);
     setNewProduct({
       reference: product.reference,
@@ -623,6 +756,23 @@ const uniqueCategoryCodes = Array.from(
       final_code: product.final_code ?? product.reference,
       technical_sheet_url: product.technical_sheet_url ?? null,
       technical_sheet_filename: product.technical_sheet_filename ?? null,
+      item_master_data: product.item_master_data ?? {},
+      siigo_type: product.siigo_type ?? "Producto",
+      dian_unit: product.dian_unit ?? "94 - Unidad",
+      tax_charge: product.tax_charge ?? "IVA 19%",
+      withholding_tax: product.withholding_tax ?? "No aplica",
+      tax_charge_two: product.tax_charge_two ?? "No aplica",
+      visible_in_sales: product.visible_in_sales ?? true,
+      visible_in_purchases: product.visible_in_purchases ?? true,
+      siigo_inventory_product: product.siigo_inventory_product ?? true,
+      price_list_1_name: product.price_list_1_name ?? "Precio de venta 1",
+      price_list_1_value: Number(product.price_list_1_value || 0),
+      price_list_2_name: product.price_list_2_name ?? "Precio de venta 2",
+      price_list_2_value: Number(product.price_list_2_value || 0),
+      include_iva_in_price: product.include_iva_in_price ?? false,
+      siigo_sync_enabled: product.siigo_sync_enabled ?? true,
+      siigo_product_id: product.siigo_product_id ?? null,
+      siigo_sync_status: product.siigo_sync_status ?? "Pendiente",
     });
     setIsModalOpen(true);
   }
@@ -683,6 +833,38 @@ const uniqueCategoryCodes = Array.from(
     };
   }
 
+  async function uploadMasterFiles() {
+    const uploadedData: Record<string, string> = {};
+
+    for (const field of selectedMasterFields) {
+      const file = masterFiles[field.field_key];
+
+      if (!file) continue;
+
+      const extension = file.name.split(".").pop() ?? "file";
+      const safeReference = (generatedPreview.reference || "item").replace(
+        /[^A-Z0-9-]/gi,
+        "_",
+      );
+      const filePath = `${safeReference}/${field.field_key}-${Date.now()}.${extension}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("product-technical-sheets")
+        .upload(filePath, file, { upsert: false });
+
+      if (uploadError) throw new Error(uploadError.message);
+
+      const { data } = supabase.storage
+        .from("product-technical-sheets")
+        .getPublicUrl(filePath);
+
+      uploadedData[field.field_key] = data.publicUrl;
+      uploadedData[`${field.field_key}_filename`] = file.name;
+    }
+
+    return uploadedData;
+  }
+
   async function handleSaveProduct() {
     if (
       !newProduct.category_id ||
@@ -695,10 +877,29 @@ const uniqueCategoryCodes = Array.from(
 
     if (!validateDynamicFields()) return;
 
+    for (const field of selectedMasterFields) {
+      const hasTextValue = Boolean(masterData[field.field_key]?.trim());
+      const hasFileValue = Boolean(masterFiles[field.field_key]);
+      const hasExistingFile = Boolean(
+        newProduct.item_master_data?.[field.field_key] ||
+          masterData[field.field_key],
+      );
+
+      if (field.required && !hasTextValue && !hasFileValue && !hasExistingFile) {
+        alert(`Debes completar: ${field.field_label}.`);
+        return;
+      }
+    }
+
     setIsSaving(true);
 
     try {
       const technicalSheet = await uploadTechnicalSheet();
+      const uploadedMasterFiles = await uploadMasterFiles();
+      const savedMasterData = {
+        ...masterData,
+        ...uploadedMasterFiles,
+      };
 
       const productData = {
         reference: generatedPreview.reference,
@@ -720,9 +921,12 @@ const uniqueCategoryCodes = Array.from(
         width_cm: newProduct.width_cm,
         length_m: newProduct.length_m,
         finish: newProduct.finish || null,
-        technical_description: newProduct.technical_description || null,
-        suggested_price: newProduct.suggested_price,
-        image_url: newProduct.image_url || null,
+        technical_description:
+          savedMasterData.description || newProduct.technical_description || null,
+        suggested_price: Number(
+          savedMasterData.suggested_sale_price ?? newProduct.suggested_price ?? 0,
+        ),
+        image_url: savedMasterData.product_image || newProduct.image_url || null,
         status: newProduct.status,
         can_be_sold: newProduct.can_be_sold,
         can_be_purchased: newProduct.can_be_purchased,
@@ -739,8 +943,25 @@ const uniqueCategoryCodes = Array.from(
         dynamic_name: generatedPreview.name,
         generated_reference: generatedPreview.reference,
         final_code: generatedPreview.reference,
-        technical_sheet_url: technicalSheet.url,
-        technical_sheet_filename: technicalSheet.filename,
+        technical_sheet_url: savedMasterData.technical_sheet || technicalSheet.url,
+        technical_sheet_filename:
+          savedMasterData.technical_sheet_filename || technicalSheet.filename,
+        item_master_data: savedMasterData,
+        siigo_type: newProduct.siigo_type || "Producto",
+        dian_unit: newProduct.dian_unit || "94 - Unidad",
+        tax_charge: newProduct.tax_charge || "IVA 19%",
+        withholding_tax: newProduct.withholding_tax || "No aplica",
+        tax_charge_two: newProduct.tax_charge_two || "No aplica",
+        visible_in_sales: newProduct.visible_in_sales ?? true,
+        visible_in_purchases: newProduct.visible_in_purchases ?? true,
+        siigo_inventory_product: newProduct.siigo_inventory_product ?? true,
+        price_list_1_name: newProduct.price_list_1_name || "Precio de venta 1",
+        price_list_1_value: Number(newProduct.price_list_1_value || 0),
+        price_list_2_name: newProduct.price_list_2_name || "Precio de venta 2",
+        price_list_2_value: Number(newProduct.price_list_2_value || 0),
+        include_iva_in_price: newProduct.include_iva_in_price ?? false,
+        siigo_sync_enabled: newProduct.siigo_sync_enabled ?? true,
+        siigo_sync_status: newProduct.siigo_sync_status || "Pendiente",
       };
 
       if (isEditing) {
@@ -771,6 +992,8 @@ const uniqueCategoryCodes = Array.from(
     setIsModalOpen(false);
     setEditingProductId(null);
     setDynamicData({});
+    setMasterData({});
+    setMasterFiles({});
     setTechnicalSheetFile(null);
     setNewProduct(emptyProduct);
   }
@@ -956,7 +1179,22 @@ const uniqueCategoryCodes = Array.from(
                 ×
               </button>
             </div>
+<section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+  <div className="mb-6 flex flex-col gap-3 border-b border-gray-100 pb-5 md:flex-row md:items-start md:justify-between">
+    <div>
+      <div className="mb-2 inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#07076b] text-sm font-bold text-white">
+        1
+      </div>
 
+      <h3 className="text-xl font-bold text-[#07076b]">
+        Clasificación industrial
+      </h3>
+
+      <p className="mt-1 text-sm text-gray-500">
+        Define la categoría, grupo, subgrupo, codificación automática y estructura industrial del item.
+      </p>
+    </div>
+  </div>
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <Field label="Categoría *">
                 <select
@@ -1126,238 +1364,462 @@ const uniqueCategoryCodes = Array.from(
                 />
               </Field>
 
-              <Field label="Tipo de producto">
-                <select
-                  value={newProduct.product_type}
-                  onChange={(event) =>
-                    updateNewProduct("product_type", event.target.value)
-                  }
-                  className={inputClassName}
-                >
-                  {productTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
-              </Field>
+            </div>
+  </section>
+            <section className="mt-8 rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+              <div className="mb-6 flex flex-col gap-3 border-b border-gray-100 pb-5 md:flex-row md:items-start md:justify-between">
+                <div>
+                  <div className="mb-2 inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#07076b] text-sm font-bold text-white">
+                    2
+                  </div>
+                  <h3 className="text-xl font-bold text-[#07076b]">
+                    Datos maestros del item
+                  </h3>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Registra datos permanentes del item. Los datos variables como lote, factura, remisión, cantidad y certificado de calidad se registrarán en las entradas de inventario.
+                  </p>
+                </div>
+              </div>
 
-              <Field label="Origen / abastecimiento">
-                <select
-                  value={newProduct.supply_type}
-                  onChange={(event) =>
-                    updateNewProduct("supply_type", event.target.value)
-                  }
-                  className={inputClassName}
-                >
-                  {supplyTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
-              </Field>
+              {!selectedCategory && (
+                <div className="rounded-xl bg-gray-50 p-4 text-sm text-gray-500">
+                  Selecciona una categoría para ver los datos maestros configurados.
+                </div>
+              )}
 
-              <Field label="Proceso">
-                <select
-                  value={newProduct.production_process ?? ""}
-                  onChange={(event) =>
-                    updateNewProduct("production_process", event.target.value)
-                  }
-                  className={inputClassName}
-                >
-                  {productionProcesses.map((process) => (
-                    <option key={process} value={process}>
-                      {process}
-                    </option>
-                  ))}
-                </select>
-              </Field>
+              {selectedCategory && selectedMasterFields.length === 0 && (
+                <div className="rounded-xl bg-gray-50 p-4 text-sm text-gray-500">
+                  Esta categoría aún no tiene datos maestros configurados.
+                </div>
+              )}
 
-              <Field label="Estado">
-                <select
-                  value={newProduct.status}
-                  onChange={(event) =>
-                    updateNewProduct(
-                      "status",
-                      event.target.value as Product["status"],
-                    )
-                  }
-                  className={inputClassName}
-                >
-                  <option value="Activo">Activo</option>
-                  <option value="Inactivo">Inactivo</option>
-                </select>
-              </Field>
+              {selectedMasterFields.length > 0 && (
+                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                  {selectedMasterFields.map((field) => {
+                    const value = masterData[field.field_key] ?? "";
+                    const selectedFile = masterFiles[field.field_key];
+                    const existingUrl = masterData[field.field_key];
 
-              <Field label="Unidad">
-                <input
-                  value={newProduct.unit}
-                  onChange={(event) =>
-                    updateNewProduct("unit", event.target.value)
-                  }
-                  placeholder="Ej: Unidad, KG, metro"
-                  className={inputClassName}
-                />
-              </Field>
-
-              <Field label="Precio sugerido">
-                <input
-                  type="number"
-                  value={newProduct.suggested_price}
-                  onChange={(event) =>
-                    updateNewProduct(
-                      "suggested_price",
-                      Number(event.target.value),
-                    )
-                  }
-                  placeholder="0"
-                  className={inputClassName}
-                />
-              </Field>
-
-              <div className="md:col-span-2">
-                <Field label="Ficha técnica PDF (Opcional)">
-                  <input
-                    type="file"
-                    accept="application/pdf"
-                    onChange={(event) =>
-                      setTechnicalSheetFile(event.target.files?.[0] ?? null)
+                    if (field.field_type === "textarea") {
+                      return (
+                        <div key={field.id} className="md:col-span-2">
+                          <Field label={`${field.field_label}${field.required ? " *" : ""}`}>
+                            <textarea
+                              rows={3}
+                              value={value}
+                              onChange={(event) =>
+                                handleMasterFieldChange(field.field_key, event.target.value)
+                              }
+                              placeholder={field.field_label}
+                              className={inputClassName}
+                            />
+                          </Field>
+                        </div>
+                      );
                     }
-                    className={inputClassName}
-                  />
-                  {technicalSheetFile && (
-                    <p className="mt-2 text-xs text-gray-500">
-                      Archivo seleccionado: {technicalSheetFile.name}
-                    </p>
-                  )}
-                  {!technicalSheetFile && newProduct.technical_sheet_url && (
-                    <a
-                      href={newProduct.technical_sheet_url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="mt-2 inline-block text-xs font-medium text-[#07076b] underline"
+
+                    if (field.field_type === "select") {
+                      return (
+                        <Field key={field.id} label={`${field.field_label}${field.required ? " *" : ""}`}>
+                          <select
+                            value={value}
+                            onChange={(event) =>
+                              handleMasterFieldChange(field.field_key, event.target.value)
+                            }
+                            className={inputClassName}
+                          >
+                            <option value="">Seleccionar</option>
+                            {getMasterFieldOptions(field).map((option) => (
+                              <option key={option} value={option}>
+                                {option}
+                              </option>
+                            ))}
+                          </select>
+                        </Field>
+                      );
+                    }
+
+                    if (field.field_type === "image" || field.field_type === "pdf") {
+                      const accept =
+                        field.field_type === "image"
+                          ? "image/jpeg,image/png,image/webp"
+                          : "application/pdf";
+
+                      return (
+                        <Field key={field.id} label={`${field.field_label}${field.required ? " *" : ""}`}>
+                          <input
+                            type="file"
+                            accept={accept}
+                            onChange={(event) =>
+                              handleMasterFileChange(
+                                field.field_key,
+                                event.target.files?.[0] ?? null,
+                              )
+                            }
+                            className={inputClassName}
+                          />
+
+                          {selectedFile && (
+                            <p className="mt-2 text-xs text-gray-500">
+                              Archivo seleccionado: {selectedFile.name}
+                            </p>
+                          )}
+
+                          {!selectedFile && existingUrl && (
+                            <a
+                              href={existingUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="mt-2 inline-block text-xs font-medium text-[#07076b] underline"
+                            >
+                              Ver archivo actual
+                            </a>
+                          )}
+                        </Field>
+                      );
+                    }
+
+                    return (
+                      <Field key={field.id} label={`${field.field_label}${field.required ? " *" : ""}`}>
+                        <input
+                          type={field.field_type === "number" ? "number" : "text"}
+                          value={value}
+                          onChange={(event) =>
+                            handleMasterFieldChange(field.field_key, event.target.value)
+                          }
+                          placeholder={field.field_label}
+                          className={inputClassName}
+                        />
+                      </Field>
+                    );
+                  })}
+
+                  <Field label="Estado">
+                    <select
+                      value={newProduct.status}
+                      onChange={(event) =>
+                        updateNewProduct(
+                          "status",
+                          event.target.value as Product["status"],
+                        )
+                      }
+                      className={inputClassName}
                     >
-                      Ver ficha actual
-                    </a>
-                  )}
-                </Field>
+                      <option value="Activo">Activo</option>
+                      <option value="Inactivo">Inactivo</option>
+                    </select>
+                  </Field>
+                </div>
+              )}
+            </section>
+
+            <section className="mt-8 rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+              <div className="mb-6 flex flex-col gap-3 border-b border-gray-100 pb-5 md:flex-row md:items-start md:justify-between">
+                <div>
+                  <div className="mb-2 inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#07076b] text-sm font-bold text-white">
+                    3
+                  </div>
+                  <h3 className="text-xl font-bold text-[#07076b]">
+                    Configuración operativa y SIIGO
+                  </h3>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Define cómo se comporta el item en CLAP y deja preparados los datos necesarios para sincronizarlo con SIIGO.
+                  </p>
+                </div>
               </div>
 
-              <div className="md:col-span-2">
-                <Field label="Descripción técnica">
-                  <textarea
-                    rows={3}
-                    value={newProduct.technical_description ?? ""}
-                    onChange={(event) =>
-                      updateNewProduct(
-                        "technical_description",
-                        event.target.value,
-                      )
-                    }
-                    placeholder="Notas técnicas adicionales del item..."
-                    className={inputClassName}
-                  />
-                </Field>
+              <div className="grid gap-6 lg:grid-cols-2">
+                <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+                  <div className="mb-5">
+                    <h4 className="text-lg font-semibold text-[#07076b]">
+                      Comportamiento operativo
+                    </h4>
+                    <p className="mt-1 text-sm text-gray-500">
+                      Define cómo se comporta este item dentro de inventarios,
+                      producción, compras, activos y mantenimiento.
+                    </p>
+                  </div>
+
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <CheckboxGroup title="Comercial">
+                      <CheckboxField
+                        label="Se vende"
+                        checked={newProduct.can_be_sold}
+                        onChange={(value) => updateNewProduct("can_be_sold", value)}
+                      />
+                      <CheckboxField
+                        label="Se compra"
+                        checked={newProduct.can_be_purchased}
+                        onChange={(value) =>
+                          updateNewProduct("can_be_purchased", value)
+                        }
+                      />
+                      <CheckboxField
+                        label="Se fabrica"
+                        checked={newProduct.can_be_manufactured}
+                        onChange={(value) =>
+                          updateNewProduct("can_be_manufactured", value)
+                        }
+                      />
+                    </CheckboxGroup>
+
+                    <CheckboxGroup title="Inventarios">
+                      <CheckboxField
+                        label="Maneja inventario"
+                        checked={newProduct.tracks_inventory}
+                        onChange={(value) =>
+                          updateNewProduct("tracks_inventory", value)
+                        }
+                      />
+                      <CheckboxField
+                        label="Maneja lotes"
+                        checked={newProduct.tracks_lots}
+                        onChange={(value) => updateNewProduct("tracks_lots", value)}
+                      />
+                      <CheckboxField
+                        label="Maneja seriales"
+                        checked={newProduct.tracks_serials}
+                        onChange={(value) =>
+                          updateNewProduct("tracks_serials", value)
+                        }
+                      />
+                    </CheckboxGroup>
+
+                    <CheckboxGroup title="Ingeniería">
+                      <CheckboxField
+                        label="Requiere fórmula"
+                        checked={newProduct.requires_formula}
+                        onChange={(value) =>
+                          updateNewProduct("requires_formula", value)
+                        }
+                      />
+                      <CheckboxField
+                        label="Requiere componentes"
+                        checked={newProduct.requires_components}
+                        onChange={(value) =>
+                          updateNewProduct("requires_components", value)
+                        }
+                      />
+                      <CheckboxField
+                        label="Requiere ruta"
+                        checked={newProduct.requires_route}
+                        onChange={(value) =>
+                          updateNewProduct("requires_route", value)
+                        }
+                      />
+                    </CheckboxGroup>
+
+                    <CheckboxGroup title="Activos">
+                      <CheckboxField
+                        label="Requiere mantenimiento"
+                        checked={newProduct.requires_maintenance}
+                        onChange={(value) =>
+                          updateNewProduct("requires_maintenance", value)
+                        }
+                      />
+                      <CheckboxField
+                        label="Depreciable"
+                        checked={newProduct.depreciable}
+                        onChange={(value) => updateNewProduct("depreciable", value)}
+                      />
+                    </CheckboxGroup>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-indigo-100 bg-indigo-50 p-5">
+                  <div className="mb-5">
+                    <h4 className="text-lg font-semibold text-[#07076b]">
+                      Integración comercial / SIIGO
+                    </h4>
+                    <p className="mt-1 text-sm text-gray-600">
+                      Campos necesarios para crear o sincronizar este item con SIIGO cuando la integración esté activa.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                    <Field label="Tipo SIIGO">
+                      <select
+                        value={newProduct.siigo_type ?? "Producto"}
+                        onChange={(event) =>
+                          updateNewProduct("siigo_type", event.target.value)
+                        }
+                        className={inputClassName}
+                      >
+                        {siigoTypes.map((type) => (
+                          <option key={type} value={type}>
+                            {type}
+                          </option>
+                        ))}
+                      </select>
+                    </Field>
+
+                    <Field label="Unidad DIAN">
+                      <select
+                        value={newProduct.dian_unit ?? "94 - Unidad"}
+                        onChange={(event) =>
+                          updateNewProduct("dian_unit", event.target.value)
+                        }
+                        className={inputClassName}
+                      >
+                        {siigoDianUnits.map((unit) => {
+                          const label = `${unit.code} - ${unit.name}`;
+                          return (
+                            <option key={unit.id} value={label}>
+                              {label}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </Field>
+
+                    <Field label="Impuesto cargo">
+                      <select
+                        value={newProduct.tax_charge ?? "IVA 19%"}
+                        onChange={(event) =>
+                          updateNewProduct("tax_charge", event.target.value)
+                        }
+                        className={inputClassName}
+                      >
+                        {siigoTaxCharges.map((tax) => (
+                          <option key={tax.id} value={tax.name}>
+                            {tax.name}
+                          </option>
+                        ))}
+                      </select>
+                    </Field>
+
+                    <Field label="Retención">
+                      <select
+                        value={newProduct.withholding_tax ?? "No aplica"}
+                        onChange={(event) =>
+                          updateNewProduct("withholding_tax", event.target.value)
+                        }
+                        className={inputClassName}
+                      >
+                        {siigoWithholdingTaxes.map((tax) => (
+                          <option key={tax.id} value={tax.name}>
+                            {tax.name}
+                          </option>
+                        ))}
+                      </select>
+                    </Field>
+
+                    <Field label="Impuesto adicional">
+                      <select
+                        value={newProduct.tax_charge_two ?? "No aplica"}
+                        onChange={(event) =>
+                          updateNewProduct("tax_charge_two", event.target.value)
+                        }
+                        className={inputClassName}
+                      >
+                        {siigoTaxCharges.map((tax) => (
+                          <option key={tax.id} value={tax.name}>
+                            {tax.name}
+                          </option>
+                        ))}
+                      </select>
+                    </Field>
+
+                    <Field label="Lista de precio 1">
+                      <input
+                        type="text"
+                        value={newProduct.price_list_1_name ?? "Precio de venta 1"}
+                        onChange={(event) =>
+                          updateNewProduct("price_list_1_name", event.target.value)
+                        }
+                        className={inputClassName}
+                      />
+                    </Field>
+
+                    <Field label="Precio venta 1">
+                      <input
+                        type="number"
+                        min={0}
+                        value={newProduct.price_list_1_value ?? 0}
+                        onChange={(event) =>
+                          updateNewProduct(
+                            "price_list_1_value",
+                            Number(event.target.value || 0),
+                          )
+                        }
+                        className={inputClassName}
+                      />
+                    </Field>
+
+                    <Field label="Lista de precio 2">
+                      <input
+                        type="text"
+                        value={newProduct.price_list_2_name ?? "Precio de venta 2"}
+                        onChange={(event) =>
+                          updateNewProduct("price_list_2_name", event.target.value)
+                        }
+                        className={inputClassName}
+                      />
+                    </Field>
+
+                    <Field label="Precio venta 2">
+                      <input
+                        type="number"
+                        min={0}
+                        value={newProduct.price_list_2_value ?? 0}
+                        onChange={(event) =>
+                          updateNewProduct(
+                            "price_list_2_value",
+                            Number(event.target.value || 0),
+                          )
+                        }
+                        className={inputClassName}
+                      />
+                    </Field>
+                  </div>
+
+                  <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <CheckboxField
+                      label="Visible en ventas"
+                      checked={newProduct.visible_in_sales ?? true}
+                      onChange={(value) =>
+                        updateNewProduct("visible_in_sales", value)
+                      }
+                    />
+                    <CheckboxField
+                      label="Visible en compras"
+                      checked={newProduct.visible_in_purchases ?? true}
+                      onChange={(value) =>
+                        updateNewProduct("visible_in_purchases", value)
+                      }
+                    />
+                    <CheckboxField
+                      label="Producto inventariable en SIIGO"
+                      checked={newProduct.siigo_inventory_product ?? true}
+                      onChange={(value) =>
+                        updateNewProduct("siigo_inventory_product", value)
+                      }
+                    />
+                    <CheckboxField
+                      label="Incluir IVA en precio de venta"
+                      checked={newProduct.include_iva_in_price ?? false}
+                      onChange={(value) =>
+                        updateNewProduct("include_iva_in_price", value)
+                      }
+                    />
+                    <CheckboxField
+                      label="Sincronizar con SIIGO"
+                      checked={newProduct.siigo_sync_enabled ?? true}
+                      onChange={(value) =>
+                        updateNewProduct("siigo_sync_enabled", value)
+                      }
+                    />
+                  </div>
+
+                  <div className="mt-5 rounded-xl bg-white p-4 text-xs text-gray-500">
+                    Estado de sincronización:{" "}
+                    <span className="font-semibold text-[#07076b]">
+                      {newProduct.siigo_sync_status ?? "Pendiente"}
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
-
-            <div className="mt-8 rounded-2xl border border-gray-200 bg-gray-50 p-5">
-              <div className="mb-5">
-                <h3 className="text-lg font-semibold text-[#07076b]">
-                  Comportamiento del item
-                </h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  Define cómo se comporta este item dentro de inventarios,
-                  producción, compras, activos y mantenimiento.
-                </p>
-              </div>
-
-              <div className="grid gap-6 md:grid-cols-4">
-                <CheckboxGroup title="Comercial">
-                  <CheckboxField
-                    label="Se vende"
-                    checked={newProduct.can_be_sold}
-                    onChange={(value) => updateNewProduct("can_be_sold", value)}
-                  />
-                  <CheckboxField
-                    label="Se compra"
-                    checked={newProduct.can_be_purchased}
-                    onChange={(value) =>
-                      updateNewProduct("can_be_purchased", value)
-                    }
-                  />
-                  <CheckboxField
-                    label="Se fabrica"
-                    checked={newProduct.can_be_manufactured}
-                    onChange={(value) =>
-                      updateNewProduct("can_be_manufactured", value)
-                    }
-                  />
-                </CheckboxGroup>
-
-                <CheckboxGroup title="Inventarios">
-                  <CheckboxField
-                    label="Maneja inventario"
-                    checked={newProduct.tracks_inventory}
-                    onChange={(value) =>
-                      updateNewProduct("tracks_inventory", value)
-                    }
-                  />
-                  <CheckboxField
-                    label="Maneja lotes"
-                    checked={newProduct.tracks_lots}
-                    onChange={(value) => updateNewProduct("tracks_lots", value)}
-                  />
-                  <CheckboxField
-                    label="Maneja seriales"
-                    checked={newProduct.tracks_serials}
-                    onChange={(value) =>
-                      updateNewProduct("tracks_serials", value)
-                    }
-                  />
-                </CheckboxGroup>
-
-                <CheckboxGroup title="Ingeniería">
-                  <CheckboxField
-                    label="Requiere fórmula"
-                    checked={newProduct.requires_formula}
-                    onChange={(value) =>
-                      updateNewProduct("requires_formula", value)
-                    }
-                  />
-                  <CheckboxField
-                    label="Requiere componentes"
-                    checked={newProduct.requires_components}
-                    onChange={(value) =>
-                      updateNewProduct("requires_components", value)
-                    }
-                  />
-                  <CheckboxField
-                    label="Requiere ruta"
-                    checked={newProduct.requires_route}
-                    onChange={(value) =>
-                      updateNewProduct("requires_route", value)
-                    }
-                  />
-                </CheckboxGroup>
-
-                <CheckboxGroup title="Activos">
-                  <CheckboxField
-                    label="Requiere mantenimiento"
-                    checked={newProduct.requires_maintenance}
-                    onChange={(value) =>
-                      updateNewProduct("requires_maintenance", value)
-                    }
-                  />
-                  <CheckboxField
-                    label="Depreciable"
-                    checked={newProduct.depreciable}
-                    onChange={(value) => updateNewProduct("depreciable", value)}
-                  />
-                </CheckboxGroup>
-              </div>
-            </div>
+            </section>
 
             {newProduct.requires_components && (
               <div className="mt-6 rounded-2xl border border-indigo-100 bg-indigo-50 p-4 text-sm text-indigo-800">
