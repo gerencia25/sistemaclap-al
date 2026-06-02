@@ -1,26 +1,18 @@
 const configOptions = [
   {
-    code: "CL",
-    title: "Clientes",
-    description:
-      "Administrar la base maestra de clientes comerciales del sistema.",
-    href: "/configuracion/clientes",
-    status: "Activo",
-  },
-  {
-    code: "IT",
-    title: "Items",
+    code: "CD",
+    title: "Codificación",
     description:
       "Gestionar productos, materias primas, insumos, repuestos, activos, servicios y su comportamiento operativo.",
     href: "/configuracion/productos",
     status: "Activo",
   },
   {
-    code: "PV",
-    title: "Proveedores",
+    code: "TR",
+    title: "Terceros",
     description:
-      "Administrar proveedores, contactos, datos fiscales y condiciones de pago para compras y recepción de materiales.",
-    href: "/configuracion/proveedores",
+      "Administrar clientes, proveedores y otros terceros en una única base maestra preparada para integración con SIIGO.",
+    href: "/configuracion/terceros",
     status: "Activo",
   },
   {

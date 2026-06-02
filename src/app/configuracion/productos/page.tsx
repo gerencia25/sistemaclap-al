@@ -5,18 +5,6 @@ import { ReactNode, useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { createClassificationOption } from "@/lib/itemClassificationEngine";
 
-const productTypes = ["Simple", "Compuesto", "Servicio", "Materia prima"];
-const supplyTypes = ["Fabricado", "Comprado", "Mixto", "Servicio"];
-const productionProcesses = [
-  "Inyección",
-  "Soplado",
-  "Extrusión",
-  "Comprado",
-  "Servicio",
-  "No aplica",
-];
-
-const siigoTypes = ["Producto", "Servicio"];
 
 type ItemCategory = { id: string; code: string; name: string };
 type ItemGroup = {
@@ -69,29 +57,6 @@ type ClassificationOption = {
   status: string;
 };
 
-type SiigoTaxCharge = {
-  id: string;
-  code: string;
-  name: string;
-  percentage: number | null;
-  status: string;
-};
-
-type SiigoWithholdingTax = {
-  id: string;
-  code: string;
-  name: string;
-  percentage: number | null;
-  status: string;
-};
-
-type SiigoDianUnit = {
-  id: string;
-  code: string;
-  name: string;
-  status: string;
-};
-
 
 type ItemMasterField = {
   id: string;
@@ -115,9 +80,11 @@ type Product = {
   group_id: string | null;
   subgroup_id: string | null;
   classification_code: string | null;
+
   product_type: string;
   supply_type: string;
   production_process: string | null;
+
   color: string | null;
   unit: string;
   material: string | null;
@@ -126,44 +93,62 @@ type Product = {
   width_cm: number | null;
   length_m: number | null;
   finish: string | null;
+
   technical_description: string | null;
   suggested_price: number;
+
   image_url: string | null;
+
   status: "Activo" | "Inactivo";
+
   can_be_sold: boolean;
   can_be_purchased: boolean;
   can_be_manufactured: boolean;
+
   tracks_inventory: boolean;
   tracks_lots: boolean;
   tracks_serials: boolean;
+
   requires_formula: boolean;
   requires_components: boolean;
   requires_route: boolean;
+
   requires_maintenance: boolean;
   depreciable: boolean;
+
   dynamic_code_data: Record<string, string> | null;
   dynamic_name: string | null;
   generated_reference: string | null;
   final_code: string | null;
+
   technical_sheet_url?: string | null;
   technical_sheet_filename?: string | null;
+
   item_master_data?: Record<string, string> | null;
+
+  // =========================
+  // CAMPOS SIIGO
+  // =========================
+
   siigo_type?: string | null;
   dian_unit?: string | null;
+
   tax_charge?: string | null;
-  withholding_tax?: string | null;
-  tax_charge_two?: string | null;
+  retention?: string | null;
+
+  price_list_1_name?: string | null;
+  price_list_1_value?: number | null;
+
+  price_list_2_name?: string | null;
+  price_list_2_value?: number | null;
+
   visible_in_sales?: boolean;
   visible_in_purchases?: boolean;
-  siigo_inventory_product?: boolean;
-  price_list_1_name?: string | null;
-  price_list_1_value?: number;
-  price_list_2_name?: string | null;
-  price_list_2_value?: number;
-  include_iva_in_price?: boolean;
-  siigo_sync_enabled?: boolean;
-  siigo_product_id?: string | null;
-  siigo_sync_status?: string | null;
+  inventory_product_siigo?: boolean;
+  include_vat_in_price?: boolean;
+  sync_with_siigo?: boolean;
+
+  sync_status?: string | null;
 };
 
 const emptyProduct: Omit<Product, "id"> = {
@@ -175,9 +160,11 @@ const emptyProduct: Omit<Product, "id"> = {
   group_id: null,
   subgroup_id: null,
   classification_code: null,
+
   product_type: "Simple",
   supply_type: "Fabricado",
   production_process: "Inyección",
+
   color: "",
   unit: "Unidad",
   material: "",
@@ -186,44 +173,62 @@ const emptyProduct: Omit<Product, "id"> = {
   width_cm: null,
   length_m: null,
   finish: "",
+
   technical_description: "",
   suggested_price: 0,
+
   image_url: "",
+
   status: "Activo",
+
   can_be_sold: true,
   can_be_purchased: false,
   can_be_manufactured: false,
+
   tracks_inventory: true,
   tracks_lots: false,
   tracks_serials: false,
+
   requires_formula: false,
   requires_components: false,
   requires_route: false,
+
   requires_maintenance: false,
   depreciable: false,
+
   dynamic_code_data: {},
   dynamic_name: null,
   generated_reference: null,
   final_code: null,
+
   technical_sheet_url: null,
   technical_sheet_filename: null,
+
   item_master_data: {},
+
+  // =========================
+  // CAMPOS SIIGO
+  // =========================
+
   siigo_type: "Producto",
   dian_unit: "94 - Unidad",
+
   tax_charge: "IVA 19%",
-  withholding_tax: "No aplica",
-  tax_charge_two: "No aplica",
-  visible_in_sales: true,
-  visible_in_purchases: true,
-  siigo_inventory_product: true,
+  retention: "No aplica",
+
   price_list_1_name: "Precio de venta 1",
   price_list_1_value: 0,
+
   price_list_2_name: "Precio de venta 2",
   price_list_2_value: 0,
-  include_iva_in_price: false,
-  siigo_sync_enabled: true,
-  siigo_product_id: null,
-  siigo_sync_status: "Pendiente",
+
+  visible_in_sales: true,
+  visible_in_purchases: true,
+  inventory_product_siigo: true,
+  include_vat_in_price: false,
+  sync_with_siigo: true,
+
+  sync_status: "Pendiente",
 };
 
 function normalizeText(value: string) {
@@ -263,11 +268,6 @@ export default function ProductosPage() {
     ClassificationOption[]
   >([]);
   const [masterFields, setMasterFields] = useState<ItemMasterField[]>([]);
-  const [siigoTaxCharges, setSiigoTaxCharges] = useState<SiigoTaxCharge[]>([]);
-  const [siigoWithholdingTaxes, setSiigoWithholdingTaxes] = useState<
-    SiigoWithholdingTax[]
-  >([]);
-  const [siigoDianUnits, setSiigoDianUnits] = useState<SiigoDianUnit[]>([]);
   const [masterData, setMasterData] = useState<Record<string, string>>({});
   const [masterFiles, setMasterFiles] = useState<Record<string, File | null>>({});
   const [technicalSheetFile, setTechnicalSheetFile] = useState<File | null>(
@@ -487,9 +487,7 @@ const uniqueCategoryCodes = Array.from(
       { data: templateFieldsData },
       { data: optionsData },
       { data: masterFieldsData },
-      { data: taxChargesData },
-      { data: withholdingTaxesData },
-      { data: dianUnitsData },
+      
     ] = await Promise.all([
       supabase
         .from("products")
@@ -530,21 +528,6 @@ const uniqueCategoryCodes = Array.from(
         .select("*")
         .eq("status", "Activo")
         .order("display_order"),
-      supabase
-        .from("siigo_tax_charges")
-        .select("*")
-        .eq("status", "Activo")
-        .order("name"),
-      supabase
-        .from("siigo_withholding_taxes")
-        .select("*")
-        .eq("status", "Activo")
-        .order("name"),
-      supabase
-        .from("siigo_dian_units")
-        .select("*")
-        .eq("status", "Activo")
-        .order("code"),
     ]);
 
     if (productsError) {
@@ -563,11 +546,6 @@ const uniqueCategoryCodes = Array.from(
     );
     setClassificationOptions((optionsData ?? []) as ClassificationOption[]);
     setMasterFields((masterFieldsData ?? []) as ItemMasterField[]);
-    setSiigoTaxCharges((taxChargesData ?? []) as SiigoTaxCharge[]);
-    setSiigoWithholdingTaxes(
-      (withholdingTaxesData ?? []) as SiigoWithholdingTax[],
-    );
-    setSiigoDianUnits((dianUnitsData ?? []) as SiigoDianUnit[]);
     setIsLoading(false);
   }
 
@@ -757,22 +735,6 @@ const uniqueCategoryCodes = Array.from(
       technical_sheet_url: product.technical_sheet_url ?? null,
       technical_sheet_filename: product.technical_sheet_filename ?? null,
       item_master_data: product.item_master_data ?? {},
-      siigo_type: product.siigo_type ?? "Producto",
-      dian_unit: product.dian_unit ?? "94 - Unidad",
-      tax_charge: product.tax_charge ?? "IVA 19%",
-      withholding_tax: product.withholding_tax ?? "No aplica",
-      tax_charge_two: product.tax_charge_two ?? "No aplica",
-      visible_in_sales: product.visible_in_sales ?? true,
-      visible_in_purchases: product.visible_in_purchases ?? true,
-      siigo_inventory_product: product.siigo_inventory_product ?? true,
-      price_list_1_name: product.price_list_1_name ?? "Precio de venta 1",
-      price_list_1_value: Number(product.price_list_1_value || 0),
-      price_list_2_name: product.price_list_2_name ?? "Precio de venta 2",
-      price_list_2_value: Number(product.price_list_2_value || 0),
-      include_iva_in_price: product.include_iva_in_price ?? false,
-      siigo_sync_enabled: product.siigo_sync_enabled ?? true,
-      siigo_product_id: product.siigo_product_id ?? null,
-      siigo_sync_status: product.siigo_sync_status ?? "Pendiente",
     });
     setIsModalOpen(true);
   }
@@ -947,21 +909,6 @@ const uniqueCategoryCodes = Array.from(
         technical_sheet_filename:
           savedMasterData.technical_sheet_filename || technicalSheet.filename,
         item_master_data: savedMasterData,
-        siigo_type: newProduct.siigo_type || "Producto",
-        dian_unit: newProduct.dian_unit || "94 - Unidad",
-        tax_charge: newProduct.tax_charge || "IVA 19%",
-        withholding_tax: newProduct.withholding_tax || "No aplica",
-        tax_charge_two: newProduct.tax_charge_two || "No aplica",
-        visible_in_sales: newProduct.visible_in_sales ?? true,
-        visible_in_purchases: newProduct.visible_in_purchases ?? true,
-        siigo_inventory_product: newProduct.siigo_inventory_product ?? true,
-        price_list_1_name: newProduct.price_list_1_name || "Precio de venta 1",
-        price_list_1_value: Number(newProduct.price_list_1_value || 0),
-        price_list_2_name: newProduct.price_list_2_name || "Precio de venta 2",
-        price_list_2_value: Number(newProduct.price_list_2_value || 0),
-        include_iva_in_price: newProduct.include_iva_in_price ?? false,
-        siigo_sync_enabled: newProduct.siigo_sync_enabled ?? true,
-        siigo_sync_status: newProduct.siigo_sync_status || "Pendiente",
       };
 
       if (isEditing) {
@@ -998,12 +945,59 @@ const uniqueCategoryCodes = Array.from(
     setNewProduct(emptyProduct);
   }
 
-  function getCategoryLabel(product: Product) {
-    if (product.final_code) return product.final_code;
-    if (product.reference) return product.reference;
-    if (product.classification_code) return product.classification_code;
-    if (product.category) return product.category;
-    return "—";
+  function getProductCode(product: Product) {
+    return (
+      product.reference ||
+      product.final_code ||
+      product.generated_reference ||
+      product.classification_code ||
+      "N/A"
+    );
+  }
+
+  function getProductCategoryCode(product: Product) {
+    const code =
+      product.final_code ||
+      product.reference ||
+      product.generated_reference ||
+      product.classification_code ||
+      "";
+
+    return code.split("-")[0] || "";
+  }
+
+  function getProductProcess(product: Product) {
+    const categoryCode = getProductCategoryCode(product);
+
+    if (categoryCode !== "PTF") {
+      return "N/A";
+    }
+
+    return (
+      product.item_master_data?.production_process ||
+      product.production_process ||
+      "N/A"
+    );
+  }
+
+  function getSuggestedPriceLabel(product: Product) {
+    const categoryCode = getProductCategoryCode(product);
+    const categoriesWithSuggestedPrice = ["PTF", "PTC", "ALQ"];
+
+    if (!categoriesWithSuggestedPrice.includes(categoryCode)) {
+      return "N/A";
+    }
+
+    const price =
+      product.suggested_price ||
+      product.price_list_1_value ||
+      Number(product.item_master_data?.suggested_sale_price || 0);
+
+    return `$${Number(price || 0).toLocaleString("es-CO")}`;
+  }
+
+  function getUnitLabel(product: Product) {
+    return product.dian_unit || product.unit || "N/A";
   }
 
   return (
@@ -1011,10 +1005,10 @@ const uniqueCategoryCodes = Array.from(
       <section className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div>
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.15em] text-gray-400">
-            Configuración · Items
+            Configuración · Codificación
           </p>
           <h1 className="text-4xl font-bold tracking-tight text-[#07076b]">
-            Maestro de Items
+            Maestro de Codificación
           </h1>
           <p className="mt-3 max-w-3xl text-base leading-7 text-gray-600">
             Administra productos, materias primas, insumos, repuestos, activos,
@@ -1042,18 +1036,17 @@ const uniqueCategoryCodes = Array.from(
         </div>
 
         <div className="overflow-x-auto rounded-xl border border-gray-200">
-          <table className="w-full min-w-[1500px] text-left text-sm">
+          <table className="w-full min-w-[1300px] text-left text-sm">
             <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-500">
               <tr>
-                <th className="px-4 py-3">Referencia</th>
-                <th className="px-4 py-3">Item</th>
-                <th className="px-4 py-3">Clasificación</th>
-                <th className="px-4 py-3">Tipo producto</th>
-                <th className="px-4 py-3">Origen</th>
+                <th className="px-4 py-3">Tipo</th>
+                <th className="px-4 py-3">Nombre</th>
+                <th className="px-4 py-3">Código</th>
                 <th className="px-4 py-3">Proceso</th>
+                <th className="px-4 py-3">Ficha técnica</th>
                 <th className="px-4 py-3">Precio sugerido</th>
                 <th className="px-4 py-3">Estado</th>
-                <th className="px-4 py-3">Ficha técnica</th>
+                <th className="px-4 py-3">Unidad</th>
                 <th className="px-4 py-3">Acciones</th>
               </tr>
             </thead>
@@ -1061,10 +1054,10 @@ const uniqueCategoryCodes = Array.from(
               {isLoading && (
                 <tr>
                   <td
-                    colSpan={10}
+                    colSpan={9}
                     className="px-4 py-8 text-center text-sm text-gray-500"
                   >
-                    Cargando items...
+                    Cargando productos...
                   </td>
                 </tr>
               )}
@@ -1072,41 +1065,22 @@ const uniqueCategoryCodes = Array.from(
               {!isLoading &&
                 filteredProducts.map((product) => (
                   <tr key={product.id} className="transition hover:bg-gray-50">
-                    <td className="px-4 py-4 font-medium text-[#07076b]">
-                      {product.reference}
+                    <td className="px-4 py-4 text-gray-600">
+                      {product.siigo_type || "N/A"}
                     </td>
+
                     <td className="px-4 py-4 font-medium text-gray-900">
-                      {product.name}
+                      {product.name || "N/A"}
                     </td>
+
+                    <td className="px-4 py-4 font-medium text-[#07076b]">
+                      {getProductCode(product)}
+                    </td>
+
                     <td className="px-4 py-4 text-gray-600">
-                      {getCategoryLabel(product)}
+                      {getProductProcess(product)}
                     </td>
-                    <td className="px-4 py-4 text-gray-600">
-                      {product.product_type}
-                    </td>
-                    <td className="px-4 py-4 text-gray-600">
-                      {product.supply_type}
-                    </td>
-                    <td className="px-4 py-4 text-gray-600">
-                      {product.production_process || "—"}
-                    </td>
-                    <td className="px-4 py-4 font-semibold text-gray-900">
-                      $
-                      {Number(product.suggested_price || 0).toLocaleString(
-                        "es-CO",
-                      )}
-                    </td>
-                    <td className="px-4 py-4">
-                      <span
-                        className={`rounded-full px-3 py-1 text-xs font-medium ${
-                          product.status === "Activo"
-                            ? "bg-emerald-50 text-emerald-700"
-                            : "bg-gray-100 text-gray-600"
-                        }`}
-                      >
-                        {product.status}
-                      </span>
-                    </td>
+
                     <td className="px-4 py-4">
                       {product.technical_sheet_url ? (
                         <a
@@ -1118,9 +1092,30 @@ const uniqueCategoryCodes = Array.from(
                           Ver PDF
                         </a>
                       ) : (
-                        <span className="text-gray-400">—</span>
+                        <span className="text-gray-500">N/A</span>
                       )}
                     </td>
+
+                    <td className="px-4 py-4 font-semibold text-gray-900">
+                      {getSuggestedPriceLabel(product)}
+                    </td>
+
+                    <td className="px-4 py-4">
+                      <span
+                        className={`rounded-full px-3 py-1 text-xs font-medium ${
+                          product.status === "Activo"
+                            ? "bg-emerald-50 text-emerald-700"
+                            : "bg-gray-100 text-gray-600"
+                        }`}
+                      >
+                        {product.status}
+                      </span>
+                    </td>
+
+                    <td className="px-4 py-4 text-gray-600">
+                      {getUnitLabel(product)}
+                    </td>
+
                     <td className="px-4 py-4">
                       <button
                         onClick={() => handleEditProduct(product)}
@@ -1128,6 +1123,7 @@ const uniqueCategoryCodes = Array.from(
                       >
                         Editar
                       </button>
+
                       {product.requires_components && (
                         <Link
                           href={`/configuracion/productos/${product.id}/componentes`}
@@ -1143,10 +1139,10 @@ const uniqueCategoryCodes = Array.from(
               {!isLoading && filteredProducts.length === 0 && (
                 <tr>
                   <td
-                    colSpan={10}
+                    colSpan={9}
                     className="px-4 py-8 text-center text-sm text-gray-500"
                   >
-                    No se encontraron items con ese criterio.
+                    No se encontraron productos con ese criterio.
                   </td>
                 </tr>
               )}
@@ -1161,7 +1157,7 @@ const uniqueCategoryCodes = Array.from(
             <div className="mb-6 flex items-start justify-between gap-4">
               <div>
                 <p className="mb-2 text-sm font-semibold uppercase tracking-[0.15em] text-gray-400">
-                  Configuración · Items
+                  Configuración · Codificación
                 </p>
                 <h2 className="text-2xl font-bold text-[#07076b]">
                   {isEditing ? "Editar item" : "Nuevo item"}
@@ -1513,313 +1509,102 @@ const uniqueCategoryCodes = Array.from(
               )}
             </section>
 
-            <section className="mt-8 rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
-              <div className="mb-6 flex flex-col gap-3 border-b border-gray-100 pb-5 md:flex-row md:items-start md:justify-between">
-                <div>
-                  <div className="mb-2 inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#07076b] text-sm font-bold text-white">
-                    3
-                  </div>
-                  <h3 className="text-xl font-bold text-[#07076b]">
-                    Configuración operativa y SIIGO
-                  </h3>
-                  <p className="mt-1 text-sm text-gray-500">
-                    Define cómo se comporta el item en CLAP y deja preparados los datos necesarios para sincronizarlo con SIIGO.
-                  </p>
-                </div>
+            <div className="mt-8 rounded-2xl border border-gray-200 bg-gray-50 p-5">
+              <div className="mb-5">
+                <h3 className="text-lg font-semibold text-[#07076b]">
+                  Comportamiento del item
+                </h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  Define cómo se comporta este item dentro de inventarios,
+                  producción, compras, activos y mantenimiento.
+                </p>
               </div>
 
-              <div className="grid gap-6 lg:grid-cols-2">
-                <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
-                  <div className="mb-5">
-                    <h4 className="text-lg font-semibold text-[#07076b]">
-                      Comportamiento operativo
-                    </h4>
-                    <p className="mt-1 text-sm text-gray-500">
-                      Define cómo se comporta este item dentro de inventarios,
-                      producción, compras, activos y mantenimiento.
-                    </p>
-                  </div>
+              <div className="grid gap-6 md:grid-cols-4">
+                <CheckboxGroup title="Comercial">
+                  <CheckboxField
+                    label="Se vende"
+                    checked={newProduct.can_be_sold}
+                    onChange={(value) => updateNewProduct("can_be_sold", value)}
+                  />
+                  <CheckboxField
+                    label="Se compra"
+                    checked={newProduct.can_be_purchased}
+                    onChange={(value) =>
+                      updateNewProduct("can_be_purchased", value)
+                    }
+                  />
+                  <CheckboxField
+                    label="Se fabrica"
+                    checked={newProduct.can_be_manufactured}
+                    onChange={(value) =>
+                      updateNewProduct("can_be_manufactured", value)
+                    }
+                  />
+                </CheckboxGroup>
 
-                  <div className="grid gap-6 md:grid-cols-2">
-                    <CheckboxGroup title="Comercial">
-                      <CheckboxField
-                        label="Se vende"
-                        checked={newProduct.can_be_sold}
-                        onChange={(value) => updateNewProduct("can_be_sold", value)}
-                      />
-                      <CheckboxField
-                        label="Se compra"
-                        checked={newProduct.can_be_purchased}
-                        onChange={(value) =>
-                          updateNewProduct("can_be_purchased", value)
-                        }
-                      />
-                      <CheckboxField
-                        label="Se fabrica"
-                        checked={newProduct.can_be_manufactured}
-                        onChange={(value) =>
-                          updateNewProduct("can_be_manufactured", value)
-                        }
-                      />
-                    </CheckboxGroup>
+                <CheckboxGroup title="Inventarios">
+                  <CheckboxField
+                    label="Maneja inventario"
+                    checked={newProduct.tracks_inventory}
+                    onChange={(value) =>
+                      updateNewProduct("tracks_inventory", value)
+                    }
+                  />
+                  <CheckboxField
+                    label="Maneja lotes"
+                    checked={newProduct.tracks_lots}
+                    onChange={(value) => updateNewProduct("tracks_lots", value)}
+                  />
+                  <CheckboxField
+                    label="Maneja seriales"
+                    checked={newProduct.tracks_serials}
+                    onChange={(value) =>
+                      updateNewProduct("tracks_serials", value)
+                    }
+                  />
+                </CheckboxGroup>
 
-                    <CheckboxGroup title="Inventarios">
-                      <CheckboxField
-                        label="Maneja inventario"
-                        checked={newProduct.tracks_inventory}
-                        onChange={(value) =>
-                          updateNewProduct("tracks_inventory", value)
-                        }
-                      />
-                      <CheckboxField
-                        label="Maneja lotes"
-                        checked={newProduct.tracks_lots}
-                        onChange={(value) => updateNewProduct("tracks_lots", value)}
-                      />
-                      <CheckboxField
-                        label="Maneja seriales"
-                        checked={newProduct.tracks_serials}
-                        onChange={(value) =>
-                          updateNewProduct("tracks_serials", value)
-                        }
-                      />
-                    </CheckboxGroup>
+                <CheckboxGroup title="Ingeniería">
+                  <CheckboxField
+                    label="Requiere fórmula"
+                    checked={newProduct.requires_formula}
+                    onChange={(value) =>
+                      updateNewProduct("requires_formula", value)
+                    }
+                  />
+                  <CheckboxField
+                    label="Requiere componentes"
+                    checked={newProduct.requires_components}
+                    onChange={(value) =>
+                      updateNewProduct("requires_components", value)
+                    }
+                  />
+                  <CheckboxField
+                    label="Requiere ruta"
+                    checked={newProduct.requires_route}
+                    onChange={(value) =>
+                      updateNewProduct("requires_route", value)
+                    }
+                  />
+                </CheckboxGroup>
 
-                    <CheckboxGroup title="Ingeniería">
-                      <CheckboxField
-                        label="Requiere fórmula"
-                        checked={newProduct.requires_formula}
-                        onChange={(value) =>
-                          updateNewProduct("requires_formula", value)
-                        }
-                      />
-                      <CheckboxField
-                        label="Requiere componentes"
-                        checked={newProduct.requires_components}
-                        onChange={(value) =>
-                          updateNewProduct("requires_components", value)
-                        }
-                      />
-                      <CheckboxField
-                        label="Requiere ruta"
-                        checked={newProduct.requires_route}
-                        onChange={(value) =>
-                          updateNewProduct("requires_route", value)
-                        }
-                      />
-                    </CheckboxGroup>
-
-                    <CheckboxGroup title="Activos">
-                      <CheckboxField
-                        label="Requiere mantenimiento"
-                        checked={newProduct.requires_maintenance}
-                        onChange={(value) =>
-                          updateNewProduct("requires_maintenance", value)
-                        }
-                      />
-                      <CheckboxField
-                        label="Depreciable"
-                        checked={newProduct.depreciable}
-                        onChange={(value) => updateNewProduct("depreciable", value)}
-                      />
-                    </CheckboxGroup>
-                  </div>
-                </div>
-
-                <div className="rounded-2xl border border-indigo-100 bg-indigo-50 p-5">
-                  <div className="mb-5">
-                    <h4 className="text-lg font-semibold text-[#07076b]">
-                      Integración comercial / SIIGO
-                    </h4>
-                    <p className="mt-1 text-sm text-gray-600">
-                      Campos necesarios para crear o sincronizar este item con SIIGO cuando la integración esté activa.
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                    <Field label="Tipo SIIGO">
-                      <select
-                        value={newProduct.siigo_type ?? "Producto"}
-                        onChange={(event) =>
-                          updateNewProduct("siigo_type", event.target.value)
-                        }
-                        className={inputClassName}
-                      >
-                        {siigoTypes.map((type) => (
-                          <option key={type} value={type}>
-                            {type}
-                          </option>
-                        ))}
-                      </select>
-                    </Field>
-
-                    <Field label="Unidad DIAN">
-                      <select
-                        value={newProduct.dian_unit ?? "94 - Unidad"}
-                        onChange={(event) =>
-                          updateNewProduct("dian_unit", event.target.value)
-                        }
-                        className={inputClassName}
-                      >
-                        {siigoDianUnits.map((unit) => {
-                          const label = `${unit.code} - ${unit.name}`;
-                          return (
-                            <option key={unit.id} value={label}>
-                              {label}
-                            </option>
-                          );
-                        })}
-                      </select>
-                    </Field>
-
-                    <Field label="Impuesto cargo">
-                      <select
-                        value={newProduct.tax_charge ?? "IVA 19%"}
-                        onChange={(event) =>
-                          updateNewProduct("tax_charge", event.target.value)
-                        }
-                        className={inputClassName}
-                      >
-                        {siigoTaxCharges.map((tax) => (
-                          <option key={tax.id} value={tax.name}>
-                            {tax.name}
-                          </option>
-                        ))}
-                      </select>
-                    </Field>
-
-                    <Field label="Retención">
-                      <select
-                        value={newProduct.withholding_tax ?? "No aplica"}
-                        onChange={(event) =>
-                          updateNewProduct("withholding_tax", event.target.value)
-                        }
-                        className={inputClassName}
-                      >
-                        {siigoWithholdingTaxes.map((tax) => (
-                          <option key={tax.id} value={tax.name}>
-                            {tax.name}
-                          </option>
-                        ))}
-                      </select>
-                    </Field>
-
-                    <Field label="Impuesto adicional">
-                      <select
-                        value={newProduct.tax_charge_two ?? "No aplica"}
-                        onChange={(event) =>
-                          updateNewProduct("tax_charge_two", event.target.value)
-                        }
-                        className={inputClassName}
-                      >
-                        {siigoTaxCharges.map((tax) => (
-                          <option key={tax.id} value={tax.name}>
-                            {tax.name}
-                          </option>
-                        ))}
-                      </select>
-                    </Field>
-
-                    <Field label="Lista de precio 1">
-                      <input
-                        type="text"
-                        value={newProduct.price_list_1_name ?? "Precio de venta 1"}
-                        onChange={(event) =>
-                          updateNewProduct("price_list_1_name", event.target.value)
-                        }
-                        className={inputClassName}
-                      />
-                    </Field>
-
-                    <Field label="Precio venta 1">
-                      <input
-                        type="number"
-                        min={0}
-                        value={newProduct.price_list_1_value ?? 0}
-                        onChange={(event) =>
-                          updateNewProduct(
-                            "price_list_1_value",
-                            Number(event.target.value || 0),
-                          )
-                        }
-                        className={inputClassName}
-                      />
-                    </Field>
-
-                    <Field label="Lista de precio 2">
-                      <input
-                        type="text"
-                        value={newProduct.price_list_2_name ?? "Precio de venta 2"}
-                        onChange={(event) =>
-                          updateNewProduct("price_list_2_name", event.target.value)
-                        }
-                        className={inputClassName}
-                      />
-                    </Field>
-
-                    <Field label="Precio venta 2">
-                      <input
-                        type="number"
-                        min={0}
-                        value={newProduct.price_list_2_value ?? 0}
-                        onChange={(event) =>
-                          updateNewProduct(
-                            "price_list_2_value",
-                            Number(event.target.value || 0),
-                          )
-                        }
-                        className={inputClassName}
-                      />
-                    </Field>
-                  </div>
-
-                  <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <CheckboxField
-                      label="Visible en ventas"
-                      checked={newProduct.visible_in_sales ?? true}
-                      onChange={(value) =>
-                        updateNewProduct("visible_in_sales", value)
-                      }
-                    />
-                    <CheckboxField
-                      label="Visible en compras"
-                      checked={newProduct.visible_in_purchases ?? true}
-                      onChange={(value) =>
-                        updateNewProduct("visible_in_purchases", value)
-                      }
-                    />
-                    <CheckboxField
-                      label="Producto inventariable en SIIGO"
-                      checked={newProduct.siigo_inventory_product ?? true}
-                      onChange={(value) =>
-                        updateNewProduct("siigo_inventory_product", value)
-                      }
-                    />
-                    <CheckboxField
-                      label="Incluir IVA en precio de venta"
-                      checked={newProduct.include_iva_in_price ?? false}
-                      onChange={(value) =>
-                        updateNewProduct("include_iva_in_price", value)
-                      }
-                    />
-                    <CheckboxField
-                      label="Sincronizar con SIIGO"
-                      checked={newProduct.siigo_sync_enabled ?? true}
-                      onChange={(value) =>
-                        updateNewProduct("siigo_sync_enabled", value)
-                      }
-                    />
-                  </div>
-
-                  <div className="mt-5 rounded-xl bg-white p-4 text-xs text-gray-500">
-                    Estado de sincronización:{" "}
-                    <span className="font-semibold text-[#07076b]">
-                      {newProduct.siigo_sync_status ?? "Pendiente"}
-                    </span>
-                  </div>
-                </div>
+                <CheckboxGroup title="Activos">
+                  <CheckboxField
+                    label="Requiere mantenimiento"
+                    checked={newProduct.requires_maintenance}
+                    onChange={(value) =>
+                      updateNewProduct("requires_maintenance", value)
+                    }
+                  />
+                  <CheckboxField
+                    label="Depreciable"
+                    checked={newProduct.depreciable}
+                    onChange={(value) => updateNewProduct("depreciable", value)}
+                  />
+                </CheckboxGroup>
               </div>
-            </section>
+            </div>
 
             {newProduct.requires_components && (
               <div className="mt-6 rounded-2xl border border-indigo-100 bg-indigo-50 p-4 text-sm text-indigo-800">
