@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { createClassificationOption } from "@/lib/itemClassificationEngine";
@@ -274,9 +274,9 @@ function formatValueForName(field: ClassificationTemplateField, value: string) {
 }
 
 export default function ProductosPage() {
-
+  const searchParams = useSearchParams();
   const router = useRouter();
-
+  const requestId = searchParams.get("requestId");
 
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<ItemCategory[]>([]);
@@ -432,6 +432,12 @@ const filteredSubgroups = subgroups.filter(
   useEffect(() => {
     fetchInitialData();
   }, []);
+
+  useEffect(() => {
+    if (requestId) {
+      fetchLinkedRequest(requestId);
+    }
+  }, [requestId]);
 
   useEffect(() => {
     if (!selectedCategory || !selectedGroup || !selectedSubgroup) return;
@@ -1019,6 +1025,9 @@ function closeModal() {
   setTechnicalSheetFile(null);
   setNewProduct(emptyProduct);
 
+  if (requestId) {
+    router.push("/configuracion/codificacion/creacion-codigo");
+  }
 }
 
   function getProductCode(product: Product) {
