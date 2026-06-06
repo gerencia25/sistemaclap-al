@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { createClassificationOption } from "@/lib/itemClassificationEngine";
@@ -282,18 +281,6 @@ export default function ProductosPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
 
-  const searchParams = useSearchParams();
-const requestId = searchParams.get("requestId");
-const [linkedRequest, setLinkedRequest] = useState<{
-  id: string;
-  request_number: string;
-  requester_area: string;
-  requester_name: string;
-  classification_code: string;
-  classification_name: string | null;
-  detailed_description: string;
-} | null>(null);
-
   const isEditing = editingProductId !== null;
   const inputClassName =
     "w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-[#07076b] focus:ring-2 focus:ring-[#07076b]/10 disabled:bg-gray-50 disabled:text-gray-400";
@@ -422,30 +409,6 @@ const filteredSubgroups = subgroups.filter(
   useEffect(() => {
     fetchInitialData();
   }, []);
-
-useEffect(() => {
-  if (requestId) {
-    fetchLinkedRequest(requestId);
-  }
-}, [requestId]);
-
-async function fetchLinkedRequest(id: string) {
-  const { data, error } = await supabase
-    .from("item_code_requests")
-    .select(
-      "id, request_number, requester_area, requester_name, classification_code, classification_name, detailed_description",
-    )
-    .eq("id", id)
-    .single();
-
-  if (error) {
-    alert(`No se pudo cargar la solicitud: ${error.message}`);
-    return;
-  }
-
-  setLinkedRequest(data);
-  setIsModalOpen(true);
-}
 
   useEffect(() => {
     if (!selectedCategory || !selectedGroup || !selectedSubgroup) return;
