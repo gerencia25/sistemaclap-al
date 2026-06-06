@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { createClassificationOption } from "@/lib/itemClassificationEngine";
@@ -152,23 +152,6 @@ type Product = {
   sync_status?: string | null;
 };
 
-type LinkedRequest = {
-  id: string;
-  request_number: string;
-  requester_area: string;
-  requester_name: string;
-  requester_position: string | null;
-  requester_email: string | null;
-  request_type: string;
-  request_category: string;
-  classification_code: string;
-  classification_name: string | null;
-  detailed_description: string;
-  attachment_url: string | null;
-  attachment_filename: string | null;
-  status: string;
-};
-
 const emptyProduct: Omit<Product, "id"> = {
   reference: "",
   name: "",
@@ -274,10 +257,6 @@ function formatValueForName(field: ClassificationTemplateField, value: string) {
 }
 
 export default function ProductosPage() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const requestId = searchParams.get("requestId");
-
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<ItemCategory[]>([]);
   const [groups, setGroups] = useState<ItemGroup[]>([]);
@@ -302,7 +281,18 @@ export default function ProductosPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
-  const [linkedRequest, setLinkedRequest] = useState<LinkedRequest | null>(null);
+
+  const searchParams = useSearchParams();
+const requestId = searchParams.get("requestId");
+const [linkedRequest, setLinkedRequest] = useState<{
+  id: string;
+  request_number: string;
+  requester_area: string;
+  requester_name: string;
+  classification_code: string;
+  classification_name: string | null;
+  detailed_description: string;
+} | null>(null);
 
   const isEditing = editingProductId !== null;
   const inputClassName =
@@ -433,11 +423,29 @@ const filteredSubgroups = subgroups.filter(
     fetchInitialData();
   }, []);
 
-  useEffect(() => {
-    if (requestId) {
-      fetchLinkedRequest(requestId);
-    }
-  }, [requestId]);
+useEffect(() => {
+  if (requestId) {
+    fetchLinkedRequest(requestId);
+  }
+}, [requestId]);
+
+async function fetchLinkedRequest(id: string) {
+  const { data, error } = await supabase
+    .from("item_code_requests")
+    .select(
+      "id, request_number, requester_area, requester_name, classification_code, classification_name, detailed_description",
+    )
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    alert(`No se pudo cargar la solicitud: ${error.message}`);
+    return;
+  }
+
+  setLinkedRequest(data);
+  setIsModalOpen(true);
+}
 
   useEffect(() => {
     if (!selectedCategory || !selectedGroup || !selectedSubgroup) return;
@@ -576,24 +584,6 @@ const uniqueCategoryCodes = Array.from(
     setClassificationOptions((optionsData ?? []) as ClassificationOption[]);
     setMasterFields((masterFieldsData ?? []) as ItemMasterField[]);
     setIsLoading(false);
-  }
-
-  async function fetchLinkedRequest(id: string) {
-    const { data, error } = await supabase
-      .from("item_code_requests")
-      .select(
-        "id, request_number, requester_area, requester_name, requester_position, requester_email, request_type, request_category, classification_code, classification_name, detailed_description, attachment_url, attachment_filename, status",
-      )
-      .eq("id", id)
-      .single();
-
-    if (error) {
-      alert(`No se pudo cargar la solicitud vinculada: ${error.message}`);
-      return;
-    }
-
-    setLinkedRequest(data as LinkedRequest);
-    setIsModalOpen(true);
   }
 
   const filteredProducts = useMemo(() => {
@@ -959,51 +949,17 @@ const uniqueCategoryCodes = Array.from(
       };
 
       if (isEditing) {
-  const { error } = await supabase
-    .from("products")
-    .update(productData)
-    .eq("id", editingProductId);
-
-  if (error) throw new Error(error.message);
-
-  alert("Item actualizado correctamente.");
-} else {
-  const { data: createdProduct, error } = await supabase
-    .from("products")
-    .insert(productData)
-    .select("id, reference, final_code, generated_reference")
-    .single();
-
-  if (error) throw new Error(error.message);
-
-  if (linkedRequest) {
-    const createdCode =
-      createdProduct.final_code ||
-      createdProduct.reference ||
-      createdProduct.generated_reference ||
-      generatedPreview.reference;
-
-    const { error: requestUpdateError } = await supabase
-      .from("item_code_requests")
-      .update({
-  status:
-    linkedRequest.request_type === "Desactivación"
-      ? "Desactivado"
-      : "Creado",
-  created_product_id: createdProduct.id,
-  created_product_code: createdCode,
-  created_product_name: productData.name,
-  completed_at: new Date().toISOString(),
-})
-      .eq("id", linkedRequest.id);
-
-    if (requestUpdateError) {
-      throw new Error(requestUpdateError.message);
-    }
-  }
-
-  alert("Item creado correctamente.");
-}
+        const { error } = await supabase
+          .from("products")
+          .update(productData)
+          .eq("id", editingProductId);
+        if (error) throw new Error(error.message);
+        alert("Item actualizado correctamente.");
+      } else {
+        const { error } = await supabase.from("products").insert(productData);
+        if (error) throw new Error(error.message);
+        alert("Item creado correctamente.");
+      }
 
       await fetchInitialData();
       closeModal();
@@ -1016,19 +972,15 @@ const uniqueCategoryCodes = Array.from(
     }
   }
 
-function closeModal() {
-  setIsModalOpen(false);
-  setEditingProductId(null);
-  setDynamicData({});
-  setMasterData({});
-  setMasterFiles({});
-  setTechnicalSheetFile(null);
-  setNewProduct(emptyProduct);
-
-  if (requestId) {
-    router.push("/configuracion/codificacion/creacion-codigo");
+  function closeModal() {
+    setIsModalOpen(false);
+    setEditingProductId(null);
+    setDynamicData({});
+    setMasterData({});
+    setMasterFiles({});
+    setTechnicalSheetFile(null);
+    setNewProduct(emptyProduct);
   }
-}
 
   function getProductCode(product: Product) {
     return (
@@ -1100,12 +1052,7 @@ function closeModal() {
             servicios y su clasificación industrial según la matriz SIIGO.
           </p>
         </div>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="rounded-xl bg-[#07076b] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md hover:opacity-95"
-        >
-          Nuevo item
-        </button>
+
       </section>
 
       <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
@@ -1260,77 +1207,6 @@ function closeModal() {
                 ×
               </button>
             </div>
-
-            {linkedRequest && (
-              <div className="mb-6 rounded-2xl border border-indigo-100 bg-indigo-50 p-5">
-                <p className="text-xs font-semibold uppercase tracking-wide text-indigo-500">
-                  Solicitud vinculada
-                </p>
-
-                <h3 className="mt-1 text-lg font-bold text-[#07076b]">
-                  {linkedRequest.request_number}
-                </h3>
-
-                <div className="mt-3 grid grid-cols-1 gap-3 text-sm text-gray-700 md:grid-cols-2">
-                  <p>
-                    <strong>Solicitante:</strong> {linkedRequest.requester_name}
-                  </p>
-
-                  <p>
-                    <strong>Área:</strong> {linkedRequest.requester_area}
-                  </p>
-
-                  <p>
-                    <strong>Cargo:</strong>{" "}
-                    {linkedRequest.requester_position || "N/A"}
-                  </p>
-
-                  <p>
-                    <strong>Tipo:</strong> {linkedRequest.request_type}
-                  </p>
-
-                  <p>
-                    <strong>Categoría:</strong>{" "}
-                    {linkedRequest.request_category}
-                  </p>
-
-                  <p>
-                    <strong>Clasificación solicitada:</strong>{" "}
-                    {linkedRequest.classification_code}
-                    {linkedRequest.classification_name
-                      ? ` - ${linkedRequest.classification_name}`
-                      : ""}
-                  </p>
-                </div>
-
-                <div className="mt-4">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                    Descripción
-                  </p>
-
-                  <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-gray-700">
-                    {linkedRequest.detailed_description}
-                  </p>
-                </div>
-
-                {linkedRequest.attachment_url && (
-                  <div className="mt-4">
-                    <a
-                      href={linkedRequest.attachment_url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex rounded-xl bg-white px-4 py-2 text-sm font-medium text-[#07076b] underline shadow-sm transition hover:bg-indigo-50"
-                    >
-                      Ver adjunto
-                      {linkedRequest.attachment_filename
-                        ? ` · ${linkedRequest.attachment_filename}`
-                        : ""}
-                    </a>
-                  </div>
-                )}
-              </div>
-            )}
-
 <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
   <div className="mb-6 flex flex-col gap-3 border-b border-gray-100 pb-5 md:flex-row md:items-start md:justify-between">
     <div>

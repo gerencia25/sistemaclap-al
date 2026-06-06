@@ -4,7 +4,7 @@ const configOptions = [
     title: "Codificación",
     description:
       "Gestionar productos, materias primas, insumos, repuestos, activos, servicios y su comportamiento operativo.",
-    href: "/configuracion/productos",
+    href: "/configuracion/codificacion",
     status: "Activo",
   },
   {
