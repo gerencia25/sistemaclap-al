@@ -1,10 +1,18 @@
 const codificationOptions = [
   {
-    title: "Base de datos de productos",
+    title: "Caracterización y procedimiento",
     description:
-      "Consulta, crea y edita productos, materias primas, insumos, repuestos, activos y servicios codificados.",
-    href: "/configuracion/codificacion/base-datos-productos",
-    code: "BD",
+      "Administra los documentos PDF de caracterización, procedimientos y versiones oficiales del proceso.",
+    href: "/configuracion/codificacion/caracterizacion-procedimiento",
+    code: "CP",
+    status: "Activo",
+  },
+  {
+    title: "Formatos",
+    description:
+      "Consulta y administra los formatos oficiales asociados al proceso de codificación.",
+    href: "/configuracion/codificacion/formatos",
+    code: "FO",
     status: "Activo",
   },
   {
@@ -13,23 +21,15 @@ const codificationOptions = [
       "Gestiona el historial de solicitudes, revisa pendientes y crea nuevos códigos desde el formulario oficial.",
     href: "/configuracion/codificacion/creacion-codigo",
     code: "CC",
-    status: "En construcción",
+    status: "Activo",
   },
   {
-    title: "Caracterización y procedimiento",
+    title: "Base de datos de productos",
     description:
-      "Administra los documentos PDF de caracterización, procedimientos y versiones oficiales del proceso.",
-    href: "/configuracion/codificacion/caracterizacion-procedimiento",
-    code: "CP",
-    status: "En construcción",
-  },
-  {
-    title: "Formatos",
-    description:
-      "Consulta y administra los formatos oficiales asociados al proceso de codificación.",
-    href: "/configuracion/codificacion/formatos",
-    code: "FO",
-    status: "En construcción",
+      "Consulta, crea y edita productos, materias primas, insumos, repuestos, activos y servicios codificados.",
+    href: "/configuracion/codificacion/base-datos-productos",
+    code: "BD",
+    status: "Activo",
   },
 ];
 

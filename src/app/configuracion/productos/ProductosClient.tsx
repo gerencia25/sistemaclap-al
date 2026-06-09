@@ -1000,6 +1000,24 @@ const uniqueCategoryCodes = Array.from(
     if (requestUpdateError) {
       throw new Error(requestUpdateError.message);
     }
+    if (
+  linkedRequest.requester_email &&
+  linkedRequest.request_type !== "Desactivación"
+) {
+  await fetch("/api/send-code-created-email", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+  requestNumber: linkedRequest.request_number,
+  requesterEmail: linkedRequest.requester_email,
+  requesterName: linkedRequest.requester_name,
+  createdCode,
+  createdProductName: productData.name,
+}),
+  });
+}
   }
 
   alert("Item creado correctamente.");

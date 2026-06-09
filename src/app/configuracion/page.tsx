@@ -13,54 +13,14 @@ const configOptions = [
     description:
       "Administrar clientes, proveedores y otros terceros en una única base maestra preparada para integración con SIIGO.",
     href: "/configuracion/terceros",
-    status: "Activo",
-  },
-  {
-    code: "CA",
-    title: "Categorías",
-    description:
-      "Configurar categorías comerciales utilizadas en clientes, items y cotizaciones.",
-    href: "/configuracion/categorias",
     status: "En construcción",
   },
   {
     code: "VE",
-    title: "Vendedores",
+    title: "Personal",
     description:
-      "Administrar usuarios comerciales, cargos y datos de contacto para cotizaciones y pedidos.",
+      "Administrar usuarios, personal, cargos y datos de cada trabajador.",
     href: "/configuracion/vendedores",
-    status: "En construcción",
-  },
-  {
-    code: "BO",
-    title: "Bodegas",
-    description:
-      "Configurar bodegas, ubicaciones y centros de almacenamiento para inventarios, producción y despachos.",
-    href: "/configuracion/bodegas",
-    status: "En construcción",
-  },
-  {
-    code: "AC",
-    title: "Acabados",
-    description:
-      "Administrar acabados disponibles por proceso productivo: soplado, inyección y extrusión.",
-    href: "/configuracion/acabados",
-    status: "En construcción",
-  },
-  {
-    code: "LP",
-    title: "Listas de precios",
-    description:
-      "Controlar precios comerciales, vigencias y condiciones por cliente o producto.",
-    href: "/configuracion/listas-precios",
-    status: "En construcción",
-  },
-  {
-    code: "PI",
-    title: "Plantillas ISO",
-    description:
-      "Gestionar versiones, formatos y plantillas oficiales para documentos comerciales.",
-    href: "/configuracion/plantillas",
     status: "En construcción",
   },
 ];

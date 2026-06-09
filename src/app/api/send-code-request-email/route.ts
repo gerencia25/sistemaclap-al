@@ -1,36 +1,54 @@
 import { Resend } from "resend";
-import { NextResponse } from "next/server";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const requestNumber = body.requestNumber;
 
-    if (!requestNumber) {
-      return NextResponse.json(
-        { error: "Falta el número de solicitud." },
-        { status: 400 },
-      );
-    }
+    const requestNumber = body.requestNumber || "N/A";
+    const requester =
+      body.requester ||
+      body.requesterName ||
+      body.requester_name ||
+      "No informado";
+      
+    const area =
+      body.area ||
+      body.requesterArea ||
+      body.requester_area ||
+      "No informada";
 
-    const { error } = await resend.emails.send({
+    const classification =
+      body.classification ||
+      body.classificationCode ||
+      body.classification_code ||
+      "No informada";
+
+    await resend.emails.send({
       from: "Sistema CLAP <notificaciones@mail.almultiformas.com>",
-      to: "administrador@almultiformas.com",
+      to: ["administrador@almultiformas.com"],
       subject: `Nueva solicitud de código ${requestNumber}`,
-      text: `Se creó una nueva solicitud de código número ${requestNumber}.`,
+      html: `
+        <div style="font-family: Arial, sans-serif;">
+          <h2>Nueva solicitud de código</h2>
+
+          <p><strong>Consecutivo:</strong> ${requestNumber}</p>
+          <p><strong>Solicitante:</strong> ${requester}</p>
+          <p><strong>Área:</strong> ${area}</p>
+          <p><strong>Clasificación:</strong> ${classification}</p>
+
+          <br />
+
+          <p>Ingrese al Sistema CLAP para gestionar la solicitud.</p>
+        </div>
+      `,
     });
 
-    if (error) {
-      return NextResponse.json({ error }, { status: 500 });
-    }
-
-    return NextResponse.json({ success: true });
+    return Response.json({ success: true });
   } catch (error) {
-    return NextResponse.json(
-      { error: "No se pudo enviar la notificación." },
-      { status: 500 },
-    );
+    console.error(error);
+
+    return Response.json({ success: false }, { status: 500 });
   }
 }

@@ -26,6 +26,8 @@ type ItemCodeRequest = {
   created_product_name: string | null;
   requested_at: string | null;
   completed_at: string | null;
+  rejected_at: string | null;
+  rejection_reason: string | null;
   comments: string | null;
 };
 
@@ -36,6 +38,10 @@ export default function CreacionCodigoPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedRequest, setSelectedRequest] =
     useState<ItemCodeRequest | null>(null);
+  const [requestToReject, setRequestToReject] =
+    useState<ItemCodeRequest | null>(null);
+  const [rejectionReason, setRejectionReason] = useState("");
+  const [isRejecting, setIsRejecting] = useState(false);
 
   const inputClassName =
     "w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-[#07076b] focus:ring-2 focus:ring-[#07076b]/10";
@@ -83,6 +89,7 @@ export default function CreacionCodigoPage() {
           request.product_name_to_deactivate ?? "",
           request.detailed_description,
           request.status,
+          request.rejection_reason ?? "",
         ]
           .join(" ")
           .toLowerCase()
@@ -109,10 +116,6 @@ export default function CreacionCodigoPage() {
       return "bg-amber-50 text-amber-700";
     }
 
-    if (status === "En revisión") {
-      return "bg-blue-50 text-blue-700";
-    }
-
     if (status === "Creado" || status === "Desactivado") {
       return "bg-emerald-50 text-emerald-700";
     }
@@ -122,6 +125,54 @@ export default function CreacionCodigoPage() {
     }
 
     return "bg-gray-100 text-gray-600";
+  }
+
+  async function handleRejectRequest() {
+    if (!requestToReject) return;
+
+    if (!rejectionReason.trim()) {
+      alert("Debes escribir el motivo del rechazo.");
+      return;
+    }
+
+    setIsRejecting(true);
+
+    const { error } = await supabase
+      .from("item_code_requests")
+      .update({
+        status: "Rechazado",
+        rejection_reason: rejectionReason.trim(),
+        rejected_at: new Date().toISOString(),
+      })
+      .eq("id", requestToReject.id);
+
+    setIsRejecting(false);
+
+    if (error) {
+      alert(`No se pudo rechazar la solicitud: ${error.message}`);
+      return;
+    }
+
+    if (requestToReject.requester_email) {
+  await fetch("/api/send-rejection-email", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      requestNumber: requestToReject.request_number,
+      requesterEmail: requestToReject.requester_email,
+      requesterName: requestToReject.requester_name,
+      rejectionReason: rejectionReason.trim(),
+    }),
+  });
+}
+
+    setRequestToReject(null);
+    setRejectionReason("");
+    await fetchRequests();
+
+    alert("Solicitud rechazada correctamente.");
   }
 
   return (
@@ -143,14 +194,14 @@ export default function CreacionCodigoPage() {
         </div>
 
         <Link
-          href="/configuracion/codificacion/base-datos-productos"
+          href="/configuracion/productos"
           className="rounded-xl bg-[#07076b] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md hover:opacity-95"
         >
           Crear nuevo código
         </Link>
       </section>
 
-      <section className="grid grid-cols-1 gap-5 md:grid-cols-4">
+      <section className="grid grid-cols-1 gap-5 md:grid-cols-3">
         <SummaryCard
           title="Total solicitudes"
           value={requests.length}
@@ -160,13 +211,6 @@ export default function CreacionCodigoPage() {
           title="Pendientes"
           value={requests.filter((item) => item.status === "Pendiente").length}
           tone="warning"
-        />
-        <SummaryCard
-          title="En revisión"
-          value={
-            requests.filter((item) => item.status === "En revisión").length
-          }
-          tone="info"
         />
         <SummaryCard
           title="Cerradas"
@@ -193,7 +237,6 @@ export default function CreacionCodigoPage() {
             >
               <option value="Todos">Todos</option>
               <option value="Pendiente">Pendiente</option>
-              <option value="En revisión">En revisión</option>
               <option value="Creado">Creado</option>
               <option value="Desactivado">Desactivado</option>
               <option value="Rechazado">Rechazado</option>
@@ -288,28 +331,28 @@ export default function CreacionCodigoPage() {
                     </td>
 
                     <td className="px-4 py-4">
-  {request.created_product_code ? (
-    <>
-      <p className="font-medium text-gray-800">
-        {request.created_product_code}
-      </p>
+                      {request.created_product_code ? (
+                        <>
+                          <p className="font-medium text-gray-800">
+                            {request.created_product_code}
+                          </p>
 
-      {request.created_product_name && (
-        <p className="mt-1 text-xs text-gray-500">
-          {request.created_product_name}
-        </p>
-      )}
-    </>
-  ) : (
-    <span className="text-gray-500">N/A</span>
-  )}
-</td>
+                          {request.created_product_name && (
+                            <p className="mt-1 text-xs text-gray-500">
+                              {request.created_product_name}
+                            </p>
+                          )}
+                        </>
+                      ) : (
+                        <span className="text-gray-500">N/A</span>
+                      )}
+                    </td>
 
-<td className="px-4 py-4 text-gray-600">
-  {request.completed_at
-    ? formatDate(request.completed_at)
-    : "N/A"}
-</td>
+                    <td className="px-4 py-4 text-gray-600">
+                      {request.completed_at
+                        ? formatDate(request.completed_at)
+                        : "N/A"}
+                    </td>
 
                     <td className="px-4 py-4">
                       <div className="flex flex-wrap gap-2">
@@ -327,6 +370,15 @@ export default function CreacionCodigoPage() {
                           >
                             Crear código
                           </Link>
+                        )}
+
+                        {request.status === "Pendiente" && (
+                          <button
+                            onClick={() => setRequestToReject(request)}
+                            className="rounded-lg bg-red-50 px-3 py-2 text-xs font-medium text-red-700 transition hover:bg-red-100"
+                          >
+                            Rechazar
+                          </button>
                         )}
                       </div>
                     </td>
@@ -377,7 +429,10 @@ export default function CreacionCodigoPage() {
 
             <div className="space-y-6">
               <DetailSection title="Información del solicitante">
-                <DetailItem label="Área" value={selectedRequest.requester_area} />
+                <DetailItem
+                  label="Área"
+                  value={selectedRequest.requester_area}
+                />
                 <DetailItem
                   label="Nombre"
                   value={selectedRequest.requester_name}
@@ -430,6 +485,26 @@ export default function CreacionCodigoPage() {
                 </p>
               </section>
 
+              {selectedRequest.status === "Rechazado" && (
+                <section className="rounded-2xl border border-red-100 bg-red-50 p-5">
+                  <h3 className="mb-3 text-lg font-semibold text-red-700">
+                    Motivo del rechazo
+                  </h3>
+
+                  <p className="whitespace-pre-wrap text-sm leading-6 text-red-800">
+                    {selectedRequest.rejection_reason ||
+                      "No se registró motivo."}
+                  </p>
+
+                  <p className="mt-3 text-xs text-red-600">
+                    Fecha rechazo:{" "}
+                    {selectedRequest.rejected_at
+                      ? formatDate(selectedRequest.rejected_at)
+                      : "N/A"}
+                  </p>
+                </section>
+              )}
+
               <section className="rounded-2xl border border-gray-200 bg-white p-5">
                 <h3 className="mb-3 text-lg font-semibold text-[#07076b]">
                   Adjuntos
@@ -460,6 +535,18 @@ export default function CreacionCodigoPage() {
                 </button>
 
                 {selectedRequest.status === "Pendiente" && (
+                  <button
+                    onClick={() => {
+                      setRequestToReject(selectedRequest);
+                      setSelectedRequest(null);
+                    }}
+                    className="rounded-xl bg-red-50 px-5 py-3 text-sm font-semibold text-red-700 transition hover:bg-red-100"
+                  >
+                    Rechazar solicitud
+                  </button>
+                )}
+
+                {selectedRequest.status === "Pendiente" && (
                   <Link
                     href={`/configuracion/productos?requestId=${selectedRequest.id}`}
                     className="rounded-xl bg-[#07076b] px-5 py-3 text-sm font-semibold text-white transition hover:opacity-95"
@@ -468,6 +555,55 @@ export default function CreacionCodigoPage() {
                   </Link>
                 )}
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {requestToReject && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
+          <div className="w-full max-w-xl rounded-3xl bg-white p-6 shadow-2xl">
+            <div className="mb-5">
+              <p className="mb-2 text-sm font-semibold uppercase tracking-[0.15em] text-gray-400">
+                Rechazo de solicitud
+              </p>
+
+              <h2 className="text-2xl font-bold text-[#07076b]">
+                {requestToReject.request_number}
+              </h2>
+
+              <p className="mt-2 text-sm text-gray-600">
+                Escribe el motivo por el cual esta solicitud no puede continuar.
+              </p>
+            </div>
+
+            <textarea
+              rows={5}
+              value={rejectionReason}
+              onChange={(event) => setRejectionReason(event.target.value)}
+              placeholder="Ejemplo: La solicitud no contiene información suficiente para crear el código..."
+              className={inputClassName}
+            />
+
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  setRequestToReject(null);
+                  setRejectionReason("");
+                }}
+                disabled={isRejecting}
+                className="rounded-xl border border-gray-300 px-5 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-100 disabled:opacity-50"
+              >
+                Cancelar
+              </button>
+
+              <button
+                onClick={handleRejectRequest}
+                disabled={isRejecting}
+                className="rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-700 disabled:opacity-50"
+              >
+                {isRejecting ? "Rechazando..." : "Confirmar rechazo"}
+              </button>
             </div>
           </div>
         </div>
@@ -483,12 +619,11 @@ function SummaryCard({
 }: {
   title: string;
   value: number;
-  tone: "default" | "warning" | "info" | "success";
+  tone: "default" | "warning" | "success";
 }) {
   const toneClassName = {
     default: "bg-white text-[#07076b]",
     warning: "bg-amber-50 text-amber-700",
-    info: "bg-blue-50 text-blue-700",
     success: "bg-emerald-50 text-emerald-700",
   }[tone];
 

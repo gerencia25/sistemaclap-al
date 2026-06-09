@@ -165,16 +165,21 @@ export default function SolicitudesCodigoPage() {
 
         if (updateError) throw new Error(updateError.message);
       }
-      
+
       await fetch("/api/send-code-request-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          requestNumber: data.request_number,
-        }),
-      });
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    requestNumber: data.request_number,
+    requester: payload.requester_name,
+    area: payload.requester_area,
+    classification: `${payload.classification_code} - ${
+      payload.classification_name || ""
+    }`,
+  }),
+});
 
       alert(`Solicitud creada correctamente: ${data.request_number}`);
       resetForm();
