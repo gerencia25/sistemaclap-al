@@ -1,39 +1,15 @@
-const thirdPartyOptions = [
+const thirdPartyForms = [
   {
-    title: "Caracterización y procedimiento",
+    title: "Solicitud de terceros",
     description:
-      "Administra los documentos PDF de caracterización, procedimientos y versiones oficiales del proceso.",
-    href: "/configuracion/terceros/caracterizacion-procedimiento",
-    code: "CP",
-    status: "Activo",
-  },
-  {
-    title: "Formatos",
-    description:
-      "Consulta y administra los formatos oficiales asociados al proceso de terceros.",
-    href: "/configuracion/terceros/formatos",
-    code: "FO",
-    status: "Activo",
-  },
-  {
-    title: "Creación de terceros",
-    description:
-      "Gestiona el historial de solicitudes, revisa pendientes y crea nuevos terceros desde el formulario oficial.",
-    href: "/configuracion/terceros/creacion",
-    code: "CT",
-    status: "Activo",
-  },
-  {
-    title: "Base de datos de terceros",
-    description:
-      "Consulta, crea y edita clientes, proveedores y otros terceros registrados en el sistema.",
-    href: "/configuracion/terceros/base-datos",
-    code: "BD",
+      "Formulario oficial para solicitar la creación o actualización de clientes, proveedores y otros terceros.",
+    href: "/configuracion/terceros/formatos/solicitud-terceros",
+    code: "ST",
     status: "Activo",
   },
 ];
 
-export default function TercerosPage() {
+export default function FormatosTercerosPage() {
   return (
     <div className="space-y-8">
       <section>
@@ -42,29 +18,28 @@ export default function TercerosPage() {
         </p>
 
         <h1 className="text-4xl font-bold tracking-tight text-[#07076b]">
-          Módulo de Terceros
+          Formatos
         </h1>
 
         <p className="mt-3 max-w-4xl text-base leading-7 text-gray-600">
-          Administra la base de clientes, proveedores, solicitudes de creación
-          de terceros, documentos de caracterización, procedimientos y formatos
-          del proceso.
+          Consulta y diligencia los formatos oficiales asociados al proceso de
+          gestión de terceros.
         </p>
       </section>
 
       <section className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-        {thirdPartyOptions.map((option) => {
-          const isActive = option.status === "Activo";
+        {thirdPartyForms.map((form) => {
+          const isActive = form.status === "Activo";
 
           return (
             <a
-              key={option.title}
-              href={option.href}
+              key={form.title}
+              href={form.href}
               className="group rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#07076b]/20 hover:shadow-md"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#07076b] text-xs font-semibold tracking-wide text-white">
-                  {option.code}
+                  {form.code}
                 </div>
 
                 <span
@@ -74,17 +49,17 @@ export default function TercerosPage() {
                       : "bg-amber-50 text-amber-700"
                   }`}
                 >
-                  {option.status}
+                  {form.status}
                 </span>
               </div>
 
               <div className="mt-5">
                 <h3 className="text-base font-semibold text-gray-900">
-                  {option.title}
+                  {form.title}
                 </h3>
 
                 <p className="mt-2 text-sm leading-6 text-gray-600">
-                  {option.description}
+                  {form.description}
                 </p>
               </div>
 
