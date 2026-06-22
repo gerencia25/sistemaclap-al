@@ -194,7 +194,7 @@ export default function CreacionCodigoPage() {
         </div>
 
         <Link
-          href="/configuracion/productos"
+          href="/configuracion/codificacion/base-datos-productos"
           className="rounded-xl bg-[#07076b] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md hover:opacity-95"
         >
           Crear nuevo código
@@ -365,7 +365,7 @@ export default function CreacionCodigoPage() {
 
                         {request.status === "Pendiente" && (
                           <Link
-                            href={`/configuracion/productos?requestId=${request.id}`}
+                            href={`/configuracion/codificacion/base-datos-productos?requestId=${request.id}`}
                             className="rounded-lg bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-700 transition hover:bg-emerald-100"
                           >
                             Crear código
@@ -548,7 +548,7 @@ export default function CreacionCodigoPage() {
 
                 {selectedRequest.status === "Pendiente" && (
                   <Link
-                    href={`/configuracion/productos?requestId=${selectedRequest.id}`}
+                    href={`/configuracion/codificacion/base-datos-productos?requestId=${selectedRequest.id}`}
                     className="rounded-xl bg-[#07076b] px-5 py-3 text-sm font-semibold text-white transition hover:opacity-95"
                   >
                     Crear código
