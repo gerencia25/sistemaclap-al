@@ -12,6 +12,8 @@ type Employee = {
   first_name: string;
   last_name: string;
   full_name: string;
+  area_id: string | null;
+  position_id: string | null;
   area: string;
   position: string;
   direct_manager_id: string | null;
@@ -33,6 +35,8 @@ type EmployeeRequest = {
   first_name: string;
   last_name: string;
   full_name: string;
+  area_id: string | null;
+  position_id: string | null;
   area: string;
   position: string;
   direct_manager_id: string | null;
@@ -44,13 +48,26 @@ type EmployeeRequest = {
   status: string;
 };
 
+type CompanyArea = {
+  id: string;
+  name: string;
+  status: string;
+};
+
+type CompanyPosition = {
+  id: string;
+  area_id: string;
+  name: string;
+  status: string;
+};
+
 type EmployeeForm = {
   document_type: string;
   document_number: string;
   first_name: string;
   last_name: string;
-  area: string;
-  position: string;
+  area_id: string;
+  position_id: string;
   direct_manager_id: string;
   email: string;
   phone: string;
@@ -65,8 +82,8 @@ const emptyForm: EmployeeForm = {
   document_number: "",
   first_name: "",
   last_name: "",
-  area: "",
-  position: "",
+  area_id: "",
+  position_id: "",
   direct_manager_id: "",
   email: "",
   phone: "",
@@ -111,6 +128,11 @@ export default function PersonalBaseDatosClient() {
   const requestId = searchParams.get("requestId");
 
   const [employees, setEmployees] = useState<Employee[]>([]);
+  const [companyAreas, setCompanyAreas] = useState<CompanyArea[]>([]);
+  const [companyPositions, setCompanyPositions] = useState<CompanyPosition[]>(
+    []
+  );
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -133,18 +155,36 @@ export default function PersonalBaseDatosClient() {
   }, []);
 
   useEffect(() => {
-    if (requestId) {
+    if (requestId && !loading) {
       fetchLinkedRequest(requestId);
     }
-  }, [requestId]);
+  }, [requestId, loading]);
 
-  const areas = useMemo(() => {
+  const areaFilterOptions = useMemo(() => {
     const uniqueAreas = Array.from(
       new Set(employees.map((employee) => employee.area).filter(Boolean))
     );
 
     return uniqueAreas.sort();
   }, [employees]);
+
+  const filteredPositions = useMemo(() => {
+    return companyPositions.filter(
+      (position) =>
+        position.area_id === form.area_id && position.status === "Activo"
+    );
+  }, [companyPositions, form.area_id]);
+
+  const selectedArea = useMemo(() => {
+    return companyAreas.find((area) => area.id === form.area_id) ?? null;
+  }, [companyAreas, form.area_id]);
+
+  const selectedPosition = useMemo(() => {
+    return (
+      companyPositions.find((position) => position.id === form.position_id) ??
+      null
+    );
+  }, [companyPositions, form.position_id]);
 
   const filteredEmployees = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
@@ -178,19 +218,68 @@ export default function PersonalBaseDatosClient() {
   async function fetchEmployees() {
     setLoading(true);
 
-    const { data, error } = await supabase
+    const { data: employeesData, error: employeesError } = await supabase
       .from("employees")
       .select("*")
       .order("created_at", { ascending: false });
 
-    if (error) {
-      alert(`Error cargando personal: ${error.message}`);
+    if (employeesError) {
+      alert(`Error cargando personal: ${employeesError.message}`);
       setLoading(false);
       return;
     }
 
-    setEmployees((data ?? []) as Employee[]);
+    const { data: areasData, error: areasError } = await supabase
+      .from("company_areas")
+      .select("id, name, status")
+      .order("name", { ascending: true });
+
+    if (areasError) {
+      alert(`Error cargando áreas: ${areasError.message}`);
+      setLoading(false);
+      return;
+    }
+
+    const { data: positionsData, error: positionsError } = await supabase
+      .from("company_positions")
+      .select("id, area_id, name, status")
+      .order("name", { ascending: true });
+
+    if (positionsError) {
+      alert(`Error cargando cargos: ${positionsError.message}`);
+      setLoading(false);
+      return;
+    }
+
+    setEmployees((employeesData ?? []) as Employee[]);
+    setCompanyAreas((areasData ?? []) as CompanyArea[]);
+    setCompanyPositions((positionsData ?? []) as CompanyPosition[]);
     setLoading(false);
+  }
+
+  function resolveAreaId(areaId: string | null, areaName: string) {
+    if (areaId) return areaId;
+
+    return (
+      companyAreas.find((area) => area.name === areaName)?.id ??
+      ""
+    );
+  }
+
+  function resolvePositionId(
+    positionId: string | null,
+    positionName: string,
+    areaId: string
+  ) {
+    if (positionId) return positionId;
+
+    return (
+      companyPositions.find(
+        (position) =>
+          position.name === positionName &&
+          (!areaId || position.area_id === areaId)
+      )?.id ?? ""
+    );
   }
 
   async function fetchLinkedRequest(id: string) {
@@ -207,6 +296,13 @@ export default function PersonalBaseDatosClient() {
 
     const request = data as EmployeeRequest;
 
+    const resolvedAreaId = resolveAreaId(request.area_id, request.area);
+    const resolvedPositionId = resolvePositionId(
+      request.position_id,
+      request.position,
+      resolvedAreaId
+    );
+
     setLinkedRequest(request);
     setEditingEmployeeId(null);
     setForm({
@@ -214,8 +310,8 @@ export default function PersonalBaseDatosClient() {
       document_number: request.document_number ?? "",
       first_name: request.first_name ?? "",
       last_name: request.last_name ?? "",
-      area: request.area ?? "",
-      position: request.position ?? "",
+      area_id: resolvedAreaId,
+      position_id: resolvedPositionId,
       direct_manager_id: request.direct_manager_id ?? "",
       email: request.email ?? "",
       phone: request.phone ?? "",
@@ -261,6 +357,13 @@ export default function PersonalBaseDatosClient() {
   }
 
   function openEditModal(employee: Employee) {
+    const resolvedAreaId = resolveAreaId(employee.area_id, employee.area);
+    const resolvedPositionId = resolvePositionId(
+      employee.position_id,
+      employee.position,
+      resolvedAreaId
+    );
+
     setEditingEmployeeId(employee.id);
     setLinkedRequest(null);
     setForm({
@@ -268,8 +371,8 @@ export default function PersonalBaseDatosClient() {
       document_number: employee.document_number,
       first_name: employee.first_name,
       last_name: employee.last_name,
-      area: employee.area,
-      position: employee.position,
+      area_id: resolvedAreaId,
+      position_id: resolvedPositionId,
       direct_manager_id: employee.direct_manager_id ?? "",
       email: employee.email ?? "",
       phone: employee.phone ?? "",
@@ -300,10 +403,15 @@ export default function PersonalBaseDatosClient() {
       !form.document_number.trim() ||
       !firstName ||
       !lastName ||
-      !form.area.trim() ||
-      !form.position.trim()
+      !form.area_id ||
+      !form.position_id
     ) {
       alert("Completa los campos obligatorios.");
+      return;
+    }
+
+    if (!selectedArea || !selectedPosition) {
+      alert("Selecciona un área y cargo válidos.");
       return;
     }
 
@@ -320,8 +428,10 @@ export default function PersonalBaseDatosClient() {
       first_name: firstName,
       last_name: lastName,
       full_name: fullName,
-      area: form.area.trim(),
-      position: form.position.trim(),
+      area_id: form.area_id,
+      position_id: form.position_id,
+      area: selectedArea.name,
+      position: selectedPosition.name,
       direct_manager_id: form.direct_manager_id || null,
       email: form.email.trim() || null,
       phone: form.phone.trim() || null,
@@ -455,9 +565,7 @@ export default function PersonalBaseDatosClient() {
       <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <div>
-            <label className="text-sm font-medium text-gray-700">
-              Buscar
-            </label>
+            <label className="text-sm font-medium text-gray-700">Buscar</label>
             <input
               type="text"
               value={search}
@@ -475,7 +583,7 @@ export default function PersonalBaseDatosClient() {
               className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#07076b]"
             >
               <option value="Todos">Todas las áreas</option>
-              {areas.map((area) => (
+              {areaFilterOptions.map((area) => (
                 <option key={area} value={area}>
                   {area}
                 </option>
@@ -749,30 +857,51 @@ export default function PersonalBaseDatosClient() {
                     <label className="text-sm font-medium text-gray-700">
                       Área *
                     </label>
-                    <input
-                      type="text"
-                      value={form.area}
+                    <select
+                      value={form.area_id}
                       onChange={(event) =>
-                        setForm({ ...form, area: event.target.value })
+                        setForm({
+                          ...form,
+                          area_id: event.target.value,
+                          position_id: "",
+                        })
                       }
-                      placeholder="Producción, Comercial, Logística..."
                       className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#07076b]"
-                    />
+                    >
+                      <option value="">Seleccionar área</option>
+                      {companyAreas
+                        .filter((area) => area.status === "Activa")
+                        .map((area) => (
+                          <option key={area.id} value={area.id}>
+                            {area.name}
+                          </option>
+                        ))}
+                    </select>
                   </div>
 
                   <div>
                     <label className="text-sm font-medium text-gray-700">
                       Cargo *
                     </label>
-                    <input
-                      type="text"
-                      value={form.position}
+                    <select
+                      value={form.position_id}
                       onChange={(event) =>
-                        setForm({ ...form, position: event.target.value })
+                        setForm({ ...form, position_id: event.target.value })
                       }
-                      placeholder="Gerente, Auxiliar, Operario..."
-                      className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#07076b]"
-                    />
+                      disabled={!form.area_id}
+                      className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#07076b] disabled:cursor-not-allowed disabled:bg-gray-50"
+                    >
+                      <option value="">
+                        {form.area_id
+                          ? "Seleccionar cargo"
+                          : "Primero selecciona un área"}
+                      </option>
+                      {filteredPositions.map((position) => (
+                        <option key={position.id} value={position.id}>
+                          {position.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div>
