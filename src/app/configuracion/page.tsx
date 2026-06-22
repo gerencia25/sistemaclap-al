@@ -23,6 +23,14 @@ const configOptions = [
   code: "PE",
   status: "Activo",
 },
+{
+  title: "Áreas y cargos",
+  description:
+    "Administrar la estructura organizacional, áreas, cargos, niveles jerárquicos y relaciones internas.",
+  href: "/configuracion/areas-cargos",
+  code: "AC",
+  status: "Activo",
+},
 ];
 
 export default function ConfiguracionPage() {
