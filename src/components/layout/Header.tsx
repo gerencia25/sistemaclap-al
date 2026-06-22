@@ -3,27 +3,60 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 
 const menuItems = [
-  { label: "Inicio", href: "/" },
-  { label: "Comercial", href: "/comercial" },
-  { label: "Abastecimiento y Logística", href: "/abastecimiento-logistica" },
-  { label: "Operaciones", href: "/operaciones" },
-  { label: "Financiera", href: "/financiera" },
-  { label: "Gestión Humana", href: "/gestion-humana" },
-  { label: "Diseño y Desarrollo", href: "/diseno-desarrollo" },
-  { label: "Configuración", href: "/configuracion" },
+  { label: "Inicio", href: "/", permission: null },
+  { label: "Comercial", href: "/comercial", permission: "COMERCIAL_VIEW" },
+  {
+    label: "Abastecimiento y Logística",
+    href: "/abastecimiento-logistica",
+    permission: "ABASTECIMIENTO_LOGISTICA_VIEW",
+  },
+  {
+    label: "Operaciones",
+    href: "/operaciones",
+    permission: "OPERACIONES_VIEW",
+  },
+  {
+    label: "Financiera",
+    href: "/financiera",
+    permission: "FINANCIERA_VIEW",
+  },
+  {
+    label: "Gestión Humana",
+    href: "/gestion-humana",
+    permission: "GESTION_HUMANA_VIEW",
+  },
+  {
+    label: "Diseño y Desarrollo",
+    href: "/diseno-desarrollo",
+    permission: "DISENO_DESARROLLO_VIEW",
+  },
+  {
+    label: "Configuración",
+    href: "/configuracion",
+    permission: "CONFIGURACION_VIEW",
+  },
 ];
 
 export default function Header() {
   const [open, setOpen] = useState(false);
 
   const pathname = usePathname();
-  const { session, systemUser, signOut } = useAuth();
+  const { session, systemUser, hasPermission, signOut } = useAuth();
 
   const isLoginPage = pathname.startsWith("/login");
+
+  const visibleMenuItems = useMemo(() => {
+    if (!session || !systemUser) return [];
+
+    return menuItems.filter((item) => {
+      if (!item.permission) return true;
+      return hasPermission(item.permission);
+    });
+  }, [session, systemUser, hasPermission]);
 
   const isActive = (href: string) => {
     if (href === "/") {
@@ -56,13 +89,12 @@ export default function Header() {
 
           <div className="leading-tight">
             <p className="text-sm font-bold text-[#07076b]">Sistema CLAP</p>
-
             <p className="text-xs text-gray-500">A&L Multiformas</p>
           </div>
         </Link>
 
         <nav className="hidden items-center gap-7 lg:flex">
-          {menuItems.map((item) => {
+          {visibleMenuItems.map((item) => {
             const active = isActive(item.href);
 
             return (
@@ -126,7 +158,7 @@ export default function Header() {
       {open && (
         <div className="border-t border-gray-100 bg-white/95 shadow-lg backdrop-blur-xl lg:hidden">
           <nav className="mx-auto flex max-w-7xl flex-col px-6 py-4">
-            {menuItems.map((item) => {
+            {visibleMenuItems.map((item) => {
               const active = isActive(item.href);
 
               return (
