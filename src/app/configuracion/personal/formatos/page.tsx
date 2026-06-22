@@ -1,9 +1,9 @@
 const personalFormats = [
   {
-    title: "Solicitud de ingreso de personal",
+    title: "Solicitud creación de personal",
     description:
       "Formulario oficial para solicitar la creación de un nuevo empleado en la base de personal.",
-    href: "/configuracion/personal/formatos/solicitud-ingreso",
+    href: "/configuracion/personal/formatos/solicitud-creacion",
     code: "IP",
     status: "Activo",
   },

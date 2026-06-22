@@ -18,7 +18,7 @@ const personalOptions = [
   {
     title: "Creación de personal",
     description:
-      "Gestiona solicitudes de ingreso, revisión, aprobación y creación de nuevos empleados.",
+      "Gestiona solicitudes de creación, revisión, aprobación y creación de nuevos empleados.",
     href: "/configuracion/personal/creacion",
     code: "IP",
     status: "Activo",
@@ -46,7 +46,7 @@ export default function PersonalPage() {
         </h1>
 
         <p className="mt-3 max-w-4xl text-base leading-7 text-gray-600">
-          Administra el maestro de empleados, solicitudes de ingreso,
+          Administra el maestro de empleados, solicitudes de creación,
           documentación, procedimientos y formatos asociados al proceso de
           personal.
         </p>
