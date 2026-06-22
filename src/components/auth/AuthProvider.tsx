@@ -51,35 +51,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     let isMounted = true;
 
     async function initializeAuth() {
-      const {
-        data: { session: currentSession },
-      } = await supabase.auth.getSession();
+      try {
+        const {
+          data: { session: currentSession },
+        } = await supabase.auth.getSession();
 
-      if (!isMounted) return;
+        if (!isMounted) return;
 
-      setSession(currentSession);
+        setSession(currentSession);
 
-      if (currentSession?.user?.email) {
-        await loadSystemUser(currentSession.user.email);
-      } else {
-        setSystemUser(null);
-        setPermissions([]);
-        setAccessDenied(false);
+        if (currentSession?.user?.email) {
+          await loadSystemUser(currentSession.user.email);
+        } else {
+          setSystemUser(null);
+          setPermissions([]);
+          setAccessDenied(false);
+        }
+      } catch (error) {
+        console.error("Error inicializando autenticación:", error);
+
+        if (isMounted) {
+          setSession(null);
+          setSystemUser(null);
+          setPermissions([]);
+          setAccessDenied(false);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
       }
-
-      setLoading(false);
     }
 
     initializeAuth();
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
-      setLoading(true);
+    } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession);
 
       if (newSession?.user?.email) {
-        await loadSystemUser(newSession.user.email);
+        loadSystemUser(newSession.user.email);
       } else {
         setSystemUser(null);
         setPermissions([]);
@@ -109,77 +121,97 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [loading, session, systemUser, accessDenied, isPublicPath, router]);
 
   async function loadSystemUser(email: string) {
-    const normalizedEmail = email.trim().toLowerCase();
+    try {
+      const normalizedEmail = email.trim().toLowerCase();
 
-    const { data: userData, error: userError } = await supabase
-      .from("system_users")
-      .select("*")
-      .eq("email", normalizedEmail)
-      .single();
+      const { data: userData, error: userError } = await supabase
+        .from("system_users")
+        .select("*")
+        .eq("email", normalizedEmail)
+        .maybeSingle();
 
-    if (userError || !userData) {
+      if (userError || !userData) {
+        console.error("Usuario ERP no encontrado:", userError);
+        setSystemUser(null);
+        setPermissions([]);
+        setAccessDenied(true);
+        return;
+      }
+
+      const user = userData as SystemUser;
+
+      if (user.status !== "Activo") {
+        setSystemUser(user);
+        setPermissions([]);
+        setAccessDenied(true);
+        return;
+      }
+
+      setSystemUser(user);
+      setAccessDenied(false);
+
+      if (user.is_super_admin) {
+        const { data: allPermissions, error: permissionsError } = await supabase
+          .from("system_permissions")
+          .select("permission_code")
+          .eq("status", "Activo");
+
+        if (permissionsError) {
+          console.error("Error cargando permisos:", permissionsError);
+          setPermissions([]);
+          return;
+        }
+
+        setPermissions(
+          (allPermissions ?? []).map(
+            (permission) => permission.permission_code
+          )
+        );
+        return;
+      }
+
+      if (!user.role_id) {
+        setPermissions([]);
+        return;
+      }
+
+      const { data: rolePermissionRows, error: rolePermissionsError } =
+        await supabase
+          .from("system_role_permissions")
+          .select("permission_id")
+          .eq("role_id", user.role_id);
+
+      if (rolePermissionsError || !rolePermissionRows?.length) {
+        console.error("Error cargando permisos del rol:", rolePermissionsError);
+        setPermissions([]);
+        return;
+      }
+
+      const permissionIds = rolePermissionRows.map((row) => row.permission_id);
+
+      const { data: permissionsData, error: permissionsError } = await supabase
+        .from("system_permissions")
+        .select("permission_code")
+        .in("id", permissionIds)
+        .eq("status", "Activo");
+
+      if (permissionsError) {
+        console.error("Error cargando códigos de permisos:", permissionsError);
+        setPermissions([]);
+        return;
+      }
+
+      setPermissions(
+        (permissionsData ?? []).map(
+          (permission) => permission.permission_code
+        )
+      );
+    } catch (error) {
+      console.error("Error cargando usuario del ERP:", error);
       setSystemUser(null);
       setPermissions([]);
       setAccessDenied(true);
-      return;
     }
-
-    const user = userData as SystemUser;
-
-    if (user.status !== "Activo") {
-      setSystemUser(user);
-      setPermissions([]);
-      setAccessDenied(true);
-      return;
-    }
-
-    setSystemUser(user);
-    setAccessDenied(false);
-
-    if (user.is_super_admin) {
-      const { data: allPermissions } = await supabase
-        .from("system_permissions")
-        .select("permission_code")
-        .eq("status", "Activo");
-
-      setPermissions(
-        (allPermissions ?? []).map((permission) => permission.permission_code)
-      );
-      return;
-    }
-
-    if (!user.role_id) {
-      setPermissions([]);
-      return;
-    }
-
-    const { data: rolePermissionRows, error: rolePermissionsError } =
-      await supabase
-        .from("system_role_permissions")
-        .select("permission_id")
-        .eq("role_id", user.role_id);
-
-    if (rolePermissionsError || !rolePermissionRows?.length) {
-      setPermissions([]);
-      return;
-    }
-
-    const permissionIds = rolePermissionRows.map((row) => row.permission_id);
-
-    const { data: permissionsData, error: permissionsError } = await supabase
-      .from("system_permissions")
-      .select("permission_code")
-      .in("id", permissionIds)
-      .eq("status", "Activo");
-
-    if (permissionsError) {
-      setPermissions([]);
-      return;
-    }
-
-    setPermissions(
-      (permissionsData ?? []).map((permission) => permission.permission_code)
-    );
   }
 
   async function signOut() {
@@ -198,7 +230,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       systemUser,
       permissions,
       hasPermission: (permissionCode: string) =>
-        systemUser?.is_super_admin || permissions.includes(permissionCode),
+        Boolean(
+          systemUser?.is_super_admin || permissions.includes(permissionCode)
+        ),
       signOut,
     }),
     [loading, session, systemUser, permissions]
@@ -232,7 +266,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50 px-6">
         <div className="max-w-lg rounded-3xl border border-red-100 bg-white p-8 text-center shadow-sm">
-          <h1 className="text-2xl font-bold text-red-700">Acceso no autorizado</h1>
+          <h1 className="text-2xl font-bold text-red-700">
+            Acceso no autorizado
+          </h1>
+
           <p className="mt-3 text-sm leading-6 text-gray-600">
             Tu correo está autenticado, pero no existe como usuario activo en el
             ERP o se encuentra bloqueado.
