@@ -13,16 +13,16 @@ const configOptions = [
     description:
       "Administrar clientes, proveedores y otros terceros en una única base maestra preparada para integración con SIIGO.",
     href: "/configuracion/terceros",
-    status: "En construcción",
+    status: "Activo",
   },
   {
-    code: "VE",
-    title: "Personal",
-    description:
-      "Administrar usuarios, personal, cargos y datos de cada trabajador.",
-    href: "/configuracion/vendedores",
-    status: "En construcción",
-  },
+  title: "Personal",
+  description:
+    "Administrar empleados, solicitudes de ingreso, cargos, áreas y estado laboral del personal.",
+  href: "/configuracion/personal",
+  code: "PE",
+  status: "Activo",
+},
 ];
 
 export default function ConfiguracionPage() {
