@@ -80,7 +80,7 @@ export default function HomePage() {
             ERP interno
           </p>
 
-          <h1 className="text-4xl font-bold tracking-tight text-[#07076b] md:text-5xl">
+          <h1 className="text-4xl font-bold tracking-tight text-[#07076b] md:text-4xl">
             Sistema CLAP
           </h1>
 
