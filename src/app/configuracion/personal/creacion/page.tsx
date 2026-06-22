@@ -140,67 +140,114 @@ export default function CreacionPersonalPage() {
     setLoading(false);
   }
 
-  async function approveRequest(request: EmployeeRequest) {
-    const confirmApprove = confirm(
-      `¿Deseas aprobar la solicitud ${request.request_number}?`
+async function approveRequest(request: EmployeeRequest) {
+  const confirmApprove = confirm(
+    `¿Deseas aprobar la solicitud ${request.request_number}?`
+  );
+
+  if (!confirmApprove) return;
+
+  setActionLoading(true);
+
+  const { error } = await supabase
+    .from("employee_requests")
+    .update({
+      status: "Aprobada",
+      approved_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", request.id);
+
+  if (error) {
+    setActionLoading(false);
+    alert(`Error aprobando solicitud: ${error.message}`);
+    return;
+  }
+
+  try {
+    await fetch("/api/send-personal-approval-email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        to: request.requester_email,
+        requestNumber: request.request_number,
+        requesterName: request.requester_name,
+        employeeFullName: request.full_name,
+        area: request.area,
+        position: request.position,
+      }),
+    });
+  } catch (emailError) {
+    console.error(
+      "Error enviando correo de aprobación de personal:",
+      emailError
     );
-
-    if (!confirmApprove) return;
-
-    setActionLoading(true);
-
-    const { error } = await supabase
-      .from("employee_requests")
-      .update({
-        status: "Aprobada",
-        approved_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", request.id);
-
-    if (error) {
-      setActionLoading(false);
-      alert(`Error aprobando solicitud: ${error.message}`);
-      return;
-    }
-
-    await fetchRequests();
-    setSelectedRequest(null);
-    setActionLoading(false);
   }
 
-  async function rejectRequest() {
-    if (!rejectingRequest) return;
+  await fetchRequests();
+  setSelectedRequest(null);
+  setActionLoading(false);
+}
 
-    if (!rejectionReason.trim()) {
-      alert("Debes escribir el motivo del rechazo.");
-      return;
-    }
+async function rejectRequest() {
+  if (!rejectingRequest) return;
 
-    setActionLoading(true);
-
-    const { error } = await supabase
-      .from("employee_requests")
-      .update({
-        status: "Rechazada",
-        rejection_reason: rejectionReason.trim(),
-        rejected_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", rejectingRequest.id);
-
-    if (error) {
-      setActionLoading(false);
-      alert(`Error rechazando solicitud: ${error.message}`);
-      return;
-    }
-
-    await fetchRequests();
-    setRejectingRequest(null);
-    setSelectedRequest(null);
-    setRejectionReason("");
-    setActionLoading(false);
+  if (!rejectionReason.trim()) {
+    alert("Debes escribir el motivo del rechazo.");
+    return;
   }
+
+  setActionLoading(true);
+
+  const reason = rejectionReason.trim();
+
+  const { error } = await supabase
+    .from("employee_requests")
+    .update({
+      status: "Rechazada",
+      rejection_reason: reason,
+      rejected_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", rejectingRequest.id);
+
+  if (error) {
+    setActionLoading(false);
+    alert(`Error rechazando solicitud: ${error.message}`);
+    return;
+  }
+
+  try {
+    await fetch("/api/send-personal-rejection-email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        to: rejectingRequest.requester_email,
+        requestNumber: rejectingRequest.request_number,
+        requesterName: rejectingRequest.requester_name,
+        employeeFullName: rejectingRequest.full_name,
+        area: rejectingRequest.area,
+        position: rejectingRequest.position,
+        rejectionReason: reason,
+      }),
+    });
+  } catch (emailError) {
+    console.error(
+      "Error enviando correo de rechazo de personal:",
+      emailError
+    );
+  }
+
+  await fetchRequests();
+  setRejectingRequest(null);
+  setSelectedRequest(null);
+  setRejectionReason("");
+  setActionLoading(false);
+}
 
   function openRejectModal(request: EmployeeRequest) {
     setRejectingRequest(request);

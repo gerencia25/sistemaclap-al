@@ -194,14 +194,39 @@ export default function SolicitudCreacionPersonalPage() {
     ]);
 
     if (error) {
-      setSaving(false);
-      alert(`Error creando solicitud: ${error.message}`);
-      return;
-    }
+  setSaving(false);
+  alert(`Error creando solicitud: ${error.message}`);
+  return;
+}
 
-    setCreatedRequestNumber(requestNumber);
-    setForm(emptyForm);
-    setSaving(false);
+try {
+  await fetch("/api/send-personal-request-email", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      requestNumber,
+      requesterName: form.requester_name.trim(),
+      requesterArea: form.requester_area.trim(),
+      requesterPosition: form.requester_position.trim(),
+      requesterEmail: form.requester_email.trim(),
+      employeeFullName: fullName,
+      documentNumber: form.document_number.trim(),
+      area: form.area.trim(),
+      position: form.position.trim(),
+      hireDate: form.hire_date || null,
+      contractType: form.contract_type || null,
+      detailedDescription: form.detailed_description.trim() || null,
+    }),
+  });
+} catch (emailError) {
+  console.error("Error enviando correo de solicitud de personal:", emailError);
+}
+
+setCreatedRequestNumber(requestNumber);
+setForm(emptyForm);
+setSaving(false);
   }
 
   return (
