@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 type Employee = {
@@ -8,6 +8,19 @@ type Employee = {
   full_name: string;
   position: string;
   employment_status: string;
+};
+
+type CompanyArea = {
+  id: string;
+  name: string;
+  status: string;
+};
+
+type CompanyPosition = {
+  id: string;
+  area_id: string;
+  name: string;
+  status: string;
 };
 
 type RequestForm = {
@@ -21,8 +34,9 @@ type RequestForm = {
   first_name: string;
   last_name: string;
 
-  area: string;
-  position: string;
+  area_id: string;
+  position_id: string;
+
   direct_manager_id: string;
   email: string;
   phone: string;
@@ -43,8 +57,9 @@ const emptyForm: RequestForm = {
   first_name: "",
   last_name: "",
 
-  area: "",
-  position: "",
+  area_id: "",
+  position_id: "",
+
   direct_manager_id: "",
   email: "",
   phone: "",
@@ -74,29 +89,68 @@ const contractTypes = [
 
 export default function SolicitudCreacionPersonalPage() {
   const [employees, setEmployees] = useState<Employee[]>([]);
+  const [areas, setAreas] = useState<CompanyArea[]>([]);
+  const [positions, setPositions] = useState<CompanyPosition[]>([]);
+
   const [form, setForm] = useState<RequestForm>(emptyForm);
   const [saving, setSaving] = useState(false);
-  const [createdRequestNumber, setCreatedRequestNumber] = useState<
-    string | null
-  >(null);
+  const [createdRequestNumber, setCreatedRequestNumber] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
-    fetchEmployees();
+    fetchInitialData();
   }, []);
 
-  async function fetchEmployees() {
-    const { data, error } = await supabase
+  const filteredPositions = useMemo(() => {
+    return positions.filter((position) => position.area_id === form.area_id);
+  }, [positions, form.area_id]);
+
+  const selectedArea = useMemo(() => {
+    return areas.find((area) => area.id === form.area_id) ?? null;
+  }, [areas, form.area_id]);
+
+  const selectedPosition = useMemo(() => {
+    return positions.find((position) => position.id === form.position_id) ?? null;
+  }, [positions, form.position_id]);
+
+  async function fetchInitialData() {
+    const { data: employeesData, error: employeesError } = await supabase
       .from("employees")
       .select("id, full_name, position, employment_status")
       .eq("employment_status", "Activo")
       .order("full_name", { ascending: true });
 
-    if (error) {
-      alert(`Error cargando empleados: ${error.message}`);
+    if (employeesError) {
+      alert(`Error cargando empleados: ${employeesError.message}`);
       return;
     }
 
-    setEmployees((data ?? []) as Employee[]);
+    const { data: areasData, error: areasError } = await supabase
+      .from("company_areas")
+      .select("id, name, status")
+      .eq("status", "Activa")
+      .order("name", { ascending: true });
+
+    if (areasError) {
+      alert(`Error cargando áreas: ${areasError.message}`);
+      return;
+    }
+
+    const { data: positionsData, error: positionsError } = await supabase
+      .from("company_positions")
+      .select("id, area_id, name, status")
+      .eq("status", "Activo")
+      .order("name", { ascending: true });
+
+    if (positionsError) {
+      alert(`Error cargando cargos: ${positionsError.message}`);
+      return;
+    }
+
+    setEmployees((employeesData ?? []) as Employee[]);
+    setAreas((areasData ?? []) as CompanyArea[]);
+    setPositions((positionsData ?? []) as CompanyPosition[]);
   }
 
   async function generateRequestNumber() {
@@ -134,12 +188,20 @@ export default function SolicitudCreacionPersonalPage() {
       !form.document_number.trim() ||
       !firstName ||
       !lastName ||
-      !form.area.trim() ||
-      !form.position.trim()
+      !form.area_id ||
+      !form.position_id
     ) {
       alert("Completa todos los campos obligatorios.");
       return;
     }
+
+    if (!selectedArea || !selectedPosition) {
+      alert("Selecciona un área y cargo válidos.");
+      return;
+    }
+
+    const areaName = selectedArea.name;
+    const positionName = selectedPosition.name;
 
     setSaving(true);
     setCreatedRequestNumber(null);
@@ -176,8 +238,10 @@ export default function SolicitudCreacionPersonalPage() {
         last_name: lastName,
         full_name: fullName,
 
-        area: form.area.trim(),
-        position: form.position.trim(),
+        area_id: form.area_id,
+        position_id: form.position_id,
+        area: areaName,
+        position: positionName,
 
         direct_manager_id: form.direct_manager_id || null,
 
@@ -194,39 +258,39 @@ export default function SolicitudCreacionPersonalPage() {
     ]);
 
     if (error) {
-  setSaving(false);
-  alert(`Error creando solicitud: ${error.message}`);
-  return;
-}
+      setSaving(false);
+      alert(`Error creando solicitud: ${error.message}`);
+      return;
+    }
 
-try {
-  await fetch("/api/send-personal-request-email", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      requestNumber,
-      requesterName: form.requester_name.trim(),
-      requesterArea: form.requester_area.trim(),
-      requesterPosition: form.requester_position.trim(),
-      requesterEmail: form.requester_email.trim(),
-      employeeFullName: fullName,
-      documentNumber: form.document_number.trim(),
-      area: form.area.trim(),
-      position: form.position.trim(),
-      hireDate: form.hire_date || null,
-      contractType: form.contract_type || null,
-      detailedDescription: form.detailed_description.trim() || null,
-    }),
-  });
-} catch (emailError) {
-  console.error("Error enviando correo de solicitud de personal:", emailError);
-}
+    try {
+      await fetch("/api/send-personal-request-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          requestNumber,
+          requesterName: form.requester_name.trim(),
+          requesterArea: form.requester_area.trim(),
+          requesterPosition: form.requester_position.trim(),
+          requesterEmail: form.requester_email.trim(),
+          employeeFullName: fullName,
+          documentNumber: form.document_number.trim(),
+          area: areaName,
+          position: positionName,
+          hireDate: form.hire_date || null,
+          contractType: form.contract_type || null,
+          detailedDescription: form.detailed_description.trim() || null,
+        }),
+      });
+    } catch (emailError) {
+      console.error("Error enviando correo de solicitud de personal:", emailError);
+    }
 
-setCreatedRequestNumber(requestNumber);
-setForm(emptyForm);
-setSaving(false);
+    setCreatedRequestNumber(requestNumber);
+    setForm(emptyForm);
+    setSaving(false);
   }
 
   return (
@@ -406,30 +470,47 @@ setSaving(false);
               <label className="text-sm font-medium text-gray-700">
                 Área *
               </label>
-              <input
-                type="text"
-                value={form.area}
+              <select
+                value={form.area_id}
                 onChange={(event) =>
-                  setForm({ ...form, area: event.target.value })
+                  setForm({
+                    ...form,
+                    area_id: event.target.value,
+                    position_id: "",
+                  })
                 }
-                placeholder="Producción, Comercial, Operaciones..."
                 className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#07076b]"
-              />
+              >
+                <option value="">Seleccionar área</option>
+                {areas.map((area) => (
+                  <option key={area.id} value={area.id}>
+                    {area.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div>
               <label className="text-sm font-medium text-gray-700">
                 Cargo *
               </label>
-              <input
-                type="text"
-                value={form.position}
+              <select
+                value={form.position_id}
                 onChange={(event) =>
-                  setForm({ ...form, position: event.target.value })
+                  setForm({ ...form, position_id: event.target.value })
                 }
-                placeholder="Operario, Auxiliar, Coordinador..."
-                className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#07076b]"
-              />
+                disabled={!form.area_id}
+                className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#07076b] disabled:cursor-not-allowed disabled:bg-gray-50"
+              >
+                <option value="">
+                  {form.area_id ? "Seleccionar cargo" : "Primero selecciona un área"}
+                </option>
+                {filteredPositions.map((position) => (
+                  <option key={position.id} value={position.id}>
+                    {position.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div>
