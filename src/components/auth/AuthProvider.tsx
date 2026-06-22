@@ -35,6 +35,65 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 const publicPaths = ["/login"];
 
+const protectedRoutes = [
+  {
+    path: "/configuracion/usuarios-permisos",
+    permission: "USUARIOS_PERMISOS_MANAGE",
+  },
+  {
+    path: "/configuracion/areas-cargos",
+    permission: "AREAS_CARGOS_MANAGE",
+  },
+  {
+    path: "/configuracion/personal",
+    permission: "PERSONAL_VIEW",
+  },
+  {
+    path: "/configuracion/terceros",
+    permission: "TERCEROS_VIEW",
+  },
+  {
+    path: "/configuracion/codificacion",
+    permission: "CODIFICACION_VIEW",
+  },
+  {
+    path: "/configuracion",
+    permission: "CONFIGURACION_VIEW",
+  },
+  {
+    path: "/comercial",
+    permission: "COMERCIAL_VIEW",
+  },
+  {
+    path: "/abastecimiento-logistica",
+    permission: "ABASTECIMIENTO_LOGISTICA_VIEW",
+  },
+  {
+    path: "/operaciones",
+    permission: "OPERACIONES_VIEW",
+  },
+  {
+    path: "/financiera",
+    permission: "FINANCIERA_VIEW",
+  },
+  {
+    path: "/gestion-humana",
+    permission: "GESTION_HUMANA_VIEW",
+  },
+  {
+    path: "/diseno-desarrollo",
+    permission: "DISENO_DESARROLLO_VIEW",
+  },
+];
+
+function getRequiredPermission(pathname: string) {
+  const matchedRoute = protectedRoutes.find((route) =>
+    pathname.startsWith(route.path)
+  );
+
+  return matchedRoute?.permission ?? null;
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -46,6 +105,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [accessDenied, setAccessDenied] = useState(false);
 
   const isPublicPath = publicPaths.some((path) => pathname.startsWith(path));
+
+  const requiredPermission = getRequiredPermission(pathname);
+
+  const isRouteAllowed =
+    !requiredPermission ||
+    Boolean(systemUser?.is_super_admin) ||
+    permissions.includes(requiredPermission);
 
   useEffect(() => {
     let isMounted = true;
@@ -281,6 +347,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             className="mt-6 rounded-full bg-[#07076b] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#05054f]"
           >
             Cerrar sesión
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (session && systemUser && !isPublicPath && !isRouteAllowed) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-6">
+        <div className="max-w-lg rounded-3xl border border-amber-100 bg-white p-8 text-center shadow-sm">
+          <h1 className="text-2xl font-bold text-amber-700">
+            Permiso insuficiente
+          </h1>
+
+          <p className="mt-3 text-sm leading-6 text-gray-600">
+            Tu usuario no tiene permiso para ingresar a esta sección del ERP.
+          </p>
+
+          <p className="mt-3 rounded-2xl bg-amber-50 px-4 py-3 text-xs font-semibold text-amber-700">
+            Permiso requerido: {requiredPermission}
+          </p>
+
+          <button
+            type="button"
+            onClick={() => router.replace("/")}
+            className="mt-6 rounded-full bg-[#07076b] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#05054f]"
+          >
+            Volver al inicio
           </button>
         </div>
       </div>
