@@ -33,7 +33,7 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-const publicPaths = ["/login"];
+const publicPaths = ["/login", "/auth/callback"];
 
 const protectedRoutes = [
   {
@@ -197,7 +197,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .maybeSingle();
 
       if (userError || !userData) {
-        console.error("Usuario ERP no encontrado:", userError);
+        if (userError) {
+          console.warn("Error consultando usuario ERP:", userError);
+        }
+
         setSystemUser(null);
         setPermissions([]);
         setAccessDenied(true);

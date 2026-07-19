@@ -1,58 +1,50 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 export default function LoginPage() {
-  const router = useRouter();
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  async function handleLogin(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    if (!email.trim() || !password) {
-      setErrorMessage("Ingresa correo y contraseña.");
-      return;
-    }
-
+  async function handleGoogleLogin() {
     setLoading(true);
     setErrorMessage("");
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email.trim().toLowerCase(),
-      password,
+    const redirectTo = `${window.location.origin}/auth/callback`;
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo,
+        queryParams: {
+          prompt: "select_account",
+        },
+      },
     });
 
     if (error) {
+      console.error("Error iniciando sesión con Google:", error);
+      setErrorMessage("No fue posible iniciar sesión con Google.");
       setLoading(false);
-      setErrorMessage("Correo o contraseña incorrectos.");
-      return;
     }
-
-    setLoading(false);
-    router.replace("/");
   }
 
   return (
-    <div className="flex min-h-[calc(100vh-7rem)] items-center justify-center">
-      <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
+    <div className="flex min-h-[calc(100vh-7rem)] items-center justify-center px-6">
+      <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white/90 p-8 shadow-sm backdrop-blur">
         <div className="text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-gray-400">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
             Sistema CLAP
           </p>
 
-          <h1 className="mt-3 text-3xl font-bold text-[#07076b]">
+          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[#07076b]">
             Iniciar sesión
           </h1>
 
-          <p className="mt-3 text-sm leading-6 text-gray-600">
-            Ingresa con tu correo y contraseña para acceder al ERP.
+          <p className="mt-3 text-sm leading-6 text-slate-500">
+            Ingresa con tu correo corporativo de Google. El acceso depende de
+            que tu usuario esté creado y activo en CLAP.
           </p>
         </div>
 
@@ -62,41 +54,25 @@ export default function LoginPage() {
           </div>
         )}
 
-        <form onSubmit={handleLogin} className="mt-6 space-y-5">
-          <div>
-            <label className="text-sm font-medium text-gray-700">
-              Correo
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#07076b]"
-              placeholder="usuario@almultiformas.com"
-            />
-          </div>
+        <button
+          type="button"
+          onClick={handleGoogleLogin}
+          disabled={loading}
+          className="mt-7 flex w-full items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-[#07076b]/30 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-base font-bold text-[#07076b]">
+            G
+          </span>
 
-          <div>
-            <label className="text-sm font-medium text-gray-700">
-              Contraseña
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#07076b]"
-              placeholder="••••••••"
-            />
-          </div>
+          {loading ? "Conectando con Google..." : "Continuar con Google"}
+        </button>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-full bg-[#07076b] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#05054f] disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {loading ? "Ingresando..." : "Entrar"}
-          </button>
-        </form>
+        <div className="mt-6 rounded-2xl bg-slate-50 p-4">
+          <p className="text-xs leading-5 text-slate-500">
+            Si tu correo no está registrado como usuario activo en el ERP, el
+            sistema bloqueará el acceso automáticamente.
+          </p>
+        </div>
       </div>
     </div>
   );
