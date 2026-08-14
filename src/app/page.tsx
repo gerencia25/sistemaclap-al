@@ -2,72 +2,19 @@
 
 import Link from "next/link";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { CLAP_DEPARTMENTS } from "@/config/clapNavigation";
 
-const modules = [
-  {
-    code: "CO",
-    title: "Comercial",
-    description:
-      "Gestión de clientes, cotizaciones, seguimiento comercial y oportunidades de negocio.",
-    href: "/comercial",
-    status: "Activo",
-    permission: "COMERCIAL_VIEW",
-  },
-  {
-    code: "AL",
-    title: "Abastecimiento y Logística",
-    description:
-      "Compras, inventarios, proveedores, abastecimiento y control logístico interno.",
-    href: "/abastecimiento-logistica",
-    status: "En construcción",
-    permission: "ABASTECIMIENTO_LOGISTICA_VIEW",
-  },
-  {
-    code: "OP",
-    title: "Operaciones",
-    description:
-      "Gestión operativa, trazabilidad de procesos y control de actividades internas.",
-    href: "/operaciones",
-    status: "En construcción",
-    permission: "OPERACIONES_VIEW",
-  },
-  {
-    code: "FI",
-    title: "Financiera",
-    description:
-      "Facturación, cartera, ingresos, egresos y control financiero empresarial.",
-    href: "/financiera",
-    status: "En construcción",
-    permission: "FINANCIERA_VIEW",
-  },
-  {
-    code: "GH",
-    title: "Gestión Humana",
-    description:
-      "Administración de personal, roles, novedades, desempeño y recursos humanos.",
-    href: "/gestion-humana",
-    status: "En construcción",
-    permission: "GESTION_HUMANA_VIEW",
-  },
-  {
-    code: "DD",
-    title: "Diseño y Desarrollo",
-    description:
-      "Gestión creativa, diseño de productos, desarrollo técnico y soporte digital.",
-    href: "/diseno-desarrollo",
-    status: "En construcción",
-    permission: "DISENO_DESARROLLO_VIEW",
-  },
-  {
-    code: "CF",
-    title: "Configuración",
-    description:
-      "Administración de datos maestros, usuarios, permisos, terceros, personal y parámetros base del ERP.",
-    href: "/configuracion",
-    status: "Activo",
-    permission: "CONFIGURACION_VIEW",
-  },
-];
+const legacyPermissions: Record<string, string | undefined> = {
+  JD: undefined,
+  SC: undefined,
+  DF: "FINANCIERA_VIEW",
+  DC: "COMERCIAL_VIEW",
+  DD: "DISENO_DESARROLLO_VIEW",
+  DT: undefined,
+  DO: "OPERACIONES_VIEW",
+  TH: "GESTION_HUMANA_VIEW",
+  CO: "CONFIGURACION_VIEW",
+};
 
 export default function HomePage() {
   const { hasPermission, systemUser } = useAuth();
@@ -86,14 +33,13 @@ export default function HomePage() {
 
           <p className="mt-4 max-w-3xl text-base leading-7 text-gray-600">
             Plataforma integral para centralizar, organizar y controlar los
-            procesos comerciales, logísticos, operativos, financieros,
-            administrativos y organizacionales de A&L Multiformas.
+            procesos de A&L Multiformas.
           </p>
 
           <p className="mt-3 max-w-3xl text-base leading-7 text-gray-600">
-            El sistema permite trabajar con datos maestros controlados,
-            solicitudes internas, aprobaciones, trazabilidad, usuarios por rol y
-            permisos de acceso según las responsabilidades de cada persona.
+            La plataforma está organizada por departamentos y permite gestionar
+            solicitudes, procesos, aprobaciones, trazabilidad, usuarios, roles y
+            permisos de acceso.
           </p>
         </div>
 
@@ -108,25 +54,26 @@ export default function HomePage() {
                 Acceso seguro por usuario
               </p>
               <p className="mt-1 text-sm text-emerald-700/80">
-                El sistema valida sesión, usuario ERP, rol y permisos.
+                CLAP valida sesión, usuario ERP, rol y permisos.
               </p>
             </div>
 
             <div className="rounded-2xl bg-blue-50 p-4">
               <p className="text-sm font-semibold text-[#07076b]">
-                Módulos escalables
+                Estructura centralizada
               </p>
               <p className="mt-1 text-sm text-gray-600">
-                La plataforma está preparada para crecer por áreas y procesos.
+                Los departamentos y rutas principales se administran desde un
+                catálogo central.
               </p>
             </div>
 
             <div className="rounded-2xl bg-amber-50 p-4">
               <p className="text-sm font-semibold text-amber-700">
-                Módulos en construcción
+                CLAP V2 en construcción
               </p>
               <p className="mt-1 text-sm text-amber-700/80">
-                Sistema en constante actualización.
+                Los procesos se irán habilitando progresivamente.
               </p>
             </div>
           </div>
@@ -136,33 +83,40 @@ export default function HomePage() {
       <section>
         <div className="mb-5">
           <h2 className="text-sm font-semibold uppercase tracking-[0.15em] text-gray-400">
-            Módulos del sistema
+            Departamentos
           </h2>
 
           <p className="mt-2 text-sm leading-6 text-gray-600">
-            Los módulos bloqueados aparecen visibles para mostrar la estructura
-            completa del ERP, pero el acceso depende de los permisos asignados a
-            tu usuario.
+            Selecciona el departamento al que deseas ingresar. Los accesos
+            dependen del rol y los permisos asignados a cada usuario.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-          {modules.map((module) => {
-            const isActive = module.status === "Activo";
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {CLAP_DEPARTMENTS.map((department) => {
+            const legacyPermission =
+              legacyPermissions[department.departmentCode ?? ""];
+
             const allowed =
               Boolean(systemUser?.is_super_admin) ||
-              hasPermission(module.permission);
+              (legacyPermission
+                ? hasPermission(legacyPermission)
+                : department.permission
+                  ? hasPermission(department.permission)
+                  : false);
+
+            const isActive = department.status === "active";
 
             const cardContent = (
               <>
                 <div className="flex items-start justify-between gap-5">
                   <div className="flex items-start gap-4">
                     <div
-                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xs font-semibold tracking-wide text-white ${
+                      className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-xs font-semibold tracking-wide text-white ${
                         allowed ? "bg-[#07076b]" : "bg-gray-400"
                       }`}
                     >
-                      {module.code}
+                      {department.code}
                     </div>
 
                     <div>
@@ -171,20 +125,22 @@ export default function HomePage() {
                           allowed ? "text-gray-900" : "text-gray-500"
                         }`}
                       >
-                        {module.title}
+                        {department.label}
                       </h3>
 
                       <p
-                        className={`mt-1.5 max-w-xl text-sm leading-6 ${
+                        className={`mt-1.5 text-sm leading-6 ${
                           allowed ? "text-gray-600" : "text-gray-400"
                         }`}
                       >
-                        {module.description}
+                        {department.description}
                       </p>
                     </div>
                   </div>
+                </div>
 
-                  <div className="flex shrink-0 flex-col items-end gap-2">
+                <div className="mt-5 flex items-center justify-between gap-3">
+                  <div className="flex flex-wrap gap-2">
                     <span
                       className={`rounded-full px-3 py-1 text-xs font-medium ${
                         isActive
@@ -192,7 +148,7 @@ export default function HomePage() {
                           : "bg-amber-50 text-amber-700"
                       }`}
                     >
-                      {module.status}
+                      {isActive ? "Activo" : "En construcción"}
                     </span>
 
                     {!allowed && (
@@ -201,25 +157,25 @@ export default function HomePage() {
                       </span>
                     )}
                   </div>
-                </div>
 
-                {allowed ? (
-                  <span className="mt-5 inline-flex text-sm font-medium text-[#07076b] transition group-hover:translate-x-1">
-                    Ir al módulo →
-                  </span>
-                ) : (
-                  <span className="mt-5 inline-flex text-sm font-medium text-gray-400">
-                    Sin permiso de acceso
-                  </span>
-                )}
+                  {allowed ? (
+                    <span className="text-sm font-medium text-[#07076b] transition group-hover:translate-x-1">
+                      Ir al módulo →
+                    </span>
+                  ) : (
+                    <span className="text-sm font-medium text-gray-400">
+                      Sin acceso
+                    </span>
+                  )}
+                </div>
               </>
             );
 
             if (allowed) {
               return (
                 <Link
-                  key={module.title}
-                  href={module.href}
+                  key={department.id}
+                  href={department.href}
                   className="group rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#07076b]/20 hover:shadow-md"
                 >
                   {cardContent}
@@ -229,7 +185,7 @@ export default function HomePage() {
 
             return (
               <div
-                key={module.title}
+                key={department.id}
                 className="rounded-2xl border border-gray-200 bg-white/70 p-5 opacity-80 shadow-sm"
               >
                 {cardContent}
