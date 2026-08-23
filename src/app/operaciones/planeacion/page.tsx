@@ -11,12 +11,6 @@ export default function PlaneacionPage() {
   return (
     <div className="space-y-10">
       <section>
-        <Link
-          href="/operaciones"
-          className="text-sm font-medium text-[#07076b] transition hover:opacity-70"
-        >
-          ← Volver a Dirección Operaciones
-        </Link>
 
         <div className="mt-6 max-w-4xl">
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.15em] text-gray-400">

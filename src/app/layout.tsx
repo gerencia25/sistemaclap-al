@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { AuthProvider } from "@/components/auth/AuthProvider";
+import Breadcrumb from "@/components/ui/Breadcrumb";
 
 export const metadata: Metadata = {
   title: "ERP Interno",
@@ -21,8 +22,9 @@ export default function RootLayout({
           <Header />
 
           <main className="mx-auto min-h-[calc(100vh-7rem)] max-w-7xl px-6 py-8">
-            {children}
-          </main>
+  <Breadcrumb />
+  {children}
+</main>
 
           <Footer />
         </AuthProvider>
