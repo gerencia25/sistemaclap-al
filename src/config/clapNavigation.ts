@@ -103,6 +103,118 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
       "Cotizaciones, pedidos, clientes y procesos comerciales.",
   },
 
+    {
+    id: "dc-viabilidad-producto",
+    code: "VP",
+    label: "Viabilidad de producto",
+    href: "/comercial/viabilidad-producto",
+    parentId: "dc",
+    departmentCode: "DC",
+    type: "page",
+    status: "construction",
+    permission: "DC_VIABILIDAD_VIEW",
+    description:
+      "Solicitud de análisis de viabilidad para nuevos productos dirigida a Diseño y Desarrollo.",
+  },
+
+  {
+    id: "dc-solicitud-terceros",
+    code: "ST",
+    label: "Solicitud de terceros",
+    href: "/comercial/solicitud-terceros",
+    parentId: "dc",
+    departmentCode: "DC",
+    type: "page",
+    status: "construction",
+    permission: "DC_TERCEROS_VIEW",
+    description:
+      "Solicitud de creación o revisión de terceros requerida por el proceso comercial.",
+  },
+
+  {
+    id: "dc-cotizaciones",
+    code: "COT",
+    label: "Creación de cotización",
+    href: "/comercial/cotizaciones",
+    parentId: "dc",
+    departmentCode: "DC",
+    type: "page",
+    status: "construction",
+    permission: "DC_COTIZACIONES_VIEW",
+    description:
+      "Creación, consulta y seguimiento de cotizaciones comerciales.",
+  },
+
+  {
+    id: "dc-pedidos",
+    code: "PED",
+    label: "Toma de pedido",
+    href: "/comercial/pedidos",
+    parentId: "dc",
+    departmentCode: "DC",
+    type: "page",
+    status: "construction",
+    permission: "DC_PEDIDOS_VIEW",
+    description:
+      "Registro y seguimiento de pedidos comerciales con su respectivo soporte documental.",
+  },
+
+  {
+    id: "dc-devoluciones",
+    code: "DEV",
+    label: "Devolución de mercancía",
+    href: "/comercial/devoluciones",
+    parentId: "dc",
+    departmentCode: "DC",
+    type: "page",
+    status: "construction",
+    permission: "DC_DEVOLUCIONES_VIEW",
+    description:
+      "Proceso comercial relacionado con devoluciones de mercancía.",
+  },
+
+  {
+    id: "dc-quejas-reclamos",
+    code: "PQR",
+    label: "Quejas y reclamos",
+    href: "/comercial/quejas-reclamos",
+    parentId: "dc",
+    departmentCode: "DC",
+    type: "page",
+    status: "construction",
+    permission: "DC_PQR_VIEW",
+    description:
+      "Gestión de quejas y reclamos recibidos desde el proceso comercial.",
+  },
+
+  {
+    id: "dc-satisfaccion-cliente",
+    code: "SAT",
+    label: "Satisfacción del cliente",
+    href: "/comercial/satisfaccion-cliente",
+    parentId: "dc",
+    departmentCode: "DC",
+    type: "page",
+    status: "construction",
+    permission: "DC_SATISFACCION_VIEW",
+    description:
+      "Proceso de seguimiento a la satisfacción de los clientes.",
+  },
+
+  {
+    id: "dc-caracterizacion",
+    code: "CP",
+    label: "Caracterización y procedimiento",
+    href: "/comercial/caracterizacion-procedimiento",
+    parentId: "dc",
+    departmentCode: "DC",
+    type: "page",
+    status: "construction",
+    permission: "DC_CARACTERIZACION_VIEW",
+    description:
+      "Documentación vigente de caracterización y procedimientos de Dirección Comercial.",
+  },
+  
   {
     id: "dd",
     code: "DD",
