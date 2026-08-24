@@ -5,6 +5,15 @@ import { useAuth } from "@/components/auth/AuthProvider";
 
 const configOptions = [
   {
+    code: "LP",
+    title: "Listas y parámetros",
+    description:
+      "Administra listas desplegables, opciones y parámetros generales utilizados en los formularios de CLAP.",
+    href: "/configuracion/listas-parametros",
+    status: "Activo",
+    permission: "LISTAS_PARAMETROS_MANAGE",
+  },
+  {
     code: "CD",
     title: "Codificación",
     description:

@@ -134,17 +134,40 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
   {
     id: "dc-cotizaciones",
     code: "COT",
-    label: "Creación de cotización",
+    label: "Cotizaciones",
     href: "/comercial/cotizaciones",
     parentId: "dc",
     departmentCode: "DC",
     type: "page",
-    status: "construction",
+    status: "active",
     permission: "DC_COTIZACIONES_VIEW",
     description:
       "Creación, consulta y seguimiento de cotizaciones comerciales.",
   },
-
+{
+  id: "dc-cotizaciones-nueva",
+  code: "NC",
+  label: "Nueva cotización",
+  href: "/comercial/cotizaciones/nueva",
+  parentId: "dc-cotizaciones",
+  departmentCode: "DC",
+  type: "page",
+  status: "active",
+  permission: "DC_COTIZACIONES_VIEW",
+  description: "Inicio del proceso de creación de una nueva cotización.",
+},
+{
+  id: "dc-cotizaciones-nueva-producto-linea",
+  code: "PL",
+  label: "Producto de línea",
+  href: "/comercial/cotizaciones/nueva/producto-linea",
+  parentId: "dc-cotizaciones-nueva",
+  departmentCode: "DC",
+  type: "page",
+  status: "active",
+  permission: "DC_COTIZACIONES_VIEW",
+  description: "Creación de cotización para productos de línea.",
+},
   {
     id: "dc-pedidos",
     code: "PED",
@@ -481,6 +504,46 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
     description:
       "Administración de usuarios, permisos y parámetros generales de CLAP.",
   },
+
+  {
+    id: "co-listas-parametros",
+    code: "LP",
+    label: "Listas y parámetros",
+    href: "/configuracion/listas-parametros",
+    parentId: "co",
+    departmentCode: "CO",
+    type: "page",
+    status: "active",
+    permission: "LISTAS_PARAMETROS_MANAGE",
+    description:
+      "Administra listas desplegables y parámetros utilizados por los módulos de CLAP.",
+  },
+  {
+  id: "co-listas-parametros-lineas-negocio",
+  code: "LN",
+  label: "Líneas de negocio",
+  href: "/configuracion/listas-parametros/lineas-negocio",
+  parentId: "co-listas-parametros",
+  departmentCode: "CO",
+  type: "page",
+  status: "active",
+  permission: "LISTAS_PARAMETROS_MANAGE",
+  description:
+    "Administración de líneas de negocio utilizadas por CLAP.",
+},
+{
+  id: "co-listas-parametros-segmentos-comerciales",
+  code: "SC",
+  label: "Segmentos comerciales",
+  href: "/configuracion/listas-parametros/segmentos-comerciales",
+  parentId: "co-listas-parametros",
+  departmentCode: "CO",
+  type: "page",
+  status: "active",
+  permission: "LISTAS_PARAMETROS_MANAGE",
+  description:
+    "Administración de segmentos comerciales utilizados por CLAP.",
+},
 ];
 
 export const CLAP_DEPARTMENTS = CLAP_NAVIGATION.filter(
