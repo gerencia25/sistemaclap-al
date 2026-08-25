@@ -83,12 +83,38 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
     parentId: "inicio",
     departmentCode: "DF",
     type: "department",
-    status: "construction",
+    status: "active",
     permission: "DF_VIEW",
     description:
       "Gestión financiera, aprobaciones y procesos administrativos.",
   },
 
+  {
+  id: "df-terceros",
+  code: "TER",
+  label: "Terceros",
+  href: "/direccion-financiera/terceros",
+  parentId: "df",
+  departmentCode: "DF",
+  type: "page",
+  status: "active",
+  permission: "TERCEROS_VIEW",
+  description:
+    "Administración, creación y consulta del maestro de clientes, proveedores y otros terceros.",
+},
+{
+  id: "df-caracterizacion-procedimiento",
+  code: "CP",
+  label: "Caracterización y procedimiento",
+  href: "/direccion-financiera/caracterizacion-procedimiento",
+  parentId: "df",
+  departmentCode: "DF",
+  type: "page",
+  status: "active",
+  permission: "DF_VIEW",
+  description:
+    "Documentos oficiales de caracterización y procedimiento de la Dirección Financiera.",
+},
   {
     id: "dc",
     code: "DC",
@@ -125,7 +151,7 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
     parentId: "dc",
     departmentCode: "DC",
     type: "page",
-    status: "construction",
+    status: "active",
     permission: "DC_TERCEROS_VIEW",
     description:
       "Solicitud de creación o revisión de terceros requerida por el proceso comercial.",
@@ -543,6 +569,19 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
   permission: "LISTAS_PARAMETROS_MANAGE",
   description:
     "Administración de segmentos comerciales utilizados por CLAP.",
+},
+{
+  id: "co-listas-parametros-categorias-terceros",
+  code: "CT",
+  label: "Categorías de terceros",
+  href: "/configuracion/listas-parametros/categorias-terceros",
+  parentId: "co-listas-parametros",
+  departmentCode: "CO",
+  type: "page",
+  status: "active",
+  permission: "LISTAS_PARAMETROS_MANAGE",
+  description:
+    "Administración de categorías utilizadas para clientes, proveedores y otros terceros.",
 },
 ];
 

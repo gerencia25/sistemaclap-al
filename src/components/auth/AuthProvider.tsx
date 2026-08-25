@@ -61,6 +61,10 @@ const protectedRoutes = [
     permission: "CONFIGURACION_VIEW",
   },
   {
+  path: "/comercial/solicitud-terceros",
+  permission: "DC_TERCEROS_VIEW",
+},
+  {
     path: "/comercial",
     permission: "COMERCIAL_VIEW",
   },
@@ -73,9 +77,13 @@ const protectedRoutes = [
     permission: "OPERACIONES_VIEW",
   },
   {
-    path: "/financiera",
-    permission: "FINANCIERA_VIEW",
-  },
+  path: "/direccion-financiera/terceros",
+  permission: "TERCEROS_VIEW",
+},
+{
+  path: "/direccion-financiera",
+  permission: "DF_VIEW",
+},
   {
     path: "/gestion-humana",
     permission: "GESTION_HUMANA_VIEW",

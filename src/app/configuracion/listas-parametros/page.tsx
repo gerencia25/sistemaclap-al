@@ -17,6 +17,14 @@ const parameterGroups = [
     status: "Activo",
     href: "/configuracion/listas-parametros/segmentos-comerciales",
   },
+  {
+  code: "CT",
+  title: "Categorías de terceros",
+  description:
+    "Cliente, Proveedor y futuras categorías utilizadas en las solicitudes y maestro de terceros.",
+  status: "Activo",
+  href: "/configuracion/listas-parametros/categorias-terceros",
+},
 ];
 
 export default function ListasParametrosPage() {
