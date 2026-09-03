@@ -32,24 +32,6 @@ const configOptions = [
     permission: "TERCEROS_VIEW",
   },
   {
-    code: "PE",
-    title: "Personal",
-    description:
-      "Administrar empleados, solicitudes de creación, cargos, áreas y estado laboral del personal.",
-    href: "/configuracion/personal",
-    status: "Activo",
-    permission: "PERSONAL_VIEW",
-  },
-  {
-    code: "AC",
-    title: "Áreas y cargos",
-    description:
-      "Administrar la estructura organizacional, áreas, cargos, niveles jerárquicos y relaciones internas.",
-    href: "/configuracion/areas-cargos",
-    status: "Activo",
-    permission: "AREAS_CARGOS_MANAGE",
-  },
-  {
     code: "UP",
     title: "Usuarios y permisos",
     description:

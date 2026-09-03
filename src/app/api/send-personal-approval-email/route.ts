@@ -11,9 +11,11 @@ export async function POST(request: Request) {
       to,
       requestNumber,
       requesterName,
-      employeeFullName,
+      requestReason,
       area,
       position,
+      requestedQuantity,
+      requiredDate,
     } = body;
 
     if (!process.env.RESEND_API_KEY) {
@@ -33,26 +35,32 @@ export async function POST(request: Request) {
     const { error } = await resend.emails.send({
       from: "Sistema CLAP <notificaciones@mail.almultiformas.com>",
       to: [to],
-      subject: `Solicitud creación de personal aprobada ${requestNumber}`,
+      subject: `Solicitud de personal aprobada ${requestNumber}`,
       html: `
         <div style="font-family: Arial, sans-serif; color: #111827; line-height: 1.6;">
-          <h2 style="color: #07076b;">Solicitud creación de personal aprobada</h2>
+          <h2 style="color: #07076b;">Solicitud de personal aprobada</h2>
 
           <p>Hola ${requesterName},</p>
 
           <p>
-            Tu solicitud de creación de personal ha sido aprobada en el Sistema CLAP.
+            Talento Humano ha aprobado la necesidad de personal registrada
+            en el Sistema CLAP y procederá con la gestión correspondiente.
           </p>
+
+          <h3>Información de la solicitud</h3>
 
           <ul>
             <li><strong>Consecutivo:</strong> ${requestNumber}</li>
-            <li><strong>Empleado solicitado:</strong> ${employeeFullName}</li>
-            <li><strong>Área:</strong> ${area}</li>
-            <li><strong>Cargo:</strong> ${position}</li>
+            <li><strong>Motivo:</strong> ${requestReason || "No definido"}</li>
+            <li><strong>Área requerida:</strong> ${area}</li>
+            <li><strong>Cargo requerido:</strong> ${position}</li>
+            <li><strong>Cantidad:</strong> ${requestedQuantity || 1}</li>
+            <li><strong>Fecha requerida:</strong> ${requiredDate || "No definida"}</li>
           </ul>
 
           <p>
-            El siguiente paso es crear el empleado en la base de datos de personal.
+            La aprobación de esta solicitud confirma la necesidad de personal.
+            Talento Humano continuará con el proceso de gestión correspondiente.
           </p>
         </div>
       `,

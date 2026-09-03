@@ -11,9 +11,11 @@ export async function POST(request: Request) {
       to,
       requestNumber,
       requesterName,
-      employeeFullName,
+      requestReason,
       area,
       position,
+      requestedQuantity,
+      requiredDate,
       rejectionReason,
     } = body;
 
@@ -34,26 +36,38 @@ export async function POST(request: Request) {
     const { error } = await resend.emails.send({
       from: "Sistema CLAP <notificaciones@mail.almultiformas.com>",
       to: [to],
-      subject: `Solicitud creación de personal rechazada ${requestNumber}`,
+      subject: `Solicitud de personal rechazada ${requestNumber}`,
       html: `
         <div style="font-family: Arial, sans-serif; color: #111827; line-height: 1.6;">
-          <h2 style="color: #991b1b;">Solicitud creación de personal rechazada</h2>
+          <h2 style="color: #991b1b;">Solicitud de personal rechazada</h2>
 
           <p>Hola ${requesterName},</p>
 
           <p>
-            Tu solicitud de creación de personal fue rechazada en el Sistema CLAP.
+            Talento Humano ha rechazado la solicitud de personal registrada
+            en el Sistema CLAP.
           </p>
+
+          <h3>Información de la solicitud</h3>
 
           <ul>
             <li><strong>Consecutivo:</strong> ${requestNumber}</li>
-            <li><strong>Empleado solicitado:</strong> ${employeeFullName}</li>
-            <li><strong>Área:</strong> ${area}</li>
-            <li><strong>Cargo:</strong> ${position}</li>
+            <li><strong>Motivo:</strong> ${requestReason || "No definido"}</li>
+            <li><strong>Área requerida:</strong> ${area}</li>
+            <li><strong>Cargo requerido:</strong> ${position}</li>
+            <li><strong>Cantidad:</strong> ${requestedQuantity || 1}</li>
+            <li><strong>Fecha requerida:</strong> ${requiredDate || "No definida"}</li>
           </ul>
 
           <h3>Motivo del rechazo</h3>
-          <p>${rejectionReason}</p>
+
+          <p>
+            ${rejectionReason || "No se registró un motivo de rechazo."}
+          </p>
+
+          <p style="margin-top: 24px;">
+            Consulta el Sistema CLAP para revisar el detalle de la solicitud.
+          </p>
         </div>
       `,
     });

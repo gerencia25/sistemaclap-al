@@ -41,13 +41,21 @@ const protectedRoutes = [
     permission: "USUARIOS_PERMISOS_MANAGE",
   },
   {
-    path: "/configuracion/areas-cargos",
-    permission: "AREAS_CARGOS_MANAGE",
-  },
-  {
-    path: "/configuracion/personal",
-    permission: "PERSONAL_VIEW",
-  },
+  path: "/talento-humano/estructura-organizacional",
+  permission: "AREAS_CARGOS_MANAGE",
+},
+{
+  path: "/talento-humano/personal",
+  permission: "PERSONAL_VIEW",
+},
+{
+  path: "/talento-humano/solicitudes-personal",
+  permission: "PERSONAL_VIEW",
+},
+{
+  path: "/talento-humano",
+  permission: "TH_VIEW",
+},
   {
     path: "/configuracion/terceros",
     permission: "TERCEROS_VIEW",
@@ -63,6 +71,10 @@ const protectedRoutes = [
   {
   path: "/comercial/solicitud-terceros",
   permission: "DC_TERCEROS_VIEW",
+},
+{
+  path: "/comercial/solicitud-personal",
+  permission: "COMERCIAL_VIEW",
 },
   {
     path: "/comercial",

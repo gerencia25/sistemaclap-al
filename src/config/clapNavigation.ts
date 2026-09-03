@@ -90,6 +90,20 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
   },
 
   {
+    id: "df-solicitud-personal",
+    code: "SP",
+    label: "Solicitud de personal",
+    href: "/direccion-financiera/solicitud-personal",
+    parentId: "df",
+    departmentCode: "DF",
+    type: "page",
+    status: "active",
+    permission: "DF_VIEW",
+    description:
+      "Solicitud de necesidades de personal dirigida a Talento Humano.",
+  },
+
+  {
   id: "df-terceros",
   code: "TER",
   label: "Terceros",
@@ -156,6 +170,20 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
     description:
       "Solicitud de creación o revisión de terceros requerida por el proceso comercial.",
   },
+
+  {
+  id: "dc-solicitud-personal",
+  code: "SP",
+  label: "Solicitud de personal",
+  href: "/comercial/solicitud-personal",
+  parentId: "dc",
+  departmentCode: "DC",
+  type: "page",
+  status: "active",
+  permission: "COMERCIAL_VIEW",
+  description:
+    "Solicitud de necesidades de personal dirigida a Talento Humano.",
+},
 
   {
     id: "dc-cotizaciones",
@@ -279,6 +307,20 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
   },
 
   {
+    id: "dd-solicitud-personal",
+    code: "SP",
+    label: "Solicitud de personal",
+    href: "/diseno-desarrollo/solicitud-personal",
+    parentId: "dd",
+    departmentCode: "DD",
+    type: "page",
+    status: "active",
+    permission: "DD_VIEW",
+    description:
+      "Solicitud de necesidades de personal dirigida a Talento Humano.",
+  },
+
+  {
     id: "dt",
     code: "DT",
     label: "Dirección Técnica",
@@ -293,6 +335,20 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
   },
 
   {
+    id: "dt-solicitud-personal",
+    code: "SP",
+    label: "Solicitud de personal",
+    href: "/direccion-tecnica/solicitud-personal",
+    parentId: "dt",
+    departmentCode: "DT",
+    type: "page",
+    status: "active",
+    permission: "DT_VIEW",
+    description:
+      "Solicitud de necesidades de personal dirigida a Talento Humano.",
+  },
+
+  {
     id: "do",
     code: "DO",
     label: "Dirección Operaciones",
@@ -304,6 +360,20 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
     permission: "DO_VIEW",
     description:
       "Planeación, abastecimiento, logística y procesos productivos.",
+  },
+
+  {
+    id: "do-solicitud-personal",
+    code: "SP",
+    label: "Solicitud de personal",
+    href: "/operaciones/solicitud-personal",
+    parentId: "do",
+    departmentCode: "DO",
+    type: "page",
+    status: "active",
+    permission: "DO_VIEW",
+    description:
+      "Solicitud de necesidades de personal dirigida a Talento Humano.",
   },
 
     {
@@ -511,11 +581,79 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
     parentId: "inicio",
     departmentCode: "TH",
     type: "department",
-    status: "construction",
+    status: "active",
     permission: "TH_VIEW",
     description:
       "Gestión de personal y procesos relacionados con Talento Humano.",
   },
+
+  {
+  id: "th-caracterizacion-procedimiento",
+  code: "CP",
+  label: "Caracterización y procedimiento",
+  href: "/talento-humano/caracterizacion-procedimiento",
+  parentId: "th",
+  departmentCode: "TH",
+  type: "page",
+  status: "active",
+  permission: "TH_VIEW",
+  description:
+    "Documentos oficiales de caracterización y procedimiento de Talento Humano.",
+},
+{
+  id: "th-solicitudes-personal",
+  code: "SP",
+  label: "Solicitudes de personal",
+  href: "/talento-humano/solicitudes-personal",
+  parentId: "th",
+  departmentCode: "TH",
+  type: "page",
+  status: "active",
+  permission: "PERSONAL_VIEW",
+  description:
+    "Bandeja de solicitudes de creación y gestión de personal recibidas por Talento Humano.",
+},
+{
+  id: "th-personal",
+  code: "PER",
+  label: "Personal",
+  href: "/talento-humano/personal",
+  parentId: "th",
+  departmentCode: "TH",
+  type: "page",
+  status: "active",
+  permission: "TH_VIEW",
+  description:
+    "Administración del maestro de empleados de la organización.",
+},
+
+{
+  id: "th-personal-base-datos",
+  code: "BD",
+  label: "Base de datos de personal",
+  href: "/talento-humano/personal/base-datos",
+  parentId: "th-personal",
+  departmentCode: "TH",
+  type: "page",
+  status: "active",
+  permission: "TH_VIEW",
+  description:
+    "Consulta, creación y actualización de empleados, cargos y datos laborales.",
+},
+
+{
+  id: "th-estructura-organizacional",
+  code: "EO",
+  label: "Estructura organizacional",
+  href: "/talento-humano/estructura-organizacional",
+  parentId: "th",
+  departmentCode: "TH",
+  type: "page",
+  status: "active",
+  permission: "TH_VIEW",
+  description:
+    "Administración de áreas, cargos, niveles jerárquicos y relaciones de reporte.",
+},
 
   {
     id: "co",

@@ -13,12 +13,14 @@ export async function POST(request: Request) {
       requesterArea,
       requesterPosition,
       requesterEmail,
-      employeeFullName,
-      documentNumber,
+
+      requestReason,
       area,
       position,
-      hireDate,
+      requestedQuantity,
+      requiredDate,
       contractType,
+      replacementEmployeeName,
       detailedDescription,
     } = body;
 
@@ -32,22 +34,30 @@ export async function POST(request: Request) {
     const { error } = await resend.emails.send({
       from: "Sistema CLAP <notificaciones@mail.almultiformas.com>",
       to: ["administrador@almultiformas.com"],
-      subject: `Nueva solicitud creación de personal ${requestNumber}`,
+      subject: `Nueva solicitud de personal ${requestNumber}`,
       html: `
         <div style="font-family: Arial, sans-serif; color: #111827; line-height: 1.6;">
-          <h2 style="color: #07076b;">Nueva solicitud creación de personal</h2>
+          <h2 style="color: #07076b;">Nueva solicitud de personal</h2>
 
-          <p>Se ha registrado una nueva solicitud de creación de personal en el Sistema CLAP.</p>
+          <p>
+            Se ha registrado una nueva necesidad de personal en el Sistema CLAP
+            para revisión de Talento Humano.
+          </p>
 
-          <h3>Información de la solicitud</h3>
+          <h3>Necesidad de personal</h3>
           <ul>
             <li><strong>Consecutivo:</strong> ${requestNumber}</li>
-            <li><strong>Empleado solicitado:</strong> ${employeeFullName}</li>
-            <li><strong>Documento:</strong> ${documentNumber}</li>
-            <li><strong>Área:</strong> ${area}</li>
-            <li><strong>Cargo:</strong> ${position}</li>
-            <li><strong>Fecha estimada de ingreso:</strong> ${hireDate || "No definida"}</li>
-            <li><strong>Tipo de contrato:</strong> ${contractType || "No definido"}</li>
+            <li><strong>Motivo:</strong> ${requestReason || "No definido"}</li>
+            <li><strong>Área requerida:</strong> ${area}</li>
+            <li><strong>Cargo requerido:</strong> ${position}</li>
+            <li><strong>Cantidad:</strong> ${requestedQuantity || 1}</li>
+            <li><strong>Fecha requerida:</strong> ${requiredDate || "No definida"}</li>
+            <li><strong>Tipo de contrato sugerido:</strong> ${contractType || "No definido"}</li>
+            ${
+              replacementEmployeeName
+                ? `<li><strong>Persona a reemplazar:</strong> ${replacementEmployeeName}</li>`
+                : ""
+            }
           </ul>
 
           <h3>Solicitante</h3>
@@ -58,11 +68,11 @@ export async function POST(request: Request) {
             <li><strong>Correo:</strong> ${requesterEmail}</li>
           </ul>
 
-          <h3>Descripción / justificación</h3>
+          <h3>Justificación / perfil requerido</h3>
           <p>${detailedDescription || "Sin descripción adicional."}</p>
 
           <p style="margin-top: 24px;">
-            Ingresa al Sistema CLAP para revisar, aprobar o rechazar esta solicitud.
+            Ingresa al Sistema CLAP para revisar y gestionar esta solicitud.
           </p>
         </div>
       `,
