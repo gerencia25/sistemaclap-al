@@ -555,68 +555,64 @@ export default function PersonalBaseDatosClient() {
     );
   }
 
-  async function fetchLinkedRequest(
-    id: string
+async function fetchLinkedRequest(
+  id: string
+) {
+  // =====================================================
+  // 1. OBTENER SESIÓN
+  // =====================================================
+
+  const {
+    data: { session },
+    error: sessionError,
+  } = await supabase.auth.getSession();
+
+  if (
+    sessionError ||
+    !session?.access_token
   ) {
-    const { data, error } =
-      await supabase
-        .from("employee_requests")
-        .select("*")
-        .eq("id", id)
-        .single();
+    alert(
+      "No se encontró una sesión válida. Inicia sesión nuevamente."
+    );
 
-    if (error) {
-      alert(
-        `Error cargando la solicitud de personal: ${error.message}`
-      );
+    return;
+  }
 
-      return;
+  // =====================================================
+  // 2. CONSULTAR SOLICITUD VINCULADA MEDIANTE API
+  // =====================================================
+
+  const response = await fetch(
+    `/api/talento-humano/solicitudes-personal/vinculada?request_id=${encodeURIComponent(id)}`,
+    {
+      method: "GET",
+
+      headers: {
+        Authorization:
+          `Bearer ${session.access_token}`,
+      },
     }
+  );
 
-    const request = data as EmployeeRequest;
+  const responseBody =
+    await response.json();
 
-    if (request.status !== "En gestión") {
-      alert(
-        `La solicitud ${request.request_number} no está en estado En gestión.`
-      );
+  if (!response.ok) {
+    alert(
+      responseBody?.error ??
+        "No fue posible cargar la solicitud de personal."
+    );
 
-      return;
-    }
+    return;
+  }
 
-    const {
-      count,
-      error: countError,
-    } = await supabase
-      .from("employee_request_fulfillments")
-      .select("id", {
-        count: "exact",
-        head: true,
-      })
-      .eq(
-        "request_id",
-        request.id
-      );
+  const request =
+    responseBody?.data?.request as EmployeeRequest;
 
-    if (countError) {
-      alert(
-        `Error consultando la cobertura de la solicitud: ${countError.message}`
-      );
-
-      return;
-    }
-
-    const fulfilledCount = count ?? 0;
-
-    if (
-      fulfilledCount >=
-      request.requested_quantity
-    ) {
-      alert(
-        `La solicitud ${request.request_number} ya tiene cubierta la cantidad solicitada.`
-      );
-
-      return;
-    }
+  const fulfilledCount =
+    Number(
+      responseBody?.data?.fulfilled_count ?? 0
+    );
 
     const resolvedAreaId =
       resolveAreaId(

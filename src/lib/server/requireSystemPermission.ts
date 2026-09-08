@@ -3,6 +3,8 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin";
 export type AuthorizedSystemUser = {
   id: string;
   auth_user_id: string | null;
+  employee_id: string | null;
+  full_name: string;
   email: string;
   role_id: string | null;
   status: string;
@@ -20,24 +22,43 @@ export class ApiAuthorizationError extends Error {
 }
 
 function getBearerToken(request: Request) {
-  const authorization = request.headers.get("authorization");
+  const authorization =
+    request.headers.get("authorization");
 
-  if (!authorization) return null;
+  if (!authorization) {
+    return null;
+  }
 
-  const [scheme, token] = authorization.split(" ");
+  const [scheme, token] =
+    authorization.split(" ");
 
-  if (scheme?.toLowerCase() !== "bearer" || !token) {
+  if (
+    scheme?.toLowerCase() !== "bearer" ||
+    !token
+  ) {
     return null;
   }
 
   return token;
 }
 
-export async function requireSystemPermission(
+
+// =========================================================
+// USUARIO CLAP ACTIVO
+//
+// Valida:
+// 1. Sesión Supabase
+// 2. Existencia en system_users
+// 3. Estado Activo
+//
+// No exige un permiso particular.
+// =========================================================
+
+export async function requireActiveSystemUser(
   request: Request,
-  permissionCode: string,
 ): Promise<AuthorizedSystemUser> {
-  const accessToken = getBearerToken(request);
+  const accessToken =
+    getBearerToken(request);
 
   if (!accessToken) {
     throw new ApiAuthorizationError(
@@ -49,32 +70,51 @@ export async function requireSystemPermission(
   const {
     data: { user: authUser },
     error: authError,
-  } = await supabaseAdmin.auth.getUser(accessToken);
+  } = await supabaseAdmin.auth.getUser(
+    accessToken,
+  );
 
-  if (authError || !authUser) {
+  if (
+    authError ||
+    !authUser
+  ) {
     throw new ApiAuthorizationError(
       "La sesión no es válida o ya expiró.",
       401,
     );
   }
 
-  let systemUser: AuthorizedSystemUser | null = null;
+  let systemUser:
+    | AuthorizedSystemUser
+    | null = null;
 
-  const { data: userByAuthId, error: userByAuthIdError } =
-    await supabaseAdmin
-      .from("system_users")
-      .select(
-        `
-          id,
-          auth_user_id,
-          email,
-          role_id,
-          status,
-          is_super_admin
-        `,
-      )
-      .eq("auth_user_id", authUser.id)
-      .maybeSingle();
+
+  // =======================================================
+  // BUSCAR PRIMERO POR auth_user_id
+  // =======================================================
+
+  const {
+    data: userByAuthId,
+    error: userByAuthIdError,
+  } = await supabaseAdmin
+    .from("system_users")
+    .select(
+      `
+        id,
+        auth_user_id,
+        employee_id,
+        full_name,
+        email,
+        role_id,
+        status,
+        is_super_admin
+      `,
+    )
+    .eq(
+      "auth_user_id",
+      authUser.id,
+    )
+    .maybeSingle();
 
   if (userByAuthIdError) {
     throw new Error(
@@ -83,27 +123,46 @@ export async function requireSystemPermission(
   }
 
   if (userByAuthId) {
-    systemUser = userByAuthId as AuthorizedSystemUser;
+    systemUser =
+      userByAuthId as AuthorizedSystemUser;
   }
 
-  // Compatibilidad con usuarios antiguos que todavía
-  // no tengan auth_user_id enlazado.
-  if (!systemUser && authUser.email) {
-    const { data: userByEmail, error: userByEmailError } =
-      await supabaseAdmin
-        .from("system_users")
-        .select(
-          `
-            id,
-            auth_user_id,
-            email,
-            role_id,
-            status,
-            is_super_admin
-          `,
-        )
-        .eq("email", authUser.email.trim().toLowerCase())
-        .maybeSingle();
+
+  // =======================================================
+  // COMPATIBILIDAD CON USUARIOS ANTIGUOS
+  //
+  // Algunos usuarios todavía pueden no tener auth_user_id
+  // enlazado. En ese caso buscamos por correo.
+  // =======================================================
+
+  if (
+    !systemUser &&
+    authUser.email
+  ) {
+    const {
+      data: userByEmail,
+      error: userByEmailError,
+    } = await supabaseAdmin
+      .from("system_users")
+      .select(
+        `
+          id,
+          auth_user_id,
+          employee_id,
+          full_name,
+          email,
+          role_id,
+          status,
+          is_super_admin
+        `,
+      )
+      .eq(
+        "email",
+        authUser.email
+          .trim()
+          .toLowerCase(),
+      )
+      .maybeSingle();
 
     if (userByEmailError) {
       throw new Error(
@@ -112,9 +171,15 @@ export async function requireSystemPermission(
     }
 
     if (userByEmail) {
-      systemUser = userByEmail as AuthorizedSystemUser;
+      systemUser =
+        userByEmail as AuthorizedSystemUser;
     }
   }
+
+
+  // =======================================================
+  // VALIDAR USUARIO CLAP
+  // =======================================================
 
   if (!systemUser) {
     throw new ApiAuthorizationError(
@@ -123,17 +188,49 @@ export async function requireSystemPermission(
     );
   }
 
-  if (systemUser.status !== "Activo") {
+  if (
+    systemUser.status !== "Activo"
+  ) {
     throw new ApiAuthorizationError(
       "El usuario CLAP se encuentra inactivo.",
       403,
     );
   }
 
-  // El superadministrador tiene acceso total.
-  if (systemUser.is_super_admin) {
+  return systemUser;
+}
+
+
+// =========================================================
+// USUARIO CLAP + PERMISO ESPECÍFICO
+// =========================================================
+
+export async function requireSystemPermission(
+  request: Request,
+  permissionCode: string,
+): Promise<AuthorizedSystemUser> {
+
+  // Primero aplicamos toda la validación común.
+  const systemUser =
+    await requireActiveSystemUser(
+      request,
+    );
+
+
+  // =======================================================
+  // SUPERADMINISTRADOR
+  // =======================================================
+
+  if (
+    systemUser.is_super_admin
+  ) {
     return systemUser;
   }
+
+
+  // =======================================================
+  // ROL
+  // =======================================================
 
   if (!systemUser.role_id) {
     throw new ApiAuthorizationError(
@@ -142,13 +239,28 @@ export async function requireSystemPermission(
     );
   }
 
-  const { data: permission, error: permissionError } =
-    await supabaseAdmin
-      .from("system_permissions")
-      .select("id, permission_code")
-      .eq("permission_code", permissionCode)
-      .eq("status", "Activo")
-      .maybeSingle();
+
+  // =======================================================
+  // PERMISO
+  // =======================================================
+
+  const {
+    data: permission,
+    error: permissionError,
+  } = await supabaseAdmin
+    .from("system_permissions")
+    .select(
+      "id, permission_code",
+    )
+    .eq(
+      "permission_code",
+      permissionCode,
+    )
+    .eq(
+      "status",
+      "Activo",
+    )
+    .maybeSingle();
 
   if (permissionError) {
     throw new Error(
@@ -163,13 +275,30 @@ export async function requireSystemPermission(
     );
   }
 
-  const { data: rolePermission, error: rolePermissionError } =
-    await supabaseAdmin
-      .from("system_role_permissions")
-      .select("permission_id")
-      .eq("role_id", systemUser.role_id)
-      .eq("permission_id", permission.id)
-      .maybeSingle();
+
+  // =======================================================
+  // PERMISO DEL ROL
+  // =======================================================
+
+  const {
+    data: rolePermission,
+    error: rolePermissionError,
+  } = await supabaseAdmin
+    .from(
+      "system_role_permissions",
+    )
+    .select(
+      "permission_id",
+    )
+    .eq(
+      "role_id",
+      systemUser.role_id,
+    )
+    .eq(
+      "permission_id",
+      permission.id,
+    )
+    .maybeSingle();
 
   if (rolePermissionError) {
     throw new Error(

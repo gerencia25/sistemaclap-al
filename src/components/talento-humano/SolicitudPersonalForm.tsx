@@ -242,30 +242,6 @@ export default function SolicitudPersonalForm({
     setEmployees((employeesResult.data ?? []) as Employee[]);
   }
 
-  async function generateRequestNumber() {
-    const { data, error } = await supabase
-      .from("employee_requests")
-      .select("request_number")
-      .ilike("request_number", "SCP-%")
-      .order("request_number", { ascending: false })
-      .limit(1);
-
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    const lastCode =
-      data?.[0]?.request_number as string | undefined;
-
-    const match = lastCode?.match(/SCP-(\d+)/);
-
-    const nextNumber = match
-      ? Number(match[1]) + 1
-      : 1;
-
-    return `SCP-${String(nextNumber).padStart(6, "0")}`;
-  }
-
   function handleAreaChange(areaId: string) {
     setForm((current) => ({
       ...current,
@@ -294,191 +270,257 @@ export default function SolicitudPersonalForm({
   }
 
   async function handleSubmit(
-    event: FormEvent<HTMLFormElement>
+  event: FormEvent<HTMLFormElement>
+) {
+  event.preventDefault();
+
+  if (
+    !form.requester_area.trim() ||
+    !form.requester_name.trim() ||
+    !form.requester_email.trim() ||
+    !form.request_reason ||
+    !form.area_id ||
+    !form.position_id ||
+    form.requested_quantity < 1 ||
+    !form.detailed_description.trim()
   ) {
-    event.preventDefault();
+    alert("Completa todos los campos obligatorios.");
+    return;
+  }
 
-    if (
-      !form.requester_area.trim() ||
-      !form.requester_name.trim() ||
-      !form.requester_email.trim() ||
-      !form.request_reason ||
-      !form.area_id ||
-      !form.position_id ||
-      form.requested_quantity < 1 ||
-      !form.detailed_description.trim()
-    ) {
-      alert("Completa todos los campos obligatorios.");
-      return;
+  if (!selectedArea || !selectedPosition) {
+    alert("Selecciona un área y cargo válidos.");
+    return;
+  }
+
+  if (
+    isReplacementReason(form.request_reason) &&
+    !form.replacement_employee_id
+  ) {
+    alert(
+      "Selecciona la persona que será reemplazada."
+    );
+    return;
+  }
+
+  setSaving(true);
+  setCreatedRequestNumber(null);
+
+  // =====================================================
+  // 1. OBTENER SESIÓN
+  // =====================================================
+
+  const {
+    data: { session },
+    error: sessionError,
+  } = await supabase.auth.getSession();
+
+  if (
+    sessionError ||
+    !session?.access_token
+  ) {
+    setSaving(false);
+
+    alert(
+      "No se encontró una sesión válida. Inicia sesión nuevamente."
+    );
+
+    return;
+  }
+
+  // =====================================================
+  // 2. CREAR SOLICITUD MEDIANTE API PROTEGIDA
+  // =====================================================
+
+  const response = await fetch(
+    "/api/talento-humano/solicitudes-personal/crear",
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization:
+          `Bearer ${session.access_token}`,
+      },
+
+      body: JSON.stringify({
+        // Estos dos campos solo se utilizan como excepción
+        // para el superadministrador sin empleado vinculado.
+        requester_area:
+          form.requester_area.trim(),
+
+        requester_position:
+          form.requester_position.trim() ||
+          "Sin cargo registrado",
+
+        request_reason:
+          form.request_reason,
+
+        area_id:
+          form.area_id,
+
+        position_id:
+          form.position_id,
+
+        requested_quantity:
+          form.requested_quantity,
+
+        required_date:
+          form.required_date || null,
+
+        contract_type:
+          form.contract_type || null,
+
+        replacement_employee_id:
+          form.replacement_employee_id || null,
+
+        detailed_description:
+          form.detailed_description.trim(),
+      }),
     }
+  );
 
-    if (!selectedArea || !selectedPosition) {
-      alert("Selecciona un área y cargo válidos.");
-      return;
-    }
+  const responseBody =
+    await response.json();
 
-    if (
-      isReplacementReason(form.request_reason) &&
-      !form.replacement_employee_id
-    ) {
-      alert(
-        "Selecciona la persona que será reemplazada."
-      );
-      return;
-    }
+  if (!response.ok) {
+    setSaving(false);
 
-    setSaving(true);
-    setCreatedRequestNumber(null);
+    alert(
+      responseBody?.error ??
+        "No fue posible crear la solicitud de personal."
+    );
 
-    let requestNumber = "";
+    return;
+  }
 
-    try {
-      requestNumber = await generateRequestNumber();
-    } catch (error) {
-      setSaving(false);
+  const requestNumber =
+    responseBody?.data?.request_number;
 
-      alert(
-        error instanceof Error
-          ? `Error generando consecutivo: ${error.message}`
-          : "Error generando consecutivo."
-      );
+  if (!requestNumber) {
+    setSaving(false);
 
-      return;
-    }
+    alert(
+      "La solicitud fue procesada, pero no se recibió el consecutivo generado."
+    );
 
-    const { error } = await supabase
-      .from("employee_requests")
-      .insert([
-        {
-          request_number: requestNumber,
+    return;
+  }
 
-          requester_area:
-            form.requester_area.trim(),
-          requester_name:
-            form.requester_name.trim(),
-          requester_position:
-            form.requester_position.trim() ||
-            "Sin cargo registrado",
-          requester_email:
-            form.requester_email.trim(),
+  // =====================================================
+  // 3. IDENTIDAD CONFIRMADA POR EL SERVIDOR
+  // =====================================================
 
-          request_type: "Solicitud de personal",
-          request_reason: form.request_reason,
+  const requester =
+    responseBody?.requester;
 
-          area_id: form.area_id,
-          position_id: form.position_id,
+  const requesterName =
+    requester?.name ??
+    form.requester_name.trim();
 
-          area: selectedArea.name,
-          position: selectedPosition.name,
+  const requesterEmail =
+    requester?.email ??
+    form.requester_email.trim();
 
-          requested_quantity:
+  const requesterArea =
+    requester?.area ??
+    form.requester_area.trim();
+
+  const requesterPosition =
+  requester?.position ??
+  (
+    form.requester_position.trim() ||
+    "Sin cargo registrado"
+  );
+
+  // =====================================================
+  // 4. CORREO DE NOTIFICACIÓN
+  // =====================================================
+
+  try {
+    await fetch(
+      "/api/send-personal-request-email",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          requestNumber,
+
+          requesterName,
+          requesterArea,
+          requesterPosition,
+          requesterEmail,
+
+          requestReason:
+            form.request_reason,
+
+          area:
+            responseBody?.data?.area ??
+            selectedArea.name,
+
+          position:
+            responseBody?.data?.position ??
+            selectedPosition.name,
+
+          requestedQuantity:
             form.requested_quantity,
 
-          required_date:
+          requiredDate:
             form.required_date || null,
 
-          contract_type:
+          contractType:
             form.contract_type || null,
 
-          replacement_employee_id:
-            form.replacement_employee_id || null,
+          replacementEmployeeName:
+            selectedReplacementEmployee?.full_name ??
+            null,
 
-          detailed_description:
+          detailedDescription:
             form.detailed_description.trim(),
-
-          status: "Pendiente",
-          updated_at: new Date().toISOString(),
-        },
-      ]);
-
-    if (error) {
-      setSaving(false);
-
-      alert(
-        `Error creando solicitud: ${error.message}`
-      );
-
-      return;
-    }
-
-    try {
-      await fetch(
-        "/api/send-personal-request-email",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            requestNumber,
-
-            requesterName:
-              form.requester_name.trim(),
-            requesterArea:
-              form.requester_area.trim(),
-            requesterPosition:
-              form.requester_position.trim() ||
-              "Sin cargo registrado",
-            requesterEmail:
-              form.requester_email.trim(),
-
-            requestReason:
-              form.request_reason,
-
-            area:
-              selectedArea.name,
-            position:
-              selectedPosition.name,
-
-            requestedQuantity:
-              form.requested_quantity,
-            requiredDate:
-              form.required_date || null,
-            contractType:
-              form.contract_type || null,
-
-            replacementEmployeeName:
-              selectedReplacementEmployee?.full_name ??
-              null,
-
-            detailedDescription:
-              form.detailed_description.trim(),
-          }),
-        }
-      );
-    } catch (emailError) {
-      console.error(
-        "Error enviando correo de solicitud de personal:",
-        emailError
-      );
-    }
-
-    setCreatedRequestNumber(requestNumber);
-
-    setForm((current) => ({
-      requester_area: originLabel,
-      requester_name: current.requester_name,
-      requester_position:
-        current.requester_position,
-      requester_email:
-        current.requester_email,
-
-      request_reason: "",
-
-      area_id: "",
-      position_id: "",
-
-      requested_quantity: 1,
-      required_date: "",
-      contract_type: "",
-
-      replacement_employee_id: "",
-
-      detailed_description: "",
-    }));
-
-    setSaving(false);
+        }),
+      }
+    );
+  } catch (emailError) {
+    console.error(
+      "Error enviando correo de solicitud de personal:",
+      emailError
+    );
   }
+
+  // =====================================================
+  // 5. CONFIRMACIÓN Y LIMPIEZA
+  // =====================================================
+
+  setCreatedRequestNumber(requestNumber);
+
+  setForm((current) => ({
+    requester_area: originLabel,
+    requester_name: current.requester_name,
+    requester_position:
+      current.requester_position,
+    requester_email:
+      current.requester_email,
+
+    request_reason: "",
+
+    area_id: "",
+    position_id: "",
+
+    requested_quantity: 1,
+    required_date: "",
+    contract_type: "",
+
+    replacement_employee_id: "",
+
+    detailed_description: "",
+  }));
+
+  setSaving(false);
+}
 
   return (
     <div className="space-y-8">

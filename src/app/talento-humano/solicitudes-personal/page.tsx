@@ -233,129 +233,190 @@ export default function SolicitudesPersonalPage() {
   // CARGAR SOLICITUDES + COBERTURA
   // =======================================================
 
-  async function fetchRequests() {
-    setLoading(true);
+async function fetchRequests() {
+  setLoading(true);
 
-    const {
-      data: requestsData,
-      error: requestsError,
-    } = await supabase
-      .from("employee_requests")
-      .select("*")
-      .order("created_at", {
-        ascending: false,
-      });
+  // =====================================================
+  // 1. OBTENER SESIÓN
+  // =====================================================
 
-    if (requestsError) {
-      alert(
-        `Error cargando solicitudes de personal: ${requestsError.message}`
-      );
+  const {
+    data: { session },
+    error: sessionError,
+  } = await supabase.auth.getSession();
 
-      setLoading(false);
-      return;
-    }
-
-    const {
-      data: fulfillmentData,
-      error: fulfillmentError,
-    } = await supabase
-      .from("employee_request_fulfillments")
-      .select("request_id");
-
-    if (fulfillmentError) {
-      alert(
-        `Error cargando cobertura de solicitudes: ${fulfillmentError.message}`
-      );
-
-      setLoading(false);
-      return;
-    }
-
-    const counts: Record<string, number> = {};
-
-    for (const row of fulfillmentData ?? []) {
-      const fulfillmentRequestId = row.request_id;
-
-      if (!fulfillmentRequestId) {
-        continue;
-      }
-
-      counts[fulfillmentRequestId] =
-        (counts[fulfillmentRequestId] ?? 0) + 1;
-    }
-
-    setFulfillmentCounts(counts);
-
-    setRequests(
-      (requestsData ?? []) as EmployeeRequest[]
+  if (
+    sessionError ||
+    !session?.access_token
+  ) {
+    alert(
+      "No se encontró una sesión válida. Inicia sesión nuevamente."
     );
 
     setLoading(false);
+    return;
   }
+
+  // =====================================================
+  // 2. CONSULTAR MEDIANTE API PROTEGIDA
+  // =====================================================
+
+  const response = await fetch(
+    "/api/talento-humano/solicitudes-personal",
+    {
+      method: "GET",
+
+      headers: {
+        Authorization:
+          `Bearer ${session.access_token}`,
+      },
+    }
+  );
+
+  const responseBody =
+    await response.json();
+
+  if (!response.ok) {
+    alert(
+      responseBody?.error ??
+        "No fue posible cargar las solicitudes de personal."
+    );
+
+    setLoading(false);
+    return;
+  }
+
+  // =====================================================
+  // 3. CARGAR DATOS EN LA INTERFAZ
+  // =====================================================
+
+  const requestsData =
+    responseBody?.data?.requests ?? [];
+
+  const fulfillmentCountsData =
+    responseBody?.data?.fulfillment_counts ?? {};
+
+  setFulfillmentCounts(
+    fulfillmentCountsData
+  );
+
+  setRequests(
+    requestsData as EmployeeRequest[]
+  );
+
+  setLoading(false);
+}
 
   // =======================================================
   // APROBAR
   // =======================================================
 
   async function approveRequest(request: EmployeeRequest) {
-    const confirmApprove = confirm(
-      `¿Deseas aprobar la solicitud ${request.request_number}?`
+  const confirmApprove = confirm(
+    `¿Deseas aprobar la solicitud ${request.request_number}?`
+  );
+
+  if (!confirmApprove) return;
+
+  setActionLoading(true);
+
+  // =====================================================
+  // 1. OBTENER SESIÓN
+  // =====================================================
+
+  const {
+    data: { session },
+    error: sessionError,
+  } = await supabase.auth.getSession();
+
+  if (
+    sessionError ||
+    !session?.access_token
+  ) {
+    setActionLoading(false);
+
+    alert(
+      "No se encontró una sesión válida. Inicia sesión nuevamente."
     );
 
-    if (!confirmApprove) return;
-
-    setActionLoading(true);
-
-    const now = new Date().toISOString();
-
-    const { error } = await supabase
-      .from("employee_requests")
-      .update({
-        status: "Aprobada",
-        approved_at: now,
-        updated_at: now,
-      })
-      .eq("id", request.id);
-
-    if (error) {
-      setActionLoading(false);
-
-      alert(
-        `Error aprobando solicitud: ${error.message}`
-      );
-
-      return;
-    }
-
-    try {
-      await fetch("/api/send-personal-approval-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          to: request.requester_email,
-          requestNumber: request.request_number,
-          requesterName: request.requester_name,
-          requestReason: request.request_reason,
-          area: request.area,
-          position: request.position,
-          requestedQuantity: request.requested_quantity,
-          requiredDate: request.required_date,
-        }),
-      });
-    } catch (emailError) {
-      console.error(
-        "Error enviando correo de aprobación de personal:",
-        emailError
-      );
-    }
-
-    await fetchRequests();
-
-    setSelectedRequest(null);
-    setActionLoading(false);
+    return;
   }
+
+  // =====================================================
+  // 2. APROBAR MEDIANTE API PROTEGIDA
+  // =====================================================
+
+  const response = await fetch(
+    "/api/talento-humano/solicitudes-personal/aprobar",
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization:
+          `Bearer ${session.access_token}`,
+      },
+
+      body: JSON.stringify({
+        request_id: request.id,
+      }),
+    }
+  );
+
+  const responseBody =
+    await response.json();
+
+  if (!response.ok) {
+    setActionLoading(false);
+
+    alert(
+      responseBody?.error ??
+        "No fue posible aprobar la solicitud."
+    );
+
+    return;
+  }
+
+  // =====================================================
+  // 3. CORREO DE APROBACIÓN
+  // =====================================================
+
+  try {
+    await fetch("/api/send-personal-approval-email", {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        to: request.requester_email,
+        requestNumber: request.request_number,
+        requesterName: request.requester_name,
+        requestReason: request.request_reason,
+        area: request.area,
+        position: request.position,
+        requestedQuantity:
+          request.requested_quantity,
+        requiredDate: request.required_date,
+      }),
+    });
+  } catch (emailError) {
+    console.error(
+      "Error enviando correo de aprobación de personal:",
+      emailError
+    );
+  }
+
+  // =====================================================
+  // 4. ACTUALIZAR INTERFAZ
+  // =====================================================
+
+  await fetchRequests();
+
+  setSelectedRequest(null);
+  setActionLoading(false);
+}
 
   // =======================================================
   // RECHAZAR
@@ -366,115 +427,208 @@ export default function SolicitudesPersonalPage() {
     setRejectionReason("");
   }
 
-  async function rejectRequest() {
-    if (!rejectingRequest) return;
+async function rejectRequest() {
+  if (!rejectingRequest) return;
 
-    if (!rejectionReason.trim()) {
-      alert(
-        "Debes escribir el motivo del rechazo."
-      );
+  if (!rejectionReason.trim()) {
+    alert(
+      "Debes escribir el motivo del rechazo."
+    );
 
-      return;
-    }
-
-    setActionLoading(true);
-
-    const now = new Date().toISOString();
-    const reason = rejectionReason.trim();
-
-    const { error } = await supabase
-      .from("employee_requests")
-      .update({
-        status: "Rechazada",
-        rejection_reason: reason,
-        rejected_at: now,
-        updated_at: now,
-      })
-      .eq("id", rejectingRequest.id);
-
-    if (error) {
-      setActionLoading(false);
-
-      alert(
-        `Error rechazando solicitud: ${error.message}`
-      );
-
-      return;
-    }
-
-    try {
-      await fetch("/api/send-personal-rejection-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          to: rejectingRequest.requester_email,
-          requestNumber: rejectingRequest.request_number,
-          requesterName: rejectingRequest.requester_name,
-          requestReason: rejectingRequest.request_reason,
-          area: rejectingRequest.area,
-          position: rejectingRequest.position,
-          requestedQuantity:
-            rejectingRequest.requested_quantity,
-          requiredDate: rejectingRequest.required_date,
-          rejectionReason: reason,
-        }),
-      });
-    } catch (emailError) {
-      console.error(
-        "Error enviando correo de rechazo de personal:",
-        emailError
-      );
-    }
-
-    await fetchRequests();
-
-    setRejectingRequest(null);
-    setSelectedRequest(null);
-    setRejectionReason("");
-    setActionLoading(false);
+    return;
   }
+
+  setActionLoading(true);
+
+  const reason = rejectionReason.trim();
+
+  // =====================================================
+  // 1. OBTENER SESIÓN
+  // =====================================================
+
+  const {
+    data: { session },
+    error: sessionError,
+  } = await supabase.auth.getSession();
+
+  if (
+    sessionError ||
+    !session?.access_token
+  ) {
+    setActionLoading(false);
+
+    alert(
+      "No se encontró una sesión válida. Inicia sesión nuevamente."
+    );
+
+    return;
+  }
+
+  // =====================================================
+  // 2. RECHAZAR MEDIANTE API PROTEGIDA
+  // =====================================================
+
+  const response = await fetch(
+    "/api/talento-humano/solicitudes-personal/rechazar",
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization:
+          `Bearer ${session.access_token}`,
+      },
+
+      body: JSON.stringify({
+        request_id: rejectingRequest.id,
+        rejection_reason: reason,
+      }),
+    }
+  );
+
+  const responseBody =
+    await response.json();
+
+  if (!response.ok) {
+    setActionLoading(false);
+
+    alert(
+      responseBody?.error ??
+        "No fue posible rechazar la solicitud."
+    );
+
+    return;
+  }
+
+  // =====================================================
+  // 3. CORREO DE RECHAZO
+  // =====================================================
+
+  try {
+    await fetch("/api/send-personal-rejection-email", {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        to: rejectingRequest.requester_email,
+        requestNumber:
+          rejectingRequest.request_number,
+        requesterName:
+          rejectingRequest.requester_name,
+        requestReason:
+          rejectingRequest.request_reason,
+        area:
+          rejectingRequest.area,
+        position:
+          rejectingRequest.position,
+        requestedQuantity:
+          rejectingRequest.requested_quantity,
+        requiredDate:
+          rejectingRequest.required_date,
+        rejectionReason: reason,
+      }),
+    });
+  } catch (emailError) {
+    console.error(
+      "Error enviando correo de rechazo de personal:",
+      emailError
+    );
+  }
+
+  // =====================================================
+  // 4. ACTUALIZAR INTERFAZ
+  // =====================================================
+
+  await fetchRequests();
+
+  setRejectingRequest(null);
+  setSelectedRequest(null);
+  setRejectionReason("");
+  setActionLoading(false);
+}
 
   // =======================================================
   // INICIAR GESTIÓN
   // =======================================================
 
   async function startManagement(request: EmployeeRequest) {
-    const confirmStart = confirm(
-      `¿Deseas iniciar la gestión de la solicitud ${request.request_number}?`
+  const confirmStart = confirm(
+    `¿Deseas iniciar la gestión de la solicitud ${request.request_number}?`
+  );
+
+  if (!confirmStart) return;
+
+  setActionLoading(true);
+
+  // =====================================================
+  // 1. OBTENER SESIÓN
+  // =====================================================
+
+  const {
+    data: { session },
+    error: sessionError,
+  } = await supabase.auth.getSession();
+
+  if (
+    sessionError ||
+    !session?.access_token
+  ) {
+    setActionLoading(false);
+
+    alert(
+      "No se encontró una sesión válida. Inicia sesión nuevamente."
     );
 
-    if (!confirmStart) return;
-
-    setActionLoading(true);
-
-    const now = new Date().toISOString();
-
-    const { error } = await supabase
-      .from("employee_requests")
-      .update({
-        status: "En gestión",
-        in_progress_at: now,
-        updated_at: now,
-      })
-      .eq("id", request.id);
-
-    if (error) {
-      setActionLoading(false);
-
-      alert(
-        `Error iniciando la gestión: ${error.message}`
-      );
-
-      return;
-    }
-
-    await fetchRequests();
-
-    setSelectedRequest(null);
-    setActionLoading(false);
+    return;
   }
+
+  // =====================================================
+  // 2. INICIAR GESTIÓN MEDIANTE API PROTEGIDA
+  // =====================================================
+
+  const response = await fetch(
+    "/api/talento-humano/solicitudes-personal/iniciar-gestion",
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization:
+          `Bearer ${session.access_token}`,
+      },
+
+      body: JSON.stringify({
+        request_id: request.id,
+      }),
+    }
+  );
+
+  const responseBody =
+    await response.json();
+
+  if (!response.ok) {
+    setActionLoading(false);
+
+    alert(
+      responseBody?.error ??
+        "No fue posible iniciar la gestión de la solicitud."
+    );
+
+    return;
+  }
+
+  // =====================================================
+  // 3. ACTUALIZAR INTERFAZ
+  // =====================================================
+
+  await fetchRequests();
+
+  setSelectedRequest(null);
+  setActionLoading(false);
+}
 
   // =======================================================
   // CANCELAR
@@ -485,49 +639,90 @@ export default function SolicitudesPersonalPage() {
     setCancellationReason("");
   }
 
-  async function cancelRequest() {
-    if (!cancelingRequest) return;
+ async function cancelRequest() {
+  if (!cancelingRequest) return;
 
-    if (!cancellationReason.trim()) {
-      alert(
-        "Debes escribir el motivo de la cancelación."
-      );
+  if (!cancellationReason.trim()) {
+    alert(
+      "Debes escribir el motivo de la cancelación."
+    );
 
-      return;
-    }
-
-    setActionLoading(true);
-
-    const now = new Date().toISOString();
-    const reason = cancellationReason.trim();
-
-    const { error } = await supabase
-      .from("employee_requests")
-      .update({
-        status: "Cancelada",
-        cancelled_at: now,
-        cancellation_reason: reason,
-        updated_at: now,
-      })
-      .eq("id", cancelingRequest.id);
-
-    if (error) {
-      setActionLoading(false);
-
-      alert(
-        `Error cancelando la solicitud: ${error.message}`
-      );
-
-      return;
-    }
-
-    await fetchRequests();
-
-    setCancelingRequest(null);
-    setSelectedRequest(null);
-    setCancellationReason("");
-    setActionLoading(false);
+    return;
   }
+
+  setActionLoading(true);
+
+  const reason = cancellationReason.trim();
+
+  // =====================================================
+  // 1. OBTENER SESIÓN
+  // =====================================================
+
+  const {
+    data: { session },
+    error: sessionError,
+  } = await supabase.auth.getSession();
+
+  if (
+    sessionError ||
+    !session?.access_token
+  ) {
+    setActionLoading(false);
+
+    alert(
+      "No se encontró una sesión válida. Inicia sesión nuevamente."
+    );
+
+    return;
+  }
+
+  // =====================================================
+  // 2. CANCELAR MEDIANTE API PROTEGIDA
+  // =====================================================
+
+  const response = await fetch(
+    "/api/talento-humano/solicitudes-personal/cancelar",
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization:
+          `Bearer ${session.access_token}`,
+      },
+
+      body: JSON.stringify({
+        request_id: cancelingRequest.id,
+        cancellation_reason: reason,
+      }),
+    }
+  );
+
+  const responseBody =
+    await response.json();
+
+  if (!response.ok) {
+    setActionLoading(false);
+
+    alert(
+      responseBody?.error ??
+        "No fue posible cancelar la solicitud."
+    );
+
+    return;
+  }
+
+  // =====================================================
+  // 3. ACTUALIZAR INTERFAZ
+  // =====================================================
+
+  await fetchRequests();
+
+  setCancelingRequest(null);
+  setSelectedRequest(null);
+  setCancellationReason("");
+  setActionLoading(false);
+}
 
   // =======================================================
   // CIERRE PARCIAL
