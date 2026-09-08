@@ -448,23 +448,49 @@ export default function PersonalBaseDatosClient() {
     setLoading(true);
 
     const {
-      data: employeesData,
-      error: employeesError,
-    } = await supabase
-      .from("employees")
-      .select("*")
-      .order("created_at", {
-        ascending: false,
-      });
+  data: { session },
+  error: sessionError,
+} = await supabase.auth.getSession();
 
-    if (employeesError) {
-      alert(
-        `Error cargando personal: ${employeesError.message}`
-      );
+if (
+  sessionError ||
+  !session?.access_token
+) {
+  alert(
+    "No se encontró una sesión válida. Inicia sesión nuevamente."
+  );
 
-      setLoading(false);
-      return;
-    }
+  setLoading(false);
+  return;
+}
+
+const employeesResponse = await fetch(
+  "/api/talento-humano/personal",
+  {
+    headers: {
+      Authorization:
+        `Bearer ${session.access_token}`,
+    },
+  }
+);
+
+const employeesResult =
+  await employeesResponse.json();
+
+if (!employeesResponse.ok) {
+  alert(
+    `Error cargando personal: ${
+      employeesResult.error ??
+      "No fue posible consultar el personal."
+    }`
+  );
+
+  setLoading(false);
+  return;
+}
+
+const employeesData =
+  employeesResult.employees ?? [];
 
     const {
       data: areasData,

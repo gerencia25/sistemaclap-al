@@ -37,7 +37,40 @@ function handleError(error: unknown) {
     { status: 500 },
   );
 }
+// =========================================================
+// GET · Consultar empleados
+// =========================================================
 
+export async function GET(request: Request) {
+  try {
+    await requireSystemPermission(
+      request,
+      "PERSONAL_VIEW",
+    );
+
+    const {
+      data: employees,
+      error: employeesError,
+    } = await supabaseAdmin
+      .from("employees")
+      .select("*")
+      .order("created_at", {
+        ascending: false,
+      });
+
+    if (employeesError) {
+      throw new Error(
+        `Error consultando personal: ${employeesError.message}`,
+      );
+    }
+
+    return NextResponse.json({
+      employees: employees ?? [],
+    });
+  } catch (error) {
+    return handleError(error);
+  }
+}
 // =========================================================
 // POST · Crear empleado
 // =========================================================

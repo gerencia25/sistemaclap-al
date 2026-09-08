@@ -186,6 +186,22 @@ export default function UsuariosPermisosPage() {
   async function fetchData() {
     setLoading(true);
 
+      const {
+    data: { session },
+    error: sessionError,
+  } = await supabase.auth.getSession();
+
+  if (
+    sessionError ||
+    !session?.access_token
+  ) {
+    alert(
+      "No se encontró una sesión válida. Inicia sesión nuevamente."
+    );
+    setLoading(false);
+    return;
+  }
+
     const { data: modulesData, error: modulesError } = await supabase
       .from("system_modules")
       .select("*")
@@ -239,17 +255,30 @@ export default function UsuariosPermisosPage() {
       return;
     }
 
-    const { data: employeesData, error: employeesError } = await supabase
-      .from("employees")
-      .select("id, full_name, email, area, position, employment_status")
-      .eq("employment_status", "Activo")
-      .order("full_name", { ascending: true });
+    const employeesResponse = await fetch(
+  "/api/configuracion/usuarios-permisos/empleados",
+  {
+    headers: {
+      Authorization:
+        `Bearer ${session.access_token}`,
+    },
+  }
+);
 
-    if (employeesError) {
-      alert(`Error cargando empleados: ${employeesError.message}`);
-      setLoading(false);
-      return;
-    }
+const employeesResult =
+  await employeesResponse.json();
+
+if (!employeesResponse.ok) {
+  alert(
+    employeesResult.error ??
+      "No fue posible cargar los empleados."
+  );
+  setLoading(false);
+  return;
+}
+
+const employeesData =
+  employeesResult.employees ?? [];
 
     setModules((modulesData ?? []) as SystemModule[]);
     setPermissions((permissionsData ?? []) as SystemPermission[]);

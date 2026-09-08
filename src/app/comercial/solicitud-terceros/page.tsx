@@ -43,80 +43,86 @@ const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
     useEffect(() => {
-    async function loadRequesterInformation() {
-      if (!systemUser) {
-        setIsLoadingRequester(false);
-        return;
-      }
-
-      try {
-        let requesterPosition = "";
-
-        if (systemUser.employee_id) {
-          const { data: employee, error: employeeError } = await supabase
-            .from("employees")
-            .select(
-              `
-                id,
-                full_name,
-                email,
-                position,
-                position_id
-              `,
-            )
-            .eq("id", systemUser.employee_id)
-            .maybeSingle();
-
-          if (employeeError) {
-            throw new Error(employeeError.message);
-          }
-
-          if (employee?.position_id) {
-            const { data: position, error: positionError } = await supabase
-              .from("company_positions")
-              .select("name")
-              .eq("id", employee.position_id)
-              .maybeSingle();
-
-            if (positionError) {
-              throw new Error(positionError.message);
-            }
-
-            requesterPosition =
-              position?.name?.trim() ||
-              employee.position?.trim() ||
-              "";
-          } else {
-            requesterPosition = employee?.position?.trim() || "";
-          }
-        }
-
-        setForm((current) => ({
-          ...current,
-          requester_area: "Dirección Comercial",
-          requester_name: systemUser.full_name ?? "",
-          requester_position: requesterPosition,
-          requester_email: systemUser.email ?? "",
-        }));
-      } catch (error) {
-        console.error(
-          "Error cargando información automática del solicitante:",
-          error,
-        );
-
-        setForm((current) => ({
-          ...current,
-          requester_area: "Dirección Comercial",
-          requester_name: systemUser.full_name ?? "",
-          requester_email: systemUser.email ?? "",
-        }));
-      } finally {
-        setIsLoadingRequester(false);
-      }
+  async function loadRequesterInformation() {
+    if (!systemUser) {
+      setIsLoadingRequester(false);
+      return;
     }
 
-    loadRequesterInformation();
-  }, [systemUser]);
+    try {
+      const {
+        data: { session },
+        error: sessionError,
+      } = await supabase.auth.getSession();
+
+      if (
+        sessionError ||
+        !session?.access_token
+      ) {
+        throw new Error(
+          "No se encontró una sesión válida."
+        );
+      }
+
+      const response = await fetch(
+        "/api/usuario/contexto-laboral",
+        {
+          headers: {
+            Authorization:
+              `Bearer ${session.access_token}`,
+          },
+        }
+      );
+
+      const result =
+        await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          result.error ??
+            "No fue posible consultar la información laboral."
+        );
+      }
+
+      setForm((current) => ({
+        ...current,
+        requester_area:
+          "Dirección Comercial",
+        requester_name:
+          result.employee?.full_name ??
+          result.user?.full_name ??
+          systemUser.full_name ??
+          "",
+        requester_position:
+          result.position_name ?? "",
+        requester_email:
+          result.user?.email ??
+          systemUser.email ??
+          "",
+      }));
+    } catch (error) {
+      console.error(
+        "Error cargando información automática del solicitante:",
+        error,
+      );
+
+      setForm((current) => ({
+        ...current,
+        requester_area:
+          "Dirección Comercial",
+        requester_name:
+          systemUser.full_name ?? "",
+        requester_position: "",
+        requester_email:
+          systemUser.email ?? "",
+      }));
+    } finally {
+      setIsLoadingRequester(false);
+    }
+  }
+
+  loadRequesterInformation();
+}, [systemUser]);
 
   function updateForm(field: keyof typeof initialForm, value: string) {
     setForm((current) => ({ ...current, [field]: value }));

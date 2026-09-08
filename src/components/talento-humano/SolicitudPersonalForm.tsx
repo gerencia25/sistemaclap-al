@@ -109,47 +109,66 @@ export default function SolicitudPersonalForm({
     fetchInitialData();
   }, []);
 
-  useEffect(() => {
-    async function loadRequester() {
-      if (!systemUser) return;
+useEffect(() => {
+  async function loadRequester() {
+    if (!systemUser) return;
 
-      let positionName = "Sin cargo registrado";
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
 
-      if (systemUser.employee_id) {
-        const { data: employeeData } = await supabase
-          .from("employees")
-          .select("position_id, position")
-          .eq("id", systemUser.employee_id)
-          .maybeSingle();
-
-        if (employeeData?.position_id) {
-          const { data: positionData } = await supabase
-            .from("company_positions")
-            .select("name")
-            .eq("id", employeeData.position_id)
-            .maybeSingle();
-
-          if (positionData?.name) {
-            positionName = positionData.name;
-          } else if (employeeData.position) {
-            positionName = employeeData.position;
-          }
-        } else if (employeeData?.position) {
-          positionName = employeeData.position;
-        }
-      }
-
-      setForm((current) => ({
-        ...current,
-        requester_area: originLabel,
-        requester_name: systemUser.full_name ?? "",
-        requester_position: positionName,
-        requester_email: systemUser.email ?? "",
-      }));
+    if (
+      sessionError ||
+      !session?.access_token
+    ) {
+      alert(
+        "No se encontró una sesión válida. Inicia sesión nuevamente."
+      );
+      return;
     }
 
-    loadRequester();
-  }, [systemUser, originLabel]);
+    const response = await fetch(
+      "/api/talento-humano/solicitudes-personal/contexto",
+      {
+        headers: {
+          Authorization:
+            `Bearer ${session.access_token}`,
+        },
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      alert(
+        result.error ??
+          "No fue posible cargar los datos del solicitante."
+      );
+      return;
+    }
+
+    const requesterEmployee =
+      result.requester?.employee ?? null;
+
+    setForm((current) => ({
+      ...current,
+      requester_area:
+        requesterEmployee?.area ?? originLabel,
+      requester_name:
+        requesterEmployee?.full_name ??
+        systemUser.full_name ??
+        "",
+      requester_position:
+        requesterEmployee?.position ??
+        "Sin cargo registrado",
+      requester_email:
+        systemUser.email ?? "",
+    }));
+  }
+
+  loadRequester();
+}, [systemUser, originLabel]);
 
   const filteredPositions = useMemo(() => {
     return positions.filter(
@@ -189,58 +208,86 @@ export default function SolicitudPersonalForm({
   }, [employees, form.replacement_employee_id]);
 
   async function fetchInitialData() {
-    const [
-      areasResult,
-      positionsResult,
-      employeesResult,
-    ] = await Promise.all([
-      supabase
-        .from("company_areas")
-        .select("id, name, status")
-        .eq("status", "Activa")
-        .order("name", { ascending: true }),
+  const {
+    data: { session },
+    error: sessionError,
+  } = await supabase.auth.getSession();
 
-      supabase
-        .from("company_positions")
-        .select("id, area_id, name, status")
-        .eq("status", "Activo")
-        .order("name", { ascending: true }),
-
-      supabase
-        .from("employees")
-        .select(
-          "id, full_name, area_id, position_id, employment_status"
-        )
-        .order("full_name", { ascending: true }),
-    ]);
-
-    if (areasResult.error) {
-      alert(
-        `Error cargando áreas: ${areasResult.error.message}`
-      );
-      return;
-    }
-
-    if (positionsResult.error) {
-      alert(
-        `Error cargando cargos: ${positionsResult.error.message}`
-      );
-      return;
-    }
-
-    if (employeesResult.error) {
-      alert(
-        `Error cargando personal: ${employeesResult.error.message}`
-      );
-      return;
-    }
-
-    setAreas((areasResult.data ?? []) as CompanyArea[]);
-    setPositions(
-      (positionsResult.data ?? []) as CompanyPosition[]
+  if (
+    sessionError ||
+    !session?.access_token
+  ) {
+    alert(
+      "No se encontró una sesión válida. Inicia sesión nuevamente."
     );
-    setEmployees((employeesResult.data ?? []) as Employee[]);
+    return;
   }
+
+  const [
+    areasResult,
+    positionsResult,
+    contextResponse,
+  ] = await Promise.all([
+    supabase
+      .from("company_areas")
+      .select("id, name, status")
+      .eq("status", "Activa")
+      .order("name", { ascending: true }),
+
+    supabase
+      .from("company_positions")
+      .select("id, area_id, name, status")
+      .eq("status", "Activo")
+      .order("name", { ascending: true }),
+
+    fetch(
+      "/api/talento-humano/solicitudes-personal/contexto",
+      {
+        headers: {
+          Authorization:
+            `Bearer ${session.access_token}`,
+        },
+      }
+    ),
+  ]);
+
+  if (areasResult.error) {
+    alert(
+      `Error cargando áreas: ${areasResult.error.message}`
+    );
+    return;
+  }
+
+  if (positionsResult.error) {
+    alert(
+      `Error cargando cargos: ${positionsResult.error.message}`
+    );
+    return;
+  }
+
+  const contextResult =
+    await contextResponse.json();
+
+  if (!contextResponse.ok) {
+    alert(
+      contextResult.error ??
+        "No fue posible cargar el personal."
+    );
+    return;
+  }
+
+  setAreas(
+    (areasResult.data ?? []) as CompanyArea[]
+  );
+
+  setPositions(
+    (positionsResult.data ?? []) as CompanyPosition[]
+  );
+
+  setEmployees(
+    (contextResult.employees ?? []) as Employee[]
+  );
+}
 
   function handleAreaChange(areaId: string) {
     setForm((current) => ({
