@@ -142,39 +142,6 @@ export default function AreasCargosPage() {
     setLoading(false);
   }
 
-  async function generateAreaCode() {
-    const { data, error } = await supabase
-      .from("company_areas")
-      .select("area_code")
-      .ilike("area_code", "AR-%")
-      .order("area_code", { ascending: false })
-      .limit(1);
-
-    if (error) throw new Error(error.message);
-
-    const lastCode = data?.[0]?.area_code as string | undefined;
-    const match = lastCode?.match(/AR-(\d+)/);
-    const nextNumber = match ? Number(match[1]) + 1 : 1;
-
-    return `AR-${String(nextNumber).padStart(6, "0")}`;
-  }
-
-  async function generatePositionCode() {
-    const { data, error } = await supabase
-      .from("company_positions")
-      .select("position_code")
-      .ilike("position_code", "CG-%")
-      .order("position_code", { ascending: false })
-      .limit(1);
-
-    if (error) throw new Error(error.message);
-
-    const lastCode = data?.[0]?.position_code as string | undefined;
-    const match = lastCode?.match(/CG-(\d+)/);
-    const nextNumber = match ? Number(match[1]) + 1 : 1;
-
-    return `CG-${String(nextNumber).padStart(6, "0")}`;
-  }
 
   function openCreateAreaModal() {
     setEditingAreaId(null);
@@ -227,142 +194,170 @@ export default function AreasCargosPage() {
   }
 
   async function saveArea() {
-    if (!areaForm.name.trim()) {
-      alert("El nombre del área es obligatorio.");
-      return;
-    }
-
-    if (editingAreaId && areaForm.parent_area_id === editingAreaId) {
-      alert("Un área no puede depender de sí misma.");
-      return;
-    }
-
-    setSaving(true);
-
-    const payload = {
-      name: areaForm.name.trim(),
-      description: areaForm.description.trim() || null,
-      manager_employee_id: areaForm.manager_employee_id || null,
-      parent_area_id: areaForm.parent_area_id || null,
-      status: areaForm.status,
-      updated_at: new Date().toISOString(),
-    };
-
-    if (editingAreaId) {
-      const { error } = await supabase
-        .from("company_areas")
-        .update(payload)
-        .eq("id", editingAreaId);
-
-      if (error) {
-        setSaving(false);
-        alert(`Error actualizando área: ${error.message}`);
-        return;
-      }
-    } else {
-      let areaCode = "";
-
-      try {
-        areaCode = await generateAreaCode();
-      } catch (error) {
-        setSaving(false);
-        alert(
-          error instanceof Error
-            ? `Error generando código de área: ${error.message}`
-            : "Error generando código de área."
-        );
-        return;
-      }
-
-      const { error } = await supabase.from("company_areas").insert([
-        {
-          area_code: areaCode,
-          ...payload,
-        },
-      ]);
-
-      if (error) {
-        setSaving(false);
-        alert(`Error creando área: ${error.message}`);
-        return;
-      }
-    }
-
-    await fetchData();
-    setSaving(false);
-    setIsAreaModalOpen(false);
+  if (!areaForm.name.trim()) {
+    alert("El nombre del área es obligatorio.");
+    return;
   }
 
-  async function savePosition() {
-    if (!positionForm.area_id || !positionForm.name.trim()) {
-      alert("El área y el nombre del cargo son obligatorios.");
-      return;
-    }
+  if (
+    editingAreaId &&
+    areaForm.parent_area_id === editingAreaId
+  ) {
+    alert("Un área no puede depender de sí misma.");
+    return;
+  }
+
+  setSaving(true);
+
+  try {
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
 
     if (
-      editingPositionId &&
-      positionForm.reports_to_position_id === editingPositionId
+      sessionError ||
+      !session?.access_token
     ) {
-      alert("Un cargo no puede reportarse a sí mismo.");
-      return;
+      throw new Error(
+        "No se encontró una sesión válida. Inicia sesión nuevamente."
+      );
     }
 
-    setSaving(true);
-
-    const payload = {
-      area_id: positionForm.area_id,
-      name: positionForm.name.trim(),
-      description: positionForm.description.trim() || null,
-      hierarchy_level: positionForm.hierarchy_level,
-      reports_to_position_id: positionForm.reports_to_position_id || null,
-      status: positionForm.status,
-      updated_at: new Date().toISOString(),
-    };
-
-    if (editingPositionId) {
-      const { error } = await supabase
-        .from("company_positions")
-        .update(payload)
-        .eq("id", editingPositionId);
-
-      if (error) {
-        setSaving(false);
-        alert(`Error actualizando cargo: ${error.message}`);
-        return;
-      }
-    } else {
-      let positionCode = "";
-
-      try {
-        positionCode = await generatePositionCode();
-      } catch (error) {
-        setSaving(false);
-        alert(
-          error instanceof Error
-            ? `Error generando código de cargo: ${error.message}`
-            : "Error generando código de cargo."
-        );
-        return;
-      }
-
-      const { error } = await supabase.from("company_positions").insert([
-        {
-          position_code: positionCode,
-          ...payload,
+    const response = await fetch(
+      "/api/talento-humano/estructura-organizacional",
+      {
+        method: editingAreaId ? "PATCH" : "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            `Bearer ${session.access_token}`,
         },
-      ]);
-
-      if (error) {
-        setSaving(false);
-        alert(`Error creando cargo: ${error.message}`);
-        return;
+        body: JSON.stringify({
+          entity: "area",
+          id: editingAreaId,
+          name: areaForm.name.trim(),
+          description:
+            areaForm.description.trim() || null,
+          manager_employee_id:
+            areaForm.manager_employee_id || null,
+          parent_area_id:
+            areaForm.parent_area_id || null,
+          status: areaForm.status,
+        }),
       }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        result.error ??
+          "No fue posible guardar el área."
+      );
     }
 
     await fetchData();
+
+    setIsAreaModalOpen(false);
+  } catch (error) {
+    alert(
+      error instanceof Error
+        ? error.message
+        : "Ocurrió un error guardando el área."
+    );
+  } finally {
     setSaving(false);
-    setIsPositionModalOpen(false);
   }
+}
+
+  async function savePosition() {
+  if (
+    !positionForm.area_id ||
+    !positionForm.name.trim()
+  ) {
+    alert(
+      "El área y el nombre del cargo son obligatorios."
+    );
+    return;
+  }
+
+  if (
+    editingPositionId &&
+    positionForm.reports_to_position_id ===
+      editingPositionId
+  ) {
+    alert(
+      "Un cargo no puede reportarse a sí mismo."
+    );
+    return;
+  }
+
+  setSaving(true);
+
+  try {
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
+
+    if (
+      sessionError ||
+      !session?.access_token
+    ) {
+      throw new Error(
+        "No se encontró una sesión válida. Inicia sesión nuevamente."
+      );
+    }
+
+    const response = await fetch(
+      "/api/talento-humano/estructura-organizacional",
+      {
+        method: editingPositionId ? "PATCH" : "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          entity: "position",
+          id: editingPositionId,
+          area_id: positionForm.area_id,
+          name: positionForm.name.trim(),
+          description:
+            positionForm.description.trim() || null,
+          hierarchy_level:
+            positionForm.hierarchy_level,
+          reports_to_position_id:
+            positionForm.reports_to_position_id ||
+            null,
+          status: positionForm.status,
+        }),
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        result.error ??
+          "No fue posible guardar el cargo."
+      );
+    }
+
+    await fetchData();
+
+    setIsPositionModalOpen(false);
+  } catch (error) {
+    alert(
+      error instanceof Error
+        ? error.message
+        : "Ocurrió un error guardando el cargo."
+    );
+  } finally {
+    setSaving(false);
+  }
+}
 
   function getAreaName(areaId: string) {
     return areas.find((area) => area.id === areaId)?.name ?? "Sin área";
