@@ -16,10 +16,10 @@ const moduleItems = [
   { label: "Operaciones", href: "/operaciones", permission: "OPERACIONES_VIEW" },
   { label: "Financiera", href: "/financiera", permission: "FINANCIERA_VIEW" },
   {
-    label: "Gestión Humana",
-    href: "/gestion-humana",
-    permission: "GESTION_HUMANA_VIEW",
-  },
+  label: "Talento Humano",
+  href: "/talento-humano",
+  permission: "GESTION_HUMANA_VIEW",
+},
   {
     label: "Diseño y Desarrollo",
     href: "/diseno-desarrollo",

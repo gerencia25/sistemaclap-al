@@ -33,7 +33,7 @@ export async function POST(request: Request) {
 
     const { error } = await resend.emails.send({
       from: "Sistema CLAP <notificaciones@mail.almultiformas.com>",
-      to: ["administrador@almultiformas.com"],
+      to: ["talentohumano@almultiformas.com"],
       subject: `Nueva solicitud de personal ${requestNumber}`,
       html: `
         <div style="font-family: Arial, sans-serif; color: #111827; line-height: 1.6;">

@@ -54,7 +54,7 @@ const protectedRoutes = [
 },
 {
   path: "/talento-humano",
-  permission: "TH_VIEW",
+  permission: "GESTION_HUMANA_VIEW",
 },
   {
     path: "/configuracion/terceros",
@@ -96,10 +96,6 @@ const protectedRoutes = [
   path: "/direccion-financiera",
   permission: "DF_VIEW",
 },
-  {
-    path: "/gestion-humana",
-    permission: "GESTION_HUMANA_VIEW",
-  },
   {
     path: "/diseno-desarrollo",
     permission: "DISENO_DESARROLLO_VIEW",

@@ -582,7 +582,7 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
     departmentCode: "TH",
     type: "department",
     status: "active",
-    permission: "TH_VIEW",
+    permission: "GESTION_HUMANA_VIEW",
     description:
       "Gestión de personal y procesos relacionados con Talento Humano.",
   },
@@ -596,7 +596,7 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
   departmentCode: "TH",
   type: "page",
   status: "active",
-  permission: "TH_VIEW",
+  permission: "GESTION_HUMANA_VIEW",
   description:
     "Documentos oficiales de caracterización y procedimiento de Talento Humano.",
 },
@@ -622,7 +622,7 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
   departmentCode: "TH",
   type: "page",
   status: "active",
-  permission: "TH_VIEW",
+  permission: "PERSONAL_VIEW",
   description:
     "Administración del maestro de empleados de la organización.",
 },
@@ -636,7 +636,7 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
   departmentCode: "TH",
   type: "page",
   status: "active",
-  permission: "TH_VIEW",
+  permission: "PERSONAL_VIEW",
   description:
     "Consulta, creación y actualización de empleados, cargos y datos laborales.",
 },
@@ -650,7 +650,7 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
   departmentCode: "TH",
   type: "page",
   status: "active",
-  permission: "TH_VIEW",
+  permission: "AREAS_CARGOS_MANAGE",
   description:
     "Administración de áreas, cargos, niveles jerárquicos y relaciones de reporte.",
 },
