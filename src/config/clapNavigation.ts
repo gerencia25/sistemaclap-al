@@ -69,10 +69,38 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
     parentId: "inicio",
     departmentCode: "SC",
     type: "department",
-    status: "construction",
+    status: "active",
     permission: "SC_VIEW",
     description:
       "Gestión documental, codificación y administración del Sistema de Gestión de la Calidad.",
+  },
+
+  {
+    id: "sc-caracterizacion-procedimiento",
+    code: "CP",
+    label: "Caracterización y procedimiento",
+    href: "/sistema-gestion-calidad/caracterizacion-procedimiento",
+    parentId: "sc",
+    departmentCode: "SC",
+    type: "page",
+    status: "active",
+    permission: "SC_VIEW",
+    description:
+      "Documentos oficiales de caracterización y procedimiento del Sistema de Gestión de la Calidad.",
+  },
+
+  {
+    id: "sc-codificacion",
+    code: "COD",
+    label: "Codificación",
+    href: "/sistema-gestion-calidad/codificacion",
+    parentId: "sc",
+    departmentCode: "SC",
+    type: "page",
+    status: "active",
+    permission: "CODIFICACION_VIEW",
+    description:
+      "Gestión de solicitudes de código, creación y administración del maestro de productos.",
   },
 
   {

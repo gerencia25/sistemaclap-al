@@ -57,6 +57,14 @@ const protectedRoutes = [
   permission: "GESTION_HUMANA_VIEW",
 },
   {
+    path: "/sistema-gestion-calidad/codificacion",
+    permission: "CODIFICACION_VIEW",
+  },
+  {
+    path: "/sistema-gestion-calidad",
+    permission: "SC_VIEW",
+  },
+  {
     path: "/configuracion/terceros",
     permission: "TERCEROS_VIEW",
   },
