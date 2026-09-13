@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/auth/AuthProvider";
 
 type ItemCodeRequest = {
@@ -34,9 +35,13 @@ type ItemCodeRequest = {
 };
 
 export default function CodificacionPage() {
+  const router = useRouter();
   const { session, hasPermission } = useAuth();
 
   const canApprove = hasPermission("CODIFICACION_APPROVE");
+  const canCreateProduct = hasPermission(
+    "CODIFICACION_CREATE_PRODUCT",
+  );
 
   const [requests, setRequests] = useState<ItemCodeRequest[]>([]);
   const [search, setSearch] = useState("");
@@ -390,6 +395,23 @@ export default function CodificacionPage() {
                           Ver
                         </button>
 
+                        {canCreateProduct &&
+                          request.status === "Pendiente" &&
+                          request.request_type === "Creación" && (
+                            <button
+                              onClick={() =>
+                                router.push(
+                                  `/sistema-gestion-calidad/codificacion/crear-codigo?requestId=${encodeURIComponent(
+                                    request.id,
+                                  )}`,
+                                )
+                              }
+                              className="rounded-lg bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-700 transition hover:bg-emerald-100"
+                            >
+                              Crear código
+                            </button>
+                          )}
+
                         {canApprove && request.status === "Pendiente" && (
                           <button
                             onClick={() => setRequestToReject(request)}
@@ -542,6 +564,23 @@ export default function CodificacionPage() {
               )}
 
               <div className="flex justify-end gap-3 border-t border-gray-100 pt-5">
+                {canCreateProduct &&
+                  selectedRequest.status === "Pendiente" &&
+                  selectedRequest.request_type === "Creación" && (
+                    <button
+                      onClick={() =>
+                        router.push(
+                          `/sistema-gestion-calidad/codificacion/crear-codigo?requestId=${encodeURIComponent(
+                            selectedRequest.id,
+                          )}`,
+                        )
+                      }
+                      className="rounded-xl bg-[#07076b] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#07076b]/90"
+                    >
+                      Crear código
+                    </button>
+                  )}
+
                 {canApprove && selectedRequest.status === "Pendiente" && (
                   <button
                     onClick={() => {
