@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const parameterGroups = [
+const commercialParameterGroups = [
   {
     code: "LN",
     title: "Líneas de negocio",
@@ -18,14 +18,66 @@ const parameterGroups = [
     href: "/configuracion/listas-parametros/segmentos-comerciales",
   },
   {
-  code: "CT",
-  title: "Categorías de terceros",
-  description:
-    "Cliente, Proveedor y futuras categorías utilizadas en las solicitudes y maestro de terceros.",
-  status: "Activo",
-  href: "/configuracion/listas-parametros/categorias-terceros",
-},
+    code: "CT",
+    title: "Categorías de terceros",
+    description:
+      "Cliente, Proveedor y futuras categorías utilizadas en las solicitudes y maestro de terceros.",
+    status: "Activo",
+    href: "/configuracion/listas-parametros/categorias-terceros",
+  },
 ];
+
+const codificationParameterGroups = [
+  {
+    code: "CD",
+    title: "Codificación",
+    description:
+      "Categorías, grupos, subgrupos, plantillas, opciones de clasificación y datos maestros utilizados para generar códigos de producto.",
+    status: "Activo",
+    href: "/configuracion/listas-parametros/codificacion",
+  },
+];
+
+function ParameterCard({
+  group,
+}: {
+  group: {
+    code: string;
+    title: string;
+    description: string;
+    status: string;
+    href: string;
+  };
+}) {
+  return (
+    <Link
+      href={group.href}
+      className="group rounded-2xl border border-gray-200 bg-white p-5 text-left shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#07076b]/20 hover:shadow-md"
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#07076b] text-xs font-semibold text-white">
+          {group.code}
+        </div>
+
+        <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
+          {group.status}
+        </span>
+      </div>
+
+      <h3 className="mt-5 text-base font-semibold text-gray-900">
+        {group.title}
+      </h3>
+
+      <p className="mt-2 text-sm leading-6 text-gray-600">
+        {group.description}
+      </p>
+
+      <span className="mt-5 inline-flex text-sm font-medium text-[#07076b] transition group-hover:translate-x-1">
+        Administrar →
+      </span>
+    </Link>
+  );
+}
 
 export default function ListasParametrosPage() {
   return (
@@ -58,34 +110,33 @@ export default function ListasParametrosPage() {
         </div>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {parameterGroups.map((group) => (
-            <Link
+          {commercialParameterGroups.map((group) => (
+            <ParameterCard
               key={group.code}
-              href={group.href}
-              className="group rounded-2xl border border-gray-200 bg-white p-5 text-left shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#07076b]/20 hover:shadow-md"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#07076b] text-xs font-semibold text-white">
-                  {group.code}
-                </div>
+              group={group}
+            />
+          ))}
+        </div>
+      </section>
 
-                <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
-                  {group.status}
-                </span>
-              </div>
+      <section>
+        <div className="mb-5">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.15em] text-gray-400">
+            Codificación
+          </h2>
 
-              <h3 className="mt-5 text-base font-semibold text-gray-900">
-                {group.title}
-              </h3>
+          <p className="mt-2 text-sm text-gray-500">
+            Administra la estructura utilizada para clasificar y generar
+            códigos de productos.
+          </p>
+        </div>
 
-              <p className="mt-2 text-sm leading-6 text-gray-600">
-                {group.description}
-              </p>
-
-              <span className="mt-5 inline-flex text-sm font-medium text-[#07076b] transition group-hover:translate-x-1">
-                Administrar →
-              </span>
-            </Link>
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {codificationParameterGroups.map((group) => (
+            <ParameterCard
+              key={group.code}
+              group={group}
+            />
           ))}
         </div>
       </section>
