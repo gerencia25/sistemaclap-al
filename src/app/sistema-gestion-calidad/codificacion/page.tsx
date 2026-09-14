@@ -43,6 +43,10 @@ export default function CodificacionPage() {
     "CODIFICACION_CREATE_PRODUCT",
   );
 
+  const canDeactivateProduct = hasPermission(
+    "CODIFICACION_DEACTIVATE_PRODUCT",
+  );
+
   const [requests, setRequests] = useState<ItemCodeRequest[]>([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("Todos");
@@ -54,6 +58,12 @@ export default function CodificacionPage() {
     useState<ItemCodeRequest | null>(null);
   const [rejectionReason, setRejectionReason] = useState("");
   const [isRejecting, setIsRejecting] = useState(false);
+
+  const [requestToDeactivate, setRequestToDeactivate] =
+    useState<ItemCodeRequest | null>(null);
+
+  const [isDeactivating, setIsDeactivating] =
+    useState(false);
 
   useEffect(() => {
     if (!session?.access_token) return;
@@ -157,6 +167,78 @@ export default function CodificacionPage() {
       );
     } finally {
       setIsRejecting(false);
+    }
+  }
+
+  async function handleDeactivateRequest() {
+    if (
+      !requestToDeactivate ||
+      !session?.access_token
+    ) {
+      return;
+    }
+
+    setIsDeactivating(true);
+
+    try {
+      const response = await fetch(
+        "/api/sistema-gestion-calidad/codificacion/solicitudes/desactivar",
+        {
+          method: "POST",
+          headers: {
+            Authorization:
+              `Bearer ${session.access_token}`,
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            request_id:
+              requestToDeactivate.id,
+          }),
+        },
+      );
+
+      const payload =
+        await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          payload?.error ||
+            "No se pudo desactivar el producto.",
+        );
+      }
+
+      const requesterHadEmail =
+        Boolean(
+          requestToDeactivate
+            .requester_email,
+        );
+
+      setRequestToDeactivate(null);
+      setSelectedRequest(null);
+
+      await fetchRequests();
+
+      if (
+        requesterHadEmail &&
+        payload.email_sent === false
+      ) {
+        alert(
+          "Producto desactivado correctamente, pero no se pudo enviar el correo de notificación.",
+        );
+      } else {
+        alert(
+          "Producto desactivado correctamente.",
+        );
+      }
+    } catch (error) {
+      alert(
+        error instanceof Error
+          ? error.message
+          : "No se pudo desactivar el producto.",
+      );
+    } finally {
+      setIsDeactivating(false);
     }
   }
 
@@ -412,6 +494,21 @@ export default function CodificacionPage() {
                             </button>
                           )}
 
+                        {canDeactivateProduct &&
+                          request.status === "Pendiente" &&
+                          request.request_type === "Desactivación" && (
+                            <button
+                              onClick={() =>
+                                setRequestToDeactivate(
+                                  request,
+                                )
+                              }
+                              className="rounded-lg bg-amber-50 px-3 py-2 text-xs font-medium text-amber-700 transition hover:bg-amber-100"
+                            >
+                              Desactivar producto
+                            </button>
+                          )}
+
                         {canApprove && request.status === "Pendiente" && (
                           <button
                             onClick={() => setRequestToReject(request)}
@@ -581,6 +678,24 @@ export default function CodificacionPage() {
                     </button>
                   )}
 
+                {canDeactivateProduct &&
+                  selectedRequest.status === "Pendiente" &&
+                  selectedRequest.request_type === "Desactivación" && (
+                    <button
+                      onClick={() => {
+                        setRequestToDeactivate(
+                          selectedRequest,
+                        );
+                        setSelectedRequest(
+                          null,
+                        );
+                      }}
+                      className="rounded-xl bg-amber-50 px-5 py-3 text-sm font-semibold text-amber-700 transition hover:bg-amber-100"
+                    >
+                      Desactivar producto
+                    </button>
+                  )}
+
                 {canApprove && selectedRequest.status === "Pendiente" && (
                   <button
                     onClick={() => {
@@ -600,6 +715,65 @@ export default function CodificacionPage() {
                   Cerrar
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {requestToDeactivate && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
+          <div className="w-full max-w-xl rounded-3xl bg-white p-6 shadow-2xl">
+            <div className="mb-5">
+              <p className="text-sm font-semibold uppercase tracking-[0.15em] text-gray-400">
+                Confirmar desactivación
+              </p>
+
+              <h2 className="mt-2 text-2xl font-bold text-[#07076b]">
+                {requestToDeactivate.product_code_to_deactivate ||
+                  requestToDeactivate.request_number}
+              </h2>
+
+              <p className="mt-3 text-sm leading-6 text-gray-600">
+                Se desactivará el producto
+                {" "}
+                <strong>
+                  {requestToDeactivate.product_name_to_deactivate ||
+                    "seleccionado"}
+                </strong>
+                {" "}
+                y dejará de estar activo en el maestro de productos.
+              </p>
+
+              <p className="mt-3 text-sm font-medium text-amber-700">
+                Esta acción no crea un producto nuevo.
+                El producto existente cambiará de Activo a Inactivo.
+              </p>
+            </div>
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() =>
+                  setRequestToDeactivate(
+                    null,
+                  )
+                }
+                disabled={isDeactivating}
+                className="rounded-xl border border-gray-300 px-5 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-100 disabled:opacity-50"
+              >
+                Cancelar
+              </button>
+
+              <button
+                onClick={
+                  handleDeactivateRequest
+                }
+                disabled={isDeactivating}
+                className="rounded-xl bg-amber-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-amber-700 disabled:opacity-50"
+              >
+                {isDeactivating
+                  ? "Desactivando..."
+                  : "Confirmar desactivación"}
+              </button>
             </div>
           </div>
         </div>
