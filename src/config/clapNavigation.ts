@@ -104,6 +104,34 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
   },
 
   {
+    id: "sc-codificacion-maestro-productos",
+    code: "MP",
+    label: "Maestro de productos",
+    href: "/sistema-gestion-calidad/codificacion/maestro-productos",
+    parentId: "sc-codificacion",
+    departmentCode: "SC",
+    type: "page",
+    status: "active",
+    permission: "CODIFICACION_VIEW",
+    description:
+      "Consulta del maestro oficial de productos creados mediante el proceso de codificación.",
+  },
+
+  {
+    id: "sc-codificacion-crear-codigo",
+    code: "CC",
+    label: "Crear código",
+    href: "/sistema-gestion-calidad/codificacion/crear-codigo",
+    parentId: "sc-codificacion",
+    departmentCode: "SC",
+    type: "page",
+    status: "active",
+    permission: "CODIFICACION_CREATE_PRODUCT",
+    description:
+      "Atención de solicitudes aprobadas para creación segura de códigos y productos.",
+  },
+
+  {
     id: "df",
     code: "DF",
     label: "Dirección Financiera",

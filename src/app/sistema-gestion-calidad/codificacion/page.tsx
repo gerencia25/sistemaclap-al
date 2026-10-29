@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/auth/AuthProvider";
+import CodificacionSubnav from "@/components/sc/CodificacionSubnav";
 
 type ItemCodeRequest = {
   id: string;
@@ -314,6 +315,8 @@ export default function CodificacionPage() {
           códigos recibidas por el Sistema de Gestión de la Calidad.
         </p>
       </section>
+
+            <CodificacionSubnav />
 
       <section className="grid grid-cols-1 gap-5 md:grid-cols-3">
         <SummaryCard
