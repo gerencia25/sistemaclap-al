@@ -309,28 +309,6 @@ export default function CrearCodigoPage() {
         category.id === categoryId,
     ) ?? null;
 
-  const availableGroupCodes = useMemo(() => {
-    if (
-      !configuration ||
-      !selectedCategory
-    ) {
-      return new Set<string>();
-    }
-
-    return new Set(
-      configuration.templates
-        .filter(
-          (template) =>
-            template.category_code ===
-            selectedCategory.code,
-        )
-        .map(
-          (template) =>
-            template.group_code,
-        ),
-    );
-  }, [configuration, selectedCategory]);
-
   const filteredGroups = useMemo(() => {
     if (
       !configuration ||
@@ -342,51 +320,17 @@ export default function CrearCodigoPage() {
     return configuration.groups.filter(
       (group) =>
         group.category_id ===
-          selectedCategory.id &&
-        availableGroupCodes.has(
-          group.code,
-        ),
+        selectedCategory.id,
     );
   }, [
     configuration,
     selectedCategory,
-    availableGroupCodes,
   ]);
 
   const selectedGroup =
     configuration?.groups.find(
       (group) => group.id === groupId,
     ) ?? null;
-
-  const availableSubgroupCodes =
-    useMemo(() => {
-      if (
-        !configuration ||
-        !selectedCategory ||
-        !selectedGroup
-      ) {
-        return new Set<string>();
-      }
-
-      return new Set(
-        configuration.templates
-          .filter(
-            (template) =>
-              template.category_code ===
-                selectedCategory.code &&
-              template.group_code ===
-                selectedGroup.code,
-          )
-          .map(
-            (template) =>
-              template.subgroup_code,
-          ),
-      );
-    }, [
-      configuration,
-      selectedCategory,
-      selectedGroup,
-    ]);
 
   const filteredSubgroups =
     useMemo(() => {
@@ -400,15 +344,11 @@ export default function CrearCodigoPage() {
       return configuration.subgroups.filter(
         (subgroup) =>
           subgroup.group_id ===
-            selectedGroup.id &&
-          availableSubgroupCodes.has(
-            subgroup.code,
-          ),
+          selectedGroup.id,
       );
     }, [
       configuration,
       selectedGroup,
-      availableSubgroupCodes,
     ]);
 
   const selectedSubgroup =
@@ -1056,6 +996,19 @@ export default function CrearCodigoPage() {
             </select>
           </Field>
         </div>
+
+        {selectedSubgroup && !selectedTemplate && (
+          <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+            <p className="text-sm font-semibold text-amber-800">
+              Esta clasificación todavía no tiene una plantilla activa de codificación.
+            </p>
+
+            <p className="mt-1 text-xs leading-5 text-amber-700">
+              La categoría, grupo y subgrupo existen en Configuración, pero debes configurar
+              su plantilla antes de crear códigos con esta combinación.
+            </p>
+          </div>
+        )}
 
         {selectedTemplate && (
           <div className="mt-7 grid grid-cols-1 gap-5 md:grid-cols-2">
