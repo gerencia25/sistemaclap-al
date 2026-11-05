@@ -46,10 +46,21 @@ export async function GET(request: Request) {
       templateFieldsResult,
       optionsResult,
       masterFieldsResult,
+      measurementUnitsResult,
     ] = await Promise.all([
       supabaseAdmin
         .from("item_categories")
-        .select("id, code, name")
+        .select(`
+          id,
+          code,
+          name,
+          can_be_sold,
+          can_be_purchased,
+          can_be_manufactured,
+          tracks_inventory,
+          tracks_lots,
+          tracks_serials
+        `)
         .eq("status", "Activo")
         .order("code"),
 
@@ -129,6 +140,18 @@ export async function GET(request: Request) {
         `)
         .eq("status", "Activo")
         .order("display_order"),
+
+      supabaseAdmin
+        .from("measurement_units")
+        .select(`
+          id,
+          code,
+          name,
+          symbol
+        `)
+        .eq("status", "Activo")
+        .order("display_order", { ascending: true })
+        .order("name", { ascending: true }),
     ]);
 
     const results = [
@@ -139,6 +162,7 @@ export async function GET(request: Request) {
       templateFieldsResult,
       optionsResult,
       masterFieldsResult,
+      measurementUnitsResult,
     ];
 
     const failedResult =
@@ -182,6 +206,8 @@ export async function GET(request: Request) {
         optionsResult.data ?? [],
       master_fields:
         masterFieldsResult.data ?? [],
+      measurement_units:
+        measurementUnitsResult.data ?? [],
     });
   } catch (error) {
     return handleError(error);

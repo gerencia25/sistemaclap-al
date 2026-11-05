@@ -223,7 +223,7 @@ export default function NuevaCompraPage() {
       }
 
       alert(`Orden de compra ${purchaseOrderNumber} creada correctamente.`);
-      window.location.href = "/abastecimiento/compras";
+      window.location.href = "/abastecimiento-logistica/compras";
     } catch (error) {
       alert(
         error instanceof Error

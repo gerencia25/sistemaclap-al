@@ -27,6 +27,25 @@ const commercialParameterGroups = [
   },
 ];
 
+const generalParameterGroups = [
+  {
+    code: "UM",
+    title: "Unidades de medida",
+    description:
+      "Administra las unidades utilizadas en codificación, compras, inventarios, producción y demás procesos de CLAP.",
+    status: "Activo",
+    href: "/configuracion/listas-parametros/unidades-medida",
+  },
+  {
+    code: "RE",
+    title: "Referencias de entradas directas",
+    description:
+      "Administra los tipos de autorización o soporte disponibles al registrar entradas directas de inventario.",
+    status: "Activo",
+    href: "/configuracion/listas-parametros/tipos-referencia-recepcion",
+  },
+];
+
 const codificationParameterGroups = [
   {
     code: "CD",
@@ -111,6 +130,27 @@ export default function ListasParametrosPage() {
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
           {commercialParameterGroups.map((group) => (
+            <ParameterCard
+              key={group.code}
+              group={group}
+            />
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <div className="mb-5">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.15em] text-gray-400">
+            Parámetros generales
+          </h2>
+
+          <p className="mt-2 text-sm text-gray-500">
+            Administra catálogos transversales utilizados por diferentes módulos de CLAP.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {generalParameterGroups.map((group) => (
             <ParameterCard
               key={group.code}
               group={group}

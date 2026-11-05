@@ -18,6 +18,14 @@ type ItemCategory = {
   name: string;
   description: string | null;
   status: "Activo" | "Inactivo";
+
+  can_be_sold: boolean;
+  can_be_purchased: boolean;
+  can_be_manufactured: boolean;
+  tracks_inventory: boolean;
+  tracks_lots: boolean;
+  tracks_serials: boolean;
+
   created_at: string;
   dependencies: Dependencies;
   code_locked: boolean;
@@ -28,6 +36,14 @@ type FormState = {
   code: string;
   name: string;
   description: string;
+
+  can_be_sold: boolean;
+  can_be_purchased: boolean;
+  can_be_manufactured: boolean;
+  tracks_inventory: boolean;
+  tracks_lots: boolean;
+  tracks_serials: boolean;
+
   code_locked: boolean;
   dependencies: Dependencies | null;
 };
@@ -37,6 +53,14 @@ const emptyForm: FormState = {
   code: "",
   name: "",
   description: "",
+
+  can_be_sold: false,
+  can_be_purchased: false,
+  can_be_manufactured: false,
+  tracks_inventory: false,
+  tracks_lots: false,
+  tracks_serials: false,
+
   code_locked: false,
   dependencies: null,
 };
@@ -115,6 +139,14 @@ export default function CategoriasCodificacionPage() {
       code: item.code,
       name: item.name,
       description: item.description ?? "",
+
+      can_be_sold: item.can_be_sold,
+      can_be_purchased: item.can_be_purchased,
+      can_be_manufactured: item.can_be_manufactured,
+      tracks_inventory: item.tracks_inventory,
+      tracks_lots: item.tracks_lots,
+      tracks_serials: item.tracks_serials,
+
       code_locked: item.code_locked,
       dependencies: item.dependencies,
     });
@@ -147,6 +179,13 @@ export default function CategoriasCodificacionPage() {
         ...(isEditing ? { id: form.id } : {}),
         name: form.name,
         description: form.description,
+
+        can_be_sold: form.can_be_sold,
+        can_be_purchased: form.can_be_purchased,
+        can_be_manufactured: form.can_be_manufactured,
+        tracks_inventory: form.tracks_inventory,
+        tracks_lots: form.tracks_lots,
+        tracks_serials: form.tracks_serials,
       };
 
       if (!isEditing || !form.code_locked) {
@@ -606,6 +645,108 @@ export default function CategoriasCodificacionPage() {
                 />
               </Field>
 
+              <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">
+                    Comportamiento operativo
+                  </p>
+
+                  <p className="mt-1 text-sm leading-6 text-gray-500">
+                    Define cómo se comportarán por defecto los productos
+                    creados dentro de esta categoría.
+                  </p>
+                </div>
+
+                <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <OperationalCheck
+                    label="Se puede vender"
+                    description="Disponible para procesos comerciales."
+                    checked={form.can_be_sold}
+                    onChange={(checked) =>
+                      setForm((current) => ({
+                        ...current,
+                        can_be_sold: checked,
+                      }))
+                    }
+                  />
+
+                  <OperationalCheck
+                    label="Se puede comprar"
+                    description="Puede adquirirse a proveedores."
+                    checked={form.can_be_purchased}
+                    onChange={(checked) =>
+                      setForm((current) => ({
+                        ...current,
+                        can_be_purchased: checked,
+                      }))
+                    }
+                  />
+
+                  <OperationalCheck
+                    label="Se puede fabricar"
+                    description="Puede producirse internamente."
+                    checked={form.can_be_manufactured}
+                    onChange={(checked) =>
+                      setForm((current) => ({
+                        ...current,
+                        can_be_manufactured: checked,
+                      }))
+                    }
+                  />
+
+                  <OperationalCheck
+                    label="Controla inventario"
+                    description="Genera existencias y movimientos de almacén."
+                    checked={form.tracks_inventory}
+                    onChange={(checked) =>
+                      setForm((current) => ({
+                        ...current,
+                        tracks_inventory: checked,
+
+                        /*
+                         * Si deja de controlar inventario,
+                         * tampoco tiene sentido controlar
+                         * lotes o seriales.
+                         */
+                        tracks_lots: checked
+                          ? current.tracks_lots
+                          : false,
+
+                        tracks_serials: checked
+                          ? current.tracks_serials
+                          : false,
+                      }))
+                    }
+                  />
+
+                  <OperationalCheck
+                    label="Controla lotes"
+                    description="Permite trazabilidad por número de lote."
+                    checked={form.tracks_lots}
+                    disabled={!form.tracks_inventory}
+                    onChange={(checked) =>
+                      setForm((current) => ({
+                        ...current,
+                        tracks_lots: checked,
+                      }))
+                    }
+                  />
+
+                  <OperationalCheck
+                    label="Controla seriales"
+                    description="Permite trazabilidad individual por serial."
+                    checked={form.tracks_serials}
+                    disabled={!form.tracks_inventory}
+                    onChange={(checked) =>
+                      setForm((current) => ({
+                        ...current,
+                        tracks_serials: checked,
+                      }))
+                    }
+                  />
+                </div>
+              </div>
+
               <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
                 <button
                   type="button"
@@ -658,6 +799,54 @@ function Field({
 
       {children}
     </div>
+  );
+}
+
+function OperationalCheck({
+  label,
+  description,
+  checked,
+  disabled = false,
+  onChange,
+}: {
+  label: string;
+  description: string;
+  checked: boolean;
+  disabled?: boolean;
+  onChange: (checked: boolean) => void;
+}) {
+  return (
+    <label
+      className={`flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition ${
+        checked
+          ? "border-[#07076b]/20 bg-white"
+          : "border-gray-200 bg-white"
+      } ${
+        disabled
+          ? "cursor-not-allowed opacity-50"
+          : "hover:border-[#07076b]/30"
+      }`}
+    >
+      <input
+        type="checkbox"
+        checked={checked}
+        disabled={disabled}
+        onChange={(event) =>
+          onChange(event.target.checked)
+        }
+        className="mt-1 h-4 w-4 accent-[#07076b]"
+      />
+
+      <span>
+        <span className="block text-sm font-semibold text-gray-900">
+          {label}
+        </span>
+
+        <span className="mt-1 block text-xs leading-5 text-gray-500">
+          {description}
+        </span>
+      </span>
+    </label>
   );
 }
 

@@ -2,7 +2,7 @@
 
 import { ReactNode, Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 type ThirdParty = {
   id: string;
@@ -102,6 +102,46 @@ type ThirdPartyRequestAttachment = {
   supplier_knowledge_file_url: string | null;
 };
 
+type ThirdPartyDocument = {
+  id: string;
+  third_party_id: string;
+  document_type:
+    | "RUT"
+    | "CAMARA_COMERCIO"
+    | "CONOCIMIENTO_CLIENTE"
+    | "CONOCIMIENTO_PROVEEDOR";
+  file_name: string;
+  file_url: string;
+  storage_path: string | null;
+  mime_type: string;
+  version: number;
+  is_current: boolean;
+  status: string;
+  uploaded_by: string | null;
+  source_request_id: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+const thirdPartyDocumentDefinitions = [
+  {
+    type: "RUT",
+    label: "RUT",
+  },
+  {
+    type: "CAMARA_COMERCIO",
+    label: "Cámara de comercio",
+  },
+  {
+    type: "CONOCIMIENTO_CLIENTE",
+    label: "Conocimiento cliente",
+  },
+  {
+    type: "CONOCIMIENTO_PROVEEDOR",
+    label: "Conocimiento proveedor",
+  },
+] as const;
+
 const emptyContact: ContactDraft = {
   first_name: "",
   last_name: "",
@@ -161,6 +201,7 @@ const emptyThirdParty: Omit<
 };
 
 function TercerosContent() {
+  const { session } = useAuth();
   const searchParams = useSearchParams();
   const requestId = searchParams.get("requestId");
 
@@ -188,6 +229,15 @@ function TercerosContent() {
   const [isSaving, setIsSaving] = useState(false);
   const [newThirdParty, setNewThirdParty] = useState(emptyThirdParty);
   const [contacts, setContacts] = useState<ContactDraft[]>([]);
+  const [
+    currentThirdPartyDocuments,
+    setCurrentThirdPartyDocuments,
+  ] = useState<ThirdPartyDocument[]>([]);
+  const [thirdPartyDocuments, setThirdPartyDocuments] = useState<
+    ThirdPartyDocument[]
+  >([]);
+  const [uploadingDocumentType, setUploadingDocumentType] =
+    useState<string | null>(null);
   const [editingThirdPartyId, setEditingThirdPartyId] = useState<string | null>(null);
 const isEditing = editingThirdPartyId !== null;
 
@@ -195,118 +245,289 @@ const isEditing = editingThirdPartyId !== null;
     "w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-[#07076b] focus:ring-2 focus:ring-[#07076b]/10 disabled:bg-gray-50 disabled:text-gray-400";
 
   useEffect(() => {
-    fetchThirdParties();
-    fetchRequestAttachments();
-    fetchMasterData();
-  }, []);
+    if (!session?.access_token) return;
+
+    void fetchInitialData();
+  }, [session?.access_token]);
 
   useEffect(() => {
-  if (requestId) {
-    fetchLinkedRequest(requestId);
-  }
-}, [requestId]);
+    if (!requestId || !session?.access_token) return;
 
-  async function fetchThirdParties() {
+    void fetchLinkedRequest(requestId);
+  }, [requestId, session?.access_token]);
+
+  async function fetchInitialData() {
+    if (!session?.access_token) return;
+
     setIsLoading(true);
 
-    const { data, error } = await supabase
-      .from("third_parties")
-      .select("*")
-      .order("created_at", { ascending: false });
+    try {
+      const response = await fetch(
+        "/api/direccion-financiera/terceros",
+        {
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          cache: "no-store",
+        },
+      );
 
-    if (error) {
-      alert(`Error cargando terceros: ${error.message}`);
+      const payload = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          payload?.error ||
+            "No se pudo cargar el maestro de terceros.",
+        );
+      }
+
+      setThirdParties(
+        (payload.thirdParties ?? []) as ThirdParty[],
+      );
+
+      setRequestAttachments(
+        (payload.requestAttachments ?? []) as ThirdPartyRequestAttachment[],
+      );
+
+      setCurrentThirdPartyDocuments(
+        (payload.currentDocuments ?? []) as ThirdPartyDocument[],
+      );
+
+      setIdentificationTypes(
+        (payload.identificationTypes ?? []) as MasterOption[],
+      );
+
+      setFiscalResponsibilities(
+        (payload.fiscalResponsibilities ?? []) as MasterOption[],
+      );
+
+      setVatRegimes(
+        (payload.vatRegimes ?? []) as MasterOption[],
+      );
+
+      setPaymentTerms(
+        (payload.paymentTerms ?? []) as PaymentTermOption[],
+      );
+
+      setCurrencies(
+        (payload.currencies ?? []) as CurrencyOption[],
+      );
+    } catch (error) {
+      alert(
+        error instanceof Error
+          ? error.message
+          : "No se pudo cargar el maestro de terceros.",
+      );
+    } finally {
       setIsLoading(false);
-      return;
     }
-
-    setThirdParties((data ?? []) as ThirdParty[]);
-    setIsLoading(false);
   }
 
   async function fetchLinkedRequest(id: string) {
-  const { data, error } = await supabase
-    .from("third_party_requests")
-    .select("*")
-    .eq("id", id)
-    .single();
+    if (!session?.access_token) return;
 
-  if (error) {
-    alert(`No se pudo cargar la solicitud: ${error.message}`);
-    return;
+    try {
+      const response = await fetch(
+        `/api/direccion-financiera/terceros?requestId=${encodeURIComponent(id)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          cache: "no-store",
+        },
+      );
+
+      const payload = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          payload?.error ||
+            "No se pudo cargar la solicitud.",
+        );
+      }
+
+      const data = payload.request as ThirdPartyRequest;
+
+      setLinkedRequest(data);
+
+      setNewThirdParty((current) => ({
+        ...current,
+        is_customer: data.category === "Cliente",
+        is_supplier: data.category === "Proveedor",
+        is_other: false,
+      }));
+
+      setIsModalOpen(true);
+    } catch (error) {
+      alert(
+        error instanceof Error
+          ? error.message
+          : "No se pudo cargar la solicitud.",
+      );
+    }
   }
 
-  setLinkedRequest(data as ThirdPartyRequest);
+  async function fetchThirdPartyContacts(
+    thirdPartyId: string,
+  ) {
+    if (!session?.access_token) return [];
 
-  setNewThirdParty((current) => ({
-    ...current,
-    is_customer: data.category === "Cliente",
-    is_supplier: data.category === "Proveedor",
-    is_other: false,
-  }));
+    const response = await fetch(
+      `/api/direccion-financiera/terceros?thirdPartyId=${encodeURIComponent(
+        thirdPartyId,
+      )}`,
+      {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        cache: "no-store",
+      },
+    );
 
-  setIsModalOpen(true);
-}
-  async function fetchRequestAttachments() {
-    const { data, error } = await supabase
-      .from("third_party_requests")
-      .select(
-        "created_third_party_id, rut_file_url, rut_file_name, chamber_commerce_file_url, chamber_commerce_file_name, customer_knowledge_file_url, customer_knowledge_file_name, supplier_knowledge_file_url, supplier_knowledge_file_name",
-      )
-      .not("created_third_party_id", "is", null);
+    const payload = await response.json();
 
-    if (error) {
-      alert(`Error cargando adjuntos: ${error.message}`);
+    if (!response.ok) {
+      throw new Error(
+        payload?.error ||
+          "No se pudieron cargar los contactos.",
+      );
+    }
+
+    return (payload.contacts ?? []).map(
+      (contact: {
+        first_name?: string | null;
+        last_name?: string | null;
+        phone_indicative?: string | null;
+        phone?: string | null;
+        email?: string | null;
+        position?: string | null;
+      }): ContactDraft => ({
+        first_name: contact.first_name ?? "",
+        last_name: contact.last_name ?? "",
+        phone_indicative:
+          contact.phone_indicative ?? "57",
+        phone: contact.phone ?? "",
+        email: contact.email ?? "",
+        position: contact.position ?? "",
+      }),
+    );
+  }
+
+  async function fetchThirdPartyDocuments(
+    thirdPartyId: string,
+  ) {
+    if (!session?.access_token) return [];
+
+    const response = await fetch(
+      `/api/direccion-financiera/terceros/documentos?thirdPartyId=${encodeURIComponent(
+        thirdPartyId,
+      )}`,
+      {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        cache: "no-store",
+      },
+    );
+
+    const payload = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        payload?.error ||
+          "No se pudieron cargar los documentos del tercero.",
+      );
+    }
+
+    return (payload.documents ?? []) as ThirdPartyDocument[];
+  }
+
+  async function handleReplaceDocument(
+    documentType: ThirdPartyDocument["document_type"],
+    file: File | null,
+  ) {
+    if (!file || !editingThirdPartyId || !session?.access_token) {
       return;
     }
 
-    setRequestAttachments((data ?? []) as ThirdPartyRequestAttachment[]);
-  }
+    if (
+      file.type !== "application/pdf" ||
+      !file.name.toLowerCase().endsWith(".pdf")
+    ) {
+      alert("Solo puedes cargar documentos en formato PDF.");
+      return;
+    }
 
-  async function fetchMasterData() {
-    const [
-      identificationTypesResponse,
-      fiscalResponsibilitiesResponse,
-      vatRegimesResponse,
-      paymentTermsResponse,
-      currenciesResponse,
-    ] = await Promise.all([
-      supabase
-        .from("third_party_identification_types")
-        .select("*")
-        .eq("status", "Activo")
-        .order("name"),
-      supabase
-        .from("third_party_fiscal_responsibilities")
-        .select("*")
-        .eq("status", "Activo")
-        .order("code"),
-      supabase
-        .from("third_party_vat_regimes")
-        .select("*")
-        .eq("status", "Activo")
-        .order("name"),
-      supabase
-        .from("third_party_payment_terms")
-        .select("*")
-        .eq("status", "Activo")
-        .order("days"),
-      supabase
-        .from("third_party_currencies")
-        .select("*")
-        .eq("status", "Activo")
-        .order("code"),
-    ]);
+    if (file.size > 15 * 1024 * 1024) {
+      alert("El archivo supera el tamaño máximo de 15 MB.");
+      return;
+    }
 
-    setIdentificationTypes(
-      (identificationTypesResponse.data ?? []) as MasterOption[],
-    );
-    setFiscalResponsibilities(
-      (fiscalResponsibilitiesResponse.data ?? []) as MasterOption[],
-    );
-    setVatRegimes((vatRegimesResponse.data ?? []) as MasterOption[]);
-    setPaymentTerms((paymentTermsResponse.data ?? []) as PaymentTermOption[]);
-    setCurrencies((currenciesResponse.data ?? []) as CurrencyOption[]);
+    setUploadingDocumentType(documentType);
+
+    try {
+      const formData = new FormData();
+
+      formData.append(
+        "third_party_id",
+        editingThirdPartyId,
+      );
+
+      formData.append(
+        "document_type",
+        documentType,
+      );
+
+      formData.append(
+        "file",
+        file,
+      );
+
+      const response = await fetch(
+        "/api/direccion-financiera/terceros/documentos",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: formData,
+        },
+      );
+
+      const payload = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          payload?.error ||
+            "No se pudo reemplazar el documento.",
+        );
+      }
+
+      const updatedDocuments =
+        await fetchThirdPartyDocuments(editingThirdPartyId);
+
+      setThirdPartyDocuments(updatedDocuments);
+
+      setCurrentThirdPartyDocuments((current) => [
+        ...current.filter(
+          (document) =>
+            document.third_party_id !== editingThirdPartyId,
+        ),
+        ...updatedDocuments.filter(
+          (document) => document.is_current,
+        ),
+      ]);
+
+      alert("Documento actualizado correctamente.");
+    } catch (error) {
+      alert(
+        error instanceof Error
+          ? error.message
+          : "No se pudo reemplazar el documento.",
+      );
+    } finally {
+      setUploadingDocumentType(null);
+    }
   }
 
   function getFiscalResponsibilityLabel(option: MasterOption) {
@@ -318,9 +539,47 @@ const isEditing = editingThirdPartyId !== null;
   }
 
   function getAttachmentsByThirdPartyId(thirdPartyId: string) {
-    return requestAttachments.find(
-      (attachment) => attachment.created_third_party_id === thirdPartyId,
+    const legacyAttachments = requestAttachments.find(
+      (attachment) =>
+        attachment.created_third_party_id === thirdPartyId,
     );
+
+    const documents = currentThirdPartyDocuments.filter(
+      (document) =>
+        document.third_party_id === thirdPartyId &&
+        document.is_current,
+    );
+
+    const getCurrentUrl = (
+      type: ThirdPartyDocument["document_type"],
+    ) =>
+      documents.find(
+        (document) => document.document_type === type,
+      )?.file_url ?? null;
+
+    return {
+      created_third_party_id: thirdPartyId,
+
+      rut_file_url:
+        getCurrentUrl("RUT") ??
+        legacyAttachments?.rut_file_url ??
+        null,
+
+      chamber_commerce_file_url:
+        getCurrentUrl("CAMARA_COMERCIO") ??
+        legacyAttachments?.chamber_commerce_file_url ??
+        null,
+
+      customer_knowledge_file_url:
+        getCurrentUrl("CONOCIMIENTO_CLIENTE") ??
+        legacyAttachments?.customer_knowledge_file_url ??
+        null,
+
+      supplier_knowledge_file_url:
+        getCurrentUrl("CONOCIMIENTO_PROVEEDOR") ??
+        legacyAttachments?.supplier_knowledge_file_url ??
+        null,
+    };
   }
 
   const filteredThirdParties = useMemo(() => {
@@ -391,7 +650,7 @@ const isEditing = editingThirdPartyId !== null;
     );
   }
 
-  function handleEditThirdParty(thirdParty: ThirdParty) {
+  async function handleEditThirdParty(thirdParty: ThirdParty) {
   setEditingThirdPartyId(thirdParty.id);
 
   setNewThirdParty({
@@ -444,12 +703,33 @@ const isEditing = editingThirdPartyId !== null;
   setLinkedRequest(null);
   setContacts([]);
   setIsModalOpen(true);
+
+  try {
+    const [
+      existingContacts,
+      existingDocuments,
+    ] = await Promise.all([
+      fetchThirdPartyContacts(thirdParty.id),
+      fetchThirdPartyDocuments(thirdParty.id),
+    ]);
+
+    setContacts(existingContacts);
+    setThirdPartyDocuments(existingDocuments);
+  } catch (error) {
+    alert(
+      error instanceof Error
+        ? error.message
+        : "No se pudo cargar la información adicional del tercero.",
+    );
+  }
 }
 
   function closeModal() {
     setIsModalOpen(false);
     setNewThirdParty(emptyThirdParty);
     setContacts([]);
+    setThirdPartyDocuments([]);
+    setUploadingDocumentType(null);
     setLinkedRequest(null);
     setEditingThirdPartyId(null);
   }
@@ -513,70 +793,63 @@ const isEditing = editingThirdPartyId !== null;
   async function handleSaveThirdParty() {
     if (!validateThirdParty()) return;
 
+    if (!session?.access_token) {
+      alert("Tu sesión no está disponible. Ingresa nuevamente.");
+      return;
+    }
+
     setIsSaving(true);
 
     try {
       const payload = {
         ...newThirdParty,
-        verification_digit: newThirdParty.verification_digit || null,
-        first_name: newThirdParty.first_name || null,
-        last_name: newThirdParty.last_name || null,
-        business_name: newThirdParty.business_name || null,
-        commercial_name: newThirdParty.commercial_name || null,
-        department: newThirdParty.department || null,
-        city: newThirdParty.city || null,
-        address: newThirdParty.address || null,
-        phone_indicative: newThirdParty.phone_indicative || null,
-        phone: newThirdParty.phone || null,
-        email: newThirdParty.email || null,
+        verification_digit:
+          newThirdParty.verification_digit || null,
+        first_name:
+          newThirdParty.first_name || null,
+        last_name:
+          newThirdParty.last_name || null,
+        business_name:
+          newThirdParty.business_name || null,
+        commercial_name:
+          newThirdParty.commercial_name || null,
+        department:
+          newThirdParty.department || null,
+        city:
+          newThirdParty.city || null,
+        address:
+          newThirdParty.address || null,
+        phone_indicative:
+          newThirdParty.phone_indicative || null,
+        phone:
+          newThirdParty.phone || null,
+        email:
+          newThirdParty.email || null,
         electronic_invoice_email:
           newThirdParty.electronic_invoice_email || null,
-        fiscal_responsibility: newThirdParty.fiscal_responsibility || null,
-        iva_regime: newThirdParty.iva_regime || null,
-        ciiu_activity: newThirdParty.ciiu_activity || null,
-        postal_code: newThirdParty.postal_code || null,
-        payment_terms: newThirdParty.payment_terms || null,
-        currency: newThirdParty.currency || null,
-        credit_limit: Number(newThirdParty.credit_limit || 0),
-        price_list: newThirdParty.price_list || null,
-        seller: newThirdParty.seller || null,
-        collector: newThirdParty.collector || null,
-        observations: newThirdParty.observations || null,
-        updated_at: new Date().toISOString(),
+        fiscal_responsibility:
+          newThirdParty.fiscal_responsibility || null,
+        iva_regime:
+          newThirdParty.iva_regime || null,
+        ciiu_activity:
+          newThirdParty.ciiu_activity || null,
+        postal_code:
+          newThirdParty.postal_code || null,
+        payment_terms:
+          newThirdParty.payment_terms || null,
+        currency:
+          newThirdParty.currency || null,
+        credit_limit:
+          Number(newThirdParty.credit_limit || 0),
+        price_list:
+          newThirdParty.price_list || null,
+        seller:
+          newThirdParty.seller || null,
+        collector:
+          newThirdParty.collector || null,
+        observations:
+          newThirdParty.observations || null,
       };
-
-      let savedThirdPartyId = editingThirdPartyId;
-
-if (isEditing) {
-  const { error } = await supabase
-    .from("third_parties")
-    .update(payload)
-    .eq("id", editingThirdPartyId);
-
-  if (error) throw new Error(error.message);
-} else {
-  const { data: insertedThirdParty, error } = await supabase
-    .from("third_parties")
-    .insert(payload)
-    .select("id")
-    .single();
-
-  if (error) {
-    if (
-      error.message.includes(
-        "third_parties_identification_type_identification_number_key",
-      )
-    ) {
-      throw new Error(
-        "Ya existe un tercero registrado con ese tipo y número de identificación.",
-      );
-    }
-
-    throw new Error(error.message);
-  }
-
-  savedThirdPartyId = insertedThirdParty.id;
-}
 
       const contactsToSave = contacts
         .filter((contact) =>
@@ -590,43 +863,57 @@ if (isEditing) {
             .join("")
             .trim(),
         )
-        .map((contact, index) => ({
-          third_party_id: savedThirdPartyId,
-          first_name: contact.first_name.trim(),
-          last_name: contact.last_name.trim() || null,
-          phone_indicative: contact.phone_indicative.trim() || null,
-          phone: contact.phone.trim() || null,
-          email: contact.email.trim() || null,
-          position: contact.position.trim() || null,
-          is_primary: index === 0,
-          status: "Activo",
+        .map((contact) => ({
+          first_name:
+            contact.first_name.trim(),
+          last_name:
+            contact.last_name.trim() || null,
+          phone_indicative:
+            contact.phone_indicative.trim() || null,
+          phone:
+            contact.phone.trim() || null,
+          email:
+            contact.email.trim() || null,
+          position:
+            contact.position.trim() || null,
         }));
 
-      if (contactsToSave.length > 0) {
-        const { error: contactsError } = await supabase
-          .from("third_party_contacts")
-          .insert(contactsToSave);
+      const response = await fetch(
+        "/api/direccion-financiera/terceros",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization:
+              `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            data: payload,
+            contacts: contactsToSave,
+            third_party_id:
+              editingThirdPartyId,
+            request_id:
+              linkedRequest?.id ?? null,
+          }),
+        },
+      );
 
-        if (contactsError) throw new Error(contactsError.message);
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          result?.error ||
+            "No se pudo guardar el tercero.",
+        );
       }
 
-      if (linkedRequest) {
-  const { error: requestUpdateError } = await supabase
-    .from("third_party_requests")
-    .update({
-  status: "Creado",
-  created_third_party_id: savedThirdPartyId,
-  completed_at: new Date().toISOString(),
-  updated_at: new Date().toISOString(),
-})
-    .eq("id", linkedRequest.id);
+      alert(
+        isEditing
+          ? "Tercero actualizado correctamente."
+          : "Tercero creado correctamente.",
+      );
 
-  if (requestUpdateError) throw new Error(requestUpdateError.message);
-}
-
-      alert("Tercero creado correctamente.");
-      await fetchThirdParties();
-      await fetchRequestAttachments();
+      await fetchInitialData();
       closeModal();
     } catch (error) {
       alert(
@@ -950,6 +1237,167 @@ if (isEditing) {
 </div>
   </section>
 )}
+            {isEditing && editingThirdPartyId && (
+              <section className="mb-8 rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+                <div className="mb-6 border-b border-gray-100 pb-5">
+                  <h3 className="text-xl font-bold text-[#07076b]">
+                    Documentos del tercero
+                  </h3>
+
+                  <p className="mt-1 text-sm text-gray-500">
+                    Consulta el documento vigente o reemplázalo por una nueva
+                    versión en PDF. Las versiones anteriores se conservan como
+                    histórico.
+                  </p>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  {thirdPartyDocumentDefinitions.map((definition) => {
+                    const documents = thirdPartyDocuments
+                      .filter(
+                        (document) =>
+                          document.document_type === definition.type,
+                      )
+                      .sort(
+                        (a, b) =>
+                          b.version - a.version,
+                      );
+
+                    const currentDocument = documents.find(
+                      (document) => document.is_current,
+                    );
+
+                    const historicalDocuments = documents.filter(
+                      (document) => !document.is_current,
+                    );
+
+                    const isUploading =
+                      uploadingDocumentType === definition.type;
+
+                    return (
+                      <div
+                        key={definition.type}
+                        className="rounded-2xl border border-gray-200 p-5"
+                      >
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                          <div>
+                            <p className="font-semibold text-gray-900">
+                              {definition.label}
+                            </p>
+
+                            {currentDocument ? (
+                              <>
+                                <p className="mt-1 text-xs text-gray-500">
+                                  Versión {currentDocument.version} ·{" "}
+                                  {currentDocument.mime_type ===
+                                  "application/pdf"
+                                    ? "PDF"
+                                    : "Documento histórico"}
+                                </p>
+
+                                <p className="mt-1 max-w-[320px] truncate text-xs text-gray-400">
+                                  {currentDocument.file_name}
+                                </p>
+                              </>
+                            ) : (
+                              <p className="mt-1 text-xs text-gray-400">
+                                Sin documento vigente
+                              </p>
+                            )}
+                          </div>
+
+                          {currentDocument && (
+                            <a
+                              href={currentDocument.file_url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex rounded-lg bg-gray-100 px-3 py-2 text-xs font-medium text-gray-700 transition hover:bg-gray-200"
+                            >
+                              Ver actual
+                            </a>
+                          )}
+                        </div>
+
+                        <div className="mt-4">
+                          <label
+                            className={`inline-flex cursor-pointer items-center rounded-lg px-4 py-2 text-xs font-semibold transition ${
+                              isUploading
+                                ? "cursor-not-allowed bg-gray-100 text-gray-400"
+                                : "bg-[#07076b] text-white hover:bg-[#0b0b87]"
+                            }`}
+                          >
+                            {isUploading
+                              ? "Subiendo..."
+                              : currentDocument
+                                ? "Reemplazar PDF"
+                                : "Subir PDF"}
+
+                            <input
+                              type="file"
+                              accept="application/pdf,.pdf"
+                              disabled={isUploading}
+                              className="hidden"
+                              onChange={(event) => {
+                                const file =
+                                  event.target.files?.[0] ?? null;
+
+                                void handleReplaceDocument(
+                                  definition.type,
+                                  file,
+                                );
+
+                                event.currentTarget.value = "";
+                              }}
+                            />
+                          </label>
+
+                          <p className="mt-2 text-xs text-gray-400">
+                            Solo PDF · máximo 15 MB
+                          </p>
+                        </div>
+
+                        {historicalDocuments.length > 0 && (
+                          <details className="mt-4 rounded-xl bg-gray-50 p-3">
+                            <summary className="cursor-pointer text-xs font-semibold text-gray-600">
+                              Historial ({historicalDocuments.length})
+                            </summary>
+
+                            <div className="mt-3 space-y-2">
+                              {historicalDocuments.map((document) => (
+                                <div
+                                  key={document.id}
+                                  className="flex items-center justify-between gap-3 rounded-lg bg-white px-3 py-2"
+                                >
+                                  <div className="min-w-0">
+                                    <p className="text-xs font-medium text-gray-700">
+                                      Versión {document.version}
+                                    </p>
+
+                                    <p className="truncate text-[11px] text-gray-400">
+                                      {document.file_name}
+                                    </p>
+                                  </div>
+
+                                  <a
+                                    href={document.file_url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="shrink-0 text-xs font-semibold text-[#07076b] hover:underline"
+                                  >
+                                    Ver
+                                  </a>
+                                </div>
+                              ))}
+                            </div>
+                          </details>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+
             <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
               <div className="mb-6 border-b border-gray-100 pb-5">
                 <div className="mb-2 inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#07076b] text-sm font-bold text-white">

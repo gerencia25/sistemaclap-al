@@ -542,6 +542,109 @@ export async function POST(request: Request) {
 
     /*
      * =====================================================
+     * COMPORTAMIENTO OPERATIVO OFICIAL
+     * =====================================================
+     *
+     * Estos valores NO se confían al navegador.
+     * Siempre se toman nuevamente desde la categoría
+     * oficial configurada en item_categories.
+     */
+    const {
+      data: operationalCategory,
+      error: operationalCategoryError,
+    } = await supabaseAdmin
+      .from("item_categories")
+      .select(`
+        id,
+        can_be_sold,
+        can_be_purchased,
+        can_be_manufactured,
+        tracks_inventory,
+        tracks_lots,
+        tracks_serials
+      `)
+      .eq("id", generated.categoryId)
+      .eq("status", "Activo")
+      .maybeSingle();
+
+    if (operationalCategoryError) {
+      throw new Error(
+        `No se pudo consultar el comportamiento operativo de la categoría: ${operationalCategoryError.message}`,
+      );
+    }
+
+    if (!operationalCategory) {
+      throw new Error(
+        "La categoría seleccionada no existe o se encuentra inactiva.",
+      );
+    }
+
+    /*
+     * =====================================================
+     * UNIDAD DE MEDIDA OFICIAL
+     * =====================================================
+     *
+     * La unidad recibida desde el navegador NO se confía.
+     * Debe existir y estar activa en el catálogo central
+     * Configuración → Listas y parámetros → Unidades de medida.
+     */
+    const requestedUnit = String(
+      product.unit ?? "",
+    )
+      .trim()
+      .toUpperCase();
+
+    if (!requestedUnit) {
+      await removeUploadedFiles(
+        uploadedPaths,
+      );
+
+      return NextResponse.json(
+        {
+          error:
+            "Debes seleccionar una unidad de medida de inventario.",
+        },
+        { status: 400 },
+      );
+    }
+
+    const {
+      data: officialMeasurementUnit,
+      error: measurementUnitError,
+    } = await supabaseAdmin
+      .from("measurement_units")
+      .select(`
+        id,
+        code,
+        name,
+        symbol
+      `)
+      .ilike("code", requestedUnit)
+      .eq("status", "Activo")
+      .maybeSingle();
+
+    if (measurementUnitError) {
+      throw new Error(
+        `No se pudo validar la unidad de medida: ${measurementUnitError.message}`,
+      );
+    }
+
+    if (!officialMeasurementUnit) {
+      await removeUploadedFiles(
+        uploadedPaths,
+      );
+
+      return NextResponse.json(
+        {
+          error:
+            "La unidad de medida seleccionada no existe o se encuentra inactiva.",
+        },
+        { status: 400 },
+      );
+    }
+
+    /*
+     * =====================================================
      * PRODUCTO OFICIAL
      * =====================================================
      *
@@ -577,6 +680,42 @@ export async function POST(request: Request) {
 
       classification_code:
         generated.classificationCode,
+
+      /*
+       * Unidad de inventario impuesta por servidor.
+       * Se conserva el código estable del catálogo:
+       * KG, ML, UND, M, etc.
+       */
+      unit:
+        officialMeasurementUnit.code,
+
+      /*
+       * Comportamiento operativo impuesto por servidor.
+       */
+      can_be_sold:
+        operationalCategory.can_be_sold,
+
+      can_be_purchased:
+        operationalCategory.can_be_purchased,
+
+      can_be_manufactured:
+        operationalCategory.can_be_manufactured,
+
+      tracks_inventory:
+        operationalCategory.tracks_inventory,
+
+      tracks_lots:
+        operationalCategory.tracks_lots,
+
+      tracks_serials:
+        operationalCategory.tracks_serials,
+
+      supply_type:
+        operationalCategory.can_be_manufactured
+          ? "Fabricado"
+          : operationalCategory.can_be_purchased
+            ? "Comprado"
+            : "Otro",
 
       dynamic_code_data:
         generated.dynamicData,

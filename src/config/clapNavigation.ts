@@ -6,6 +6,7 @@ export type DepartmentCode =
   | "DD"
   | "DT"
   | "DO"
+  | "AL"
   | "TH"
   | "CO";
 
@@ -415,7 +416,7 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
     status: "construction",
     permission: "DO_VIEW",
     description:
-      "Planeación, abastecimiento, logística y procesos productivos.",
+      "Planeación y gestión de los procesos productivos.",
   },
 
   {
@@ -503,33 +504,7 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
       "Programación de órdenes y actividades productivas previamente generadas.",
   },
 
-  {
-    id: "do-ab",
-    code: "AB",
-    label: "Abastecimiento",
-    href: "/operaciones/abastecimiento",
-    parentId: "do",
-    departmentCode: "DO",
-    type: "section",
-    status: "construction",
-    permission: "DO_AB_VIEW",
-    description:
-      "Compras, abastecimiento, inventarios y gestión de bodegas.",
-  },
 
-  {
-    id: "do-lg",
-    code: "LG",
-    label: "Logística",
-    href: "/operaciones/logistica",
-    parentId: "do",
-    departmentCode: "DO",
-    type: "section",
-    status: "construction",
-    permission: "DO_LG_VIEW",
-    description:
-      "Programación y ejecución de despachos.",
-  },
 
   {
     id: "do-in",
@@ -587,19 +562,6 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
       "Marca, empaque, conteo, ensamble y demás operaciones asociadas.",
   },
 
-  {
-    id: "do-mz",
-    code: "MZ",
-    label: "Mezclas",
-    href: "/operaciones/mezclas",
-    parentId: "do",
-    departmentCode: "DO",
-    type: "section",
-    status: "construction",
-    permission: "DO_MZ_VIEW",
-    description:
-      "Preparación y control de mezclas requeridas por los procesos productivos.",
-  },
 
   {
     id: "do-ml",
@@ -627,6 +589,216 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
     permission: "DO_MT_VIEW",
     description:
       "Mantenimiento de máquinas, infraestructura tecnológica y procesos asociados.",
+  },
+
+  {
+    id: "al",
+    code: "AL",
+    label: "Dirección Abastecimiento y Logística",
+    href: "/abastecimiento-logistica",
+    parentId: "inicio",
+    departmentCode: "AL",
+    type: "department",
+    status: "construction",
+    permission: "ABASTECIMIENTO_LOGISTICA_VIEW",
+    description:
+      "Gestión de abastecimiento, almacenes e inventarios, logística y mezclas.",
+  },
+
+  {
+    id: "al-solicitud-personal",
+    code: "SP",
+    label: "Solicitud de personal",
+    href: "/abastecimiento-logistica/solicitud-personal",
+    parentId: "al",
+    departmentCode: "AL",
+    type: "page",
+    status: "construction",
+    permission: "ABASTECIMIENTO_LOGISTICA_VIEW",
+    description:
+      "Solicitud de necesidades de personal dirigida a Talento Humano.",
+  },
+
+  {
+    id: "al-ab",
+    code: "AB",
+    label: "Abastecimiento",
+    href: "/abastecimiento-logistica/abastecimiento",
+    parentId: "al",
+    departmentCode: "AL",
+    type: "section",
+    status: "construction",
+    permission: "ABASTECIMIENTO_VIEW",
+    description:
+      "Compras y aprovisionamiento de materias primas, insumos y demás requerimientos.",
+  },
+
+  {
+    id: "al-ab-solicitud-codigo",
+    code: "SC",
+    label: "Solicitud de código",
+    href: "/abastecimiento-logistica/abastecimiento/solicitud-codigo",
+    parentId: "al-ab",
+    departmentCode: "AL",
+    type: "page",
+    status: "active",
+    permission: "CODIFICACION_REQUEST",
+    description:
+      "Solicita la creación o desactivación de códigos para materias primas, insumos, productos y demás elementos del maestro oficial.",
+  },
+
+  {
+    id: "al-ab-compras",
+    code: "CO",
+    label: "Compras",
+    href: "/abastecimiento-logistica/compras",
+    parentId: "al-ab",
+    departmentCode: "AL",
+    type: "page",
+    status: "construction",
+    permission: "ABASTECIMIENTO_VIEW",
+    description:
+      "Gestión de órdenes de compra de materias primas, insumos, repuestos y demás requerimientos.",
+  },
+
+  {
+    id: "al-ai",
+    code: "AI",
+    label: "Almacenes e Inventarios",
+    href: "/abastecimiento-logistica/almacenes-inventarios",
+    parentId: "al",
+    departmentCode: "AL",
+    type: "section",
+    status: "active",
+    permission: "ALMACEN_INVENTARIOS_VIEW",
+    description:
+      "Existencias, entradas, salidas, kardex, ajustes, ubicaciones y lotes.",
+  },
+
+  {
+    id: "al-ai-existencias",
+    code: "EX",
+    label: "Existencias",
+    href: "/abastecimiento-logistica/almacenes-inventarios/existencias",
+    parentId: "al-ai",
+    departmentCode: "AL",
+    type: "page",
+    status: "active",
+    permission: "ALMACEN_INVENTARIOS_VIEW",
+    description:
+      "Consulta de existencias por producto, almacén, lote, reservado y disponible.",
+  },
+
+  {
+    id: "al-ai-entradas",
+    code: "EN",
+    label: "Entradas / recepción",
+    href: "/abastecimiento-logistica/recepciones",
+    parentId: "al-ai",
+    departmentCode: "AL",
+    type: "page",
+    status: "active",
+    permission: "ALMACEN_RECEIVE",
+    description:
+      "Registro de recepciones y demás movimientos que aumentan las existencias.",
+  },
+
+  {
+    id: "al-ai-salidas",
+    code: "SA",
+    label: "Salidas",
+    href: "/abastecimiento-logistica/almacenes-inventarios/salidas",
+    parentId: "al-ai",
+    departmentCode: "AL",
+    type: "page",
+    status: "active",
+    permission: "ALMACEN_DISPATCH",
+    description:
+      "Registro controlado de salidas de materiales y productos del almacén.",
+  },
+
+  {
+    id: "al-ai-traslados",
+    code: "TR",
+    label: "Traslados",
+    href: "/abastecimiento-logistica/almacenes-inventarios/traslados",
+    parentId: "al-ai",
+    departmentCode: "AL",
+    type: "page",
+    status: "active",
+    permission: "ALMACEN_DISPATCH",
+    description:
+      "Traslados controlados entre almacenes conservando lote y trazabilidad.",
+  },
+
+  {
+    id: "al-ai-kardex",
+    code: "KD",
+    label: "Kardex",
+    href: "/abastecimiento-logistica/almacenes-inventarios/kardex",
+    parentId: "al-ai",
+    departmentCode: "AL",
+    type: "page",
+    status: "active",
+    permission: "ALMACEN_INVENTARIOS_VIEW",
+    description:
+      "Historial cronológico de movimientos, saldos y documentos de referencia.",
+  },
+
+  {
+    id: "al-ai-ajustes",
+    code: "AJ",
+    label: "Ajustes",
+    href: "/abastecimiento-logistica/almacenes-inventarios/ajustes",
+    parentId: "al-ai",
+    departmentCode: "AL",
+    type: "page",
+    status: "active",
+    permission: "ALMACEN_ADJUST",
+    description:
+      "Ajustes autorizados de inventario con motivo, responsable y trazabilidad.",
+  },
+
+  {
+    id: "al-ai-ubicaciones-lotes",
+    code: "UL",
+    label: "Almacenes / lotes",
+    href: "/abastecimiento-logistica/almacenes-inventarios/ubicaciones-lotes",
+    parentId: "al-ai",
+    departmentCode: "AL",
+    type: "page",
+    status: "active",
+    permission: "ALMACEN_INVENTARIOS_VIEW",
+    description:
+      "Administración de almacenes y consulta de lotes internos de inventario.",
+  },
+
+  {
+    id: "al-lg",
+    code: "LG",
+    label: "Logística",
+    href: "/abastecimiento-logistica/logistica",
+    parentId: "al",
+    departmentCode: "AL",
+    type: "section",
+    status: "construction",
+    permission: "LOGISTICA_VIEW",
+    description:
+      "Programación, preparación y ejecución de despachos y entregas.",
+  },
+
+  {
+    id: "al-mz",
+    code: "MZ",
+    label: "Mezclas",
+    href: "/abastecimiento-logistica/mezclas",
+    parentId: "al",
+    departmentCode: "AL",
+    type: "section",
+    status: "construction",
+    permission: "MEZCLAS_VIEW",
+    description:
+      "Preparación y control de mezclas requeridas por los procesos productivos.",
   },
 
   {

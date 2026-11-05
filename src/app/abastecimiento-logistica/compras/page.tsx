@@ -14,10 +14,18 @@ type PurchaseOrder = {
 
   suppliers:
     | {
-        name: string;
+        person_type: string;
+        first_name: string | null;
+        last_name: string | null;
+        business_name: string | null;
+        commercial_name: string | null;
       }
     | {
-        name: string;
+        person_type: string;
+        first_name: string | null;
+        last_name: string | null;
+        business_name: string | null;
+        commercial_name: string | null;
       }[]
     | null;
 };
@@ -48,7 +56,11 @@ export default function ComprasPage() {
         status,
         total,
         suppliers:supplier_id (
-          name
+          person_type,
+          first_name,
+          last_name,
+          business_name,
+          commercial_name
         )
       `
       )
@@ -64,15 +76,45 @@ export default function ComprasPage() {
     setIsLoading(false);
   }
 
+  function getSupplierDisplayName(
+    supplier:
+      | {
+          person_type: string;
+          first_name: string | null;
+          last_name: string | null;
+          business_name: string | null;
+          commercial_name: string | null;
+        }
+      | null
+  ) {
+    if (!supplier) return "—";
+
+    if (supplier.person_type === "Persona") {
+      return (
+        `${supplier.first_name ?? ""} ${supplier.last_name ?? ""}`.trim() ||
+        supplier.commercial_name ||
+        "Sin nombre"
+      );
+    }
+
+    return (
+      supplier.business_name ||
+      supplier.commercial_name ||
+      "Sin razón social"
+    );
+  }
+
   const filteredOrders = useMemo(() => {
     const term = search.toLowerCase().trim();
 
     if (!term) return orders;
 
     return orders.filter((order) => {
-      const supplierName = Array.isArray(order.suppliers)
-        ? order.suppliers[0]?.name ?? ""
-        : order.suppliers?.name ?? "";
+      const supplier = Array.isArray(order.suppliers)
+        ? order.suppliers[0] ?? null
+        : order.suppliers;
+
+      const supplierName = getSupplierDisplayName(supplier);
 
       return [
         order.purchase_order_number,
@@ -124,7 +166,7 @@ export default function ComprasPage() {
         </div>
 
         <Link
-          href="/abastecimiento/compras/nueva"
+          href="/abastecimiento-logistica/compras/nueva"
           className="rounded-xl bg-[#07076b] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md hover:opacity-95"
         >
           Nueva orden de compra
@@ -174,9 +216,11 @@ export default function ComprasPage() {
 
               {!isLoading &&
                 filteredOrders.map((order) => {
-                  const supplierName = Array.isArray(order.suppliers)
-                    ? order.suppliers[0]?.name ?? "—"
-                    : order.suppliers?.name ?? "—";
+                  const supplier = Array.isArray(order.suppliers)
+                    ? order.suppliers[0] ?? null
+                    : order.suppliers;
+
+                  const supplierName = getSupplierDisplayName(supplier);
 
                   return (
                     <tr

@@ -23,6 +23,13 @@ type Category = {
   id: string;
   code: string;
   name: string;
+
+  can_be_sold: boolean;
+  can_be_purchased: boolean;
+  can_be_manufactured: boolean;
+  tracks_inventory: boolean;
+  tracks_lots: boolean;
+  tracks_serials: boolean;
 };
 
 type Group = {
@@ -79,6 +86,13 @@ type MasterField = {
   options: unknown;
 };
 
+type MeasurementUnit = {
+  id: string;
+  code: string;
+  name: string;
+  symbol: string;
+};
+
 type ConfigurationPayload = {
   categories: Category[];
   groups: Group[];
@@ -87,6 +101,7 @@ type ConfigurationPayload = {
   template_fields: TemplateField[];
   options: ClassificationOption[];
   master_fields: MasterField[];
+  measurement_units: MeasurementUnit[];
 };
 
 const inputClassName =
@@ -136,6 +151,8 @@ export default function CrearCodigoPage() {
   const [categoryId, setCategoryId] = useState("");
   const [groupId, setGroupId] = useState("");
   const [subgroupId, setSubgroupId] = useState("");
+
+  const [inventoryUnit, setInventoryUnit] = useState("");
 
   const [dynamicData, setDynamicData] =
     useState<Record<string, string>>({});
@@ -627,6 +644,20 @@ export default function CrearCodigoPage() {
       return;
     }
 
+    if (!selectedCategory) {
+      alert(
+        "No se encontró la configuración de la categoría seleccionada.",
+      );
+      return;
+    }
+
+    if (!inventoryUnit) {
+      alert(
+        "Debes seleccionar la unidad de medida de inventario.",
+      );
+      return;
+    }
+
     for (
       const field of
       selectedTemplateFields
@@ -715,18 +746,34 @@ export default function CrearCodigoPage() {
         item_master_data:
           masterData,
 
-        unit: "Unidad",
+        unit: inventoryUnit,
         status: "Activo",
         product_type: "Simple",
-        supply_type: "Fabricado",
 
-        can_be_sold: true,
-        can_be_purchased: false,
-        can_be_manufactured: true,
+        supply_type:
+          selectedCategory.can_be_manufactured
+            ? "Fabricado"
+            : selectedCategory.can_be_purchased
+              ? "Comprado"
+              : "Otro",
 
-        tracks_inventory: true,
-        tracks_lots: false,
-        tracks_serials: false,
+        can_be_sold:
+          selectedCategory.can_be_sold,
+
+        can_be_purchased:
+          selectedCategory.can_be_purchased,
+
+        can_be_manufactured:
+          selectedCategory.can_be_manufactured,
+
+        tracks_inventory:
+          selectedCategory.tracks_inventory,
+
+        tracks_lots:
+          selectedCategory.tracks_lots,
+
+        tracks_serials:
+          selectedCategory.tracks_serials,
 
         requires_formula: false,
         requires_components: false,
@@ -925,6 +972,7 @@ export default function CrearCodigoPage() {
             {codeRequest.detailed_description}
           </p>
         </div>
+
       </section>
 
       <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
@@ -1141,6 +1189,38 @@ export default function CrearCodigoPage() {
               placeholder="Se genera automáticamente"
               className={`${inputClassName} bg-gray-50 font-semibold text-[#07076b]`}
             />
+          </Field>
+        </div>
+
+        <div className="mt-7 max-w-xl">
+          <Field label="Unidad de medida de inventario *">
+            <select
+              value={inventoryUnit}
+              onChange={(event) =>
+                setInventoryUnit(event.target.value)
+              }
+              className={inputClassName}
+            >
+              <option value="">
+                Seleccionar unidad de medida
+              </option>
+
+              {configuration.measurement_units.map(
+                (unit) => (
+                  <option
+                    key={unit.id}
+                    value={unit.code}
+                  >
+                    {unit.code} · {unit.name} ({unit.symbol})
+                  </option>
+                ),
+              )}
+            </select>
+
+            <p className="mt-2 text-xs leading-5 text-gray-500">
+              Unidad oficial utilizada por inventarios, entradas,
+              salidas, Kardex y demás movimientos del producto.
+            </p>
           </Field>
         </div>
       </section>
@@ -1371,7 +1451,8 @@ export default function CrearCodigoPage() {
           disabled={
             isSaving ||
             !selectedTemplate ||
-            !generatedPreview.isValidLength
+            !generatedPreview.isValidLength ||
+            !inventoryUnit
           }
           className="rounded-xl bg-[#07076b] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#07076b]/90 disabled:cursor-not-allowed disabled:opacity-50"
         >

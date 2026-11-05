@@ -167,6 +167,12 @@ export async function GET(request: Request) {
           name,
           description,
           status,
+          can_be_sold,
+          can_be_purchased,
+          can_be_manufactured,
+          tracks_inventory,
+          tracks_lots,
+          tracks_serials,
           created_at
         `)
         .order("code");
@@ -294,6 +300,24 @@ export async function POST(request: Request) {
         name,
         description,
         status: "Activo",
+
+        can_be_sold:
+          body.can_be_sold === true,
+
+        can_be_purchased:
+          body.can_be_purchased === true,
+
+        can_be_manufactured:
+          body.can_be_manufactured === true,
+
+        tracks_inventory:
+          body.tracks_inventory === true,
+
+        tracks_lots:
+          body.tracks_lots === true,
+
+        tracks_serials:
+          body.tracks_serials === true,
       })
       .select(`
         id,
@@ -301,6 +325,12 @@ export async function POST(request: Request) {
         name,
         description,
         status,
+        can_be_sold,
+        can_be_purchased,
+        can_be_manufactured,
+        tracks_inventory,
+        tracks_lots,
+        tracks_serials,
         created_at
       `)
       .single();
@@ -384,7 +414,13 @@ export async function PATCH(request: Request) {
         code,
         name,
         description,
-        status
+        status,
+        can_be_sold,
+        can_be_purchased,
+        can_be_manufactured,
+        tracks_inventory,
+        tracks_lots,
+        tracks_serials
       `)
       .eq("id", id)
       .maybeSingle();
@@ -541,6 +577,37 @@ export async function PATCH(request: Request) {
       updates.status = status;
     }
 
+    // -----------------------------------------------------
+    // Comportamiento operativo
+    // -----------------------------------------------------
+
+    const operationalFields = [
+      "can_be_sold",
+      "can_be_purchased",
+      "can_be_manufactured",
+      "tracks_inventory",
+      "tracks_lots",
+      "tracks_serials",
+    ] as const;
+
+    for (const field of operationalFields) {
+      if (body[field] === undefined) {
+        continue;
+      }
+
+      if (typeof body[field] !== "boolean") {
+        return NextResponse.json(
+          {
+            error:
+              `El campo ${field} debe ser verdadero o falso.`,
+          },
+          { status: 400 },
+        );
+      }
+
+      updates[field] = body[field];
+    }
+
     if (
       Object.keys(updates).length === 0
     ) {
@@ -566,6 +633,12 @@ export async function PATCH(request: Request) {
         name,
         description,
         status,
+        can_be_sold,
+        can_be_purchased,
+        can_be_manufactured,
+        tracks_inventory,
+        tracks_lots,
+        tracks_serials,
         created_at
       `)
       .single();

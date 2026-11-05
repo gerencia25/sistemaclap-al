@@ -642,6 +642,10 @@ const canEditProduct =
                   </th>
 
                   <th className="px-5 py-3">
+                    Unidad inventario
+                  </th>
+
+                  <th className="px-5 py-3">
                     Proceso
                   </th>
 
@@ -699,6 +703,12 @@ const canEditProduct =
                             .subgroup?.name ||
                             "N/A"}
                         </p>
+                      </td>
+
+                      <td className="px-5 py-4">
+                        <span className="inline-flex rounded-lg bg-[#07076b]/10 px-2.5 py-1 text-xs font-bold text-[#07076b]">
+                          {product.unit || "N/A"}
+                        </span>
                       </td>
 
                       <td className="px-5 py-4 text-gray-700">
@@ -1114,6 +1124,14 @@ const canEditProduct =
                   label="Estado"
                   value={
                     selectedProduct.status
+                  }
+                />
+
+                <DetailRow
+                  label="Unidad de inventario"
+                  value={
+                    selectedProduct.unit ||
+                    "N/A"
                   }
                 />
               </DetailCard>
