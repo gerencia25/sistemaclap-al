@@ -309,28 +309,14 @@ export default function CrearCodigoPage() {
         category.id === categoryId,
     ) ?? null;
 
-  const availableGroupCodes = useMemo(() => {
-    if (
-      !configuration ||
-      !selectedCategory
-    ) {
-      return new Set<string>();
-    }
-
-    return new Set(
-      configuration.templates
-        .filter(
-          (template) =>
-            template.category_code ===
-            selectedCategory.code,
-        )
-        .map(
-          (template) =>
-            template.group_code,
-        ),
-    );
-  }, [configuration, selectedCategory]);
-
+  /*
+   * Los grupos y subgrupos pertenecen al maestro de
+   * clasificación y NO dependen de que exista una
+   * plantilla activa.
+   *
+   * La plantilla se valida después de seleccionar
+   * categoría + grupo + subgrupo.
+   */
   const filteredGroups = useMemo(() => {
     if (
       !configuration ||
@@ -342,74 +328,36 @@ export default function CrearCodigoPage() {
     return configuration.groups.filter(
       (group) =>
         group.category_id ===
-          selectedCategory.id &&
-        availableGroupCodes.has(
-          group.code,
-        ),
+        selectedCategory.id,
     );
   }, [
     configuration,
     selectedCategory,
-    availableGroupCodes,
   ]);
 
   const selectedGroup =
     configuration?.groups.find(
-      (group) => group.id === groupId,
+      (group) =>
+        group.id === groupId,
     ) ?? null;
 
-  const availableSubgroupCodes =
-    useMemo(() => {
-      if (
-        !configuration ||
-        !selectedCategory ||
-        !selectedGroup
-      ) {
-        return new Set<string>();
-      }
+  const filteredSubgroups = useMemo(() => {
+    if (
+      !configuration ||
+      !selectedGroup
+    ) {
+      return [];
+    }
 
-      return new Set(
-        configuration.templates
-          .filter(
-            (template) =>
-              template.category_code ===
-                selectedCategory.code &&
-              template.group_code ===
-                selectedGroup.code,
-          )
-          .map(
-            (template) =>
-              template.subgroup_code,
-          ),
-      );
-    }, [
-      configuration,
-      selectedCategory,
-      selectedGroup,
-    ]);
-
-  const filteredSubgroups =
-    useMemo(() => {
-      if (
-        !configuration ||
-        !selectedGroup
-      ) {
-        return [];
-      }
-
-      return configuration.subgroups.filter(
-        (subgroup) =>
-          subgroup.group_id ===
-            selectedGroup.id &&
-          availableSubgroupCodes.has(
-            subgroup.code,
-          ),
-      );
-    }, [
-      configuration,
-      selectedGroup,
-      availableSubgroupCodes,
-    ]);
+    return configuration.subgroups.filter(
+      (subgroup) =>
+        subgroup.group_id ===
+        selectedGroup.id,
+    );
+  }, [
+    configuration,
+    selectedGroup,
+  ]);
 
   const selectedSubgroup =
     configuration?.subgroups.find(

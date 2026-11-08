@@ -2,17 +2,24 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 type Supplier = {
   id: string;
   name: string;
+  supplier_knowledge_status:
+    | "Pendiente"
+    | "Completo"
+    | "No aplica";
 };
 
 type Item = {
   id: string;
-  reference: string;
+  final_code: string | null;
+  reference: string | null;
   name: string;
   item_type: string;
+  unit: string | null;
   can_be_purchased: boolean;
 };
 
@@ -31,12 +38,23 @@ const emptyItem: PurchaseItem = {
 };
 
 export default function NuevaCompraPage() {
+  const { session } = useAuth();
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [items, setItems] = useState<Item[]>([]);
   const [supplierId, setSupplierId] = useState("");
-  const [orderDate, setOrderDate] = useState(
-    new Date().toISOString().slice(0, 10)
-  );
+  const [orderDate, setOrderDate] = useState(() => {
+    const today = new Date();
+
+    const year = today.getFullYear();
+    const month = String(
+      today.getMonth() + 1
+    ).padStart(2, "0");
+    const day = String(
+      today.getDate()
+    ).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  });
   const [expectedDeliveryDate, setExpectedDeliveryDate] = useState("");
   const [observations, setObservations] = useState("");
   const [purchaseItems, setPurchaseItems] = useState<PurchaseItem[]>([
@@ -48,27 +66,44 @@ export default function NuevaCompraPage() {
     "w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-800 outline-none transition focus:border-[#07076b] focus:ring-2 focus:ring-[#07076b]/10";
 
   useEffect(() => {
+    if (!session?.access_token) {
+      return;
+    }
+
     loadData();
-  }, []);
+  }, [session?.access_token]);
 
   async function loadData() {
-    const [{ data: suppliersData }, { data: itemsData }] = await Promise.all([
-      supabase
-        .from("suppliers")
-        .select("id, name")
-        .eq("status", "Activo")
-        .order("name"),
+    try {
+      const response = await fetch(
+        "/api/abastecimiento-logistica/compras/catalogos",
+        {
+          headers: {
+            Authorization:
+              `Bearer ${session?.access_token ?? ""}`,
+          },
+          cache: "no-store",
+        },
+      );
 
-      supabase
-        .from("products")
-        .select("id, reference, name, item_type, can_be_purchased")
-        .eq("status", "Activo")
-        .eq("can_be_purchased", true)
-        .order("name"),
-    ]);
+      const result = await response.json();
 
-    setSuppliers(suppliersData || []);
-    setItems(itemsData || []);
+      if (!response.ok) {
+        throw new Error(
+          result.error ||
+            "No se pudieron cargar los catálogos de compras.",
+        );
+      }
+
+      setSuppliers(result.suppliers ?? []);
+      setItems(result.items ?? []);
+    } catch (error) {
+      alert(
+        error instanceof Error
+          ? error.message
+          : "No se pudieron cargar los catálogos de compras.",
+      );
+    }
   }
 
   function addItem() {
@@ -103,6 +138,22 @@ export default function NuevaCompraPage() {
     }
 
     setPurchaseItems(updated);
+  }
+
+  function getItemUnit(itemId: string) {
+    if (!itemId) {
+      return "—";
+    }
+
+    const selectedItem = items.find(
+      (availableItem) =>
+        availableItem.id === itemId,
+    );
+
+    return (
+      selectedItem?.unit?.trim() ||
+      "Sin unidad"
+    );
   }
 
   const total = useMemo(() => {
@@ -146,35 +197,27 @@ export default function NuevaCompraPage() {
     return true;
   }
 
-  async function getNextPurchaseOrderNumber() {
-    const year = Number(new Date().getFullYear().toString().slice(-2));
+  async function getNextPurchaseRequestNumber() {
+    const { data, error } = await supabase.rpc(
+      "next_purchase_request_number",
+      {
+        p_request_date: orderDate,
+      },
+    );
 
-    const { data, error } = await supabase
-      .from("document_sequences")
-      .select("*")
-      .eq("document_type", "OC")
-      .eq("year", year)
-      .single();
-
-    if (error || !data) {
-      throw new Error("No se encontró consecutivo de órdenes de compra.");
+    if (error) {
+      throw new Error(
+        `No se pudo generar el consecutivo de la orden de compra: ${error.message}`,
+      );
     }
 
-    const nextNumber = Number(data.current_number) + 1;
-
-    const { error: updateError } = await supabase
-      .from("document_sequences")
-      .update({
-        current_number: nextNumber,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", data.id);
-
-    if (updateError) {
-      throw new Error("No se pudo actualizar el consecutivo.");
+    if (!data) {
+      throw new Error(
+        "No se pudo generar el consecutivo de la orden de compra.",
+      );
     }
 
-    return `OC-${year}${String(nextNumber).padStart(3, "0")}`;
+    return String(data);
   }
 
   async function handleSavePurchaseOrder() {
@@ -183,14 +226,17 @@ export default function NuevaCompraPage() {
     setSaving(true);
 
     try {
-      const purchaseOrderNumber = await getNextPurchaseOrderNumber();
+      const purchaseRequestNumber = await getNextPurchaseRequestNumber();
 
       const validItems = purchaseItems.filter((item) => item.item_id);
 
       const { data: createdOrder, error: orderError } = await supabase
         .from("purchase_orders")
         .insert({
-          purchase_order_number: purchaseOrderNumber,
+          purchase_order_number: purchaseRequestNumber,
+          clap_request_number: purchaseRequestNumber,
+          siigo_sync_status: "Pendiente",
+          source_system: "CLAP",
           supplier_id: supplierId,
           order_date: orderDate,
           expected_delivery_date: expectedDeliveryDate || null,
@@ -222,7 +268,7 @@ export default function NuevaCompraPage() {
         throw new Error(itemsError.message);
       }
 
-      alert(`Orden de compra ${purchaseOrderNumber} creada correctamente.`);
+      alert(`Solicitud de compra ${purchaseRequestNumber} creada correctamente.`);
       window.location.href = "/abastecimiento-logistica/compras";
     } catch (error) {
       alert(
@@ -391,20 +437,27 @@ export default function NuevaCompraPage() {
                     </td>
 
                     <td className="px-4 py-4">
-                      <input
-                        type="number"
-                        min={0}
-                        value={item.quantity_ordered}
-                        onChange={(e) =>
-                          updateItem(
-                            index,
-                            "quantity_ordered",
-                            Number(e.target.value)
-                          )
-                        }
-                        className={inputClass}
-                      />
-                    </td>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      min="0.01"
+                      step="0.01"
+                      value={item.quantity_ordered}
+                      onChange={(e) =>
+                        updateItem(
+                          index,
+                          "quantity_ordered",
+                          Number(e.target.value),
+                        )
+                      }
+                      className="w-32 rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-800 outline-none transition focus:border-[#07076b] focus:ring-2 focus:ring-[#07076b]/10"
+                    />
+
+                    <span className="min-w-14 rounded-lg bg-indigo-50 px-3 py-3 text-center text-sm font-bold text-[#07076b]">
+                      {getItemUnit(item.item_id)}
+                    </span>
+                  </div>
+                </td>
 
                     <td className="px-4 py-4">
                       <input

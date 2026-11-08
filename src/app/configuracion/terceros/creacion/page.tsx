@@ -441,8 +441,34 @@ export default function CreacionTercerosPage() {
                 <div className="flex flex-wrap gap-2">
                   <AttachmentLink label="RUT" url={selectedRequest.rut_file_url} />
                   <AttachmentLink label="Cámara de comercio" url={selectedRequest.chamber_commerce_file_url} />
-                  <AttachmentLink label="Conocimiento cliente" url={selectedRequest.customer_knowledge_file_url} />
-                  <AttachmentLink label="Conocimiento proveedor" url={selectedRequest.supplier_knowledge_file_url} />
+                  {selectedRequest.customer_knowledge_file_url ? (
+                    <AttachmentLink
+                      label="Conocimiento cliente"
+                      url={selectedRequest.customer_knowledge_file_url}
+                    />
+                  ) : selectedRequest.category === "Cliente" ? (
+                    <span className="inline-flex rounded-lg bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700">
+                      ⚠ Conocimiento cliente: Pendiente
+                    </span>
+                  ) : (
+                    <span className="inline-flex rounded-lg bg-gray-100 px-3 py-2 text-xs font-medium text-gray-500">
+                      Conocimiento cliente: N/A
+                    </span>
+                  )}
+                  {selectedRequest.supplier_knowledge_file_url ? (
+                    <AttachmentLink
+                      label="Conocimiento proveedor"
+                      url={selectedRequest.supplier_knowledge_file_url}
+                    />
+                  ) : selectedRequest.category === "Proveedor" ? (
+                    <span className="inline-flex rounded-lg bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700">
+                      ⚠ Conocimiento proveedor: Pendiente
+                    </span>
+                  ) : (
+                    <span className="inline-flex rounded-lg bg-gray-100 px-3 py-2 text-xs font-medium text-gray-500">
+                      Conocimiento proveedor: N/A
+                    </span>
+                  )}
                 </div>
               </section>
 

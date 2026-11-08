@@ -258,9 +258,12 @@ export default function ComprasPage() {
                       </td>
 
                       <td className="px-4 py-4">
-                        <button className="rounded-lg bg-[#07076b]/10 px-3 py-2 text-xs font-medium text-[#07076b] transition hover:bg-[#07076b]/20">
+                        <a
+                          href={`/abastecimiento-logistica/compras/${order.id}`}
+                          className="inline-flex rounded-lg bg-[#07076b]/10 px-3 py-2 text-xs font-medium text-[#07076b] transition hover:bg-[#07076b]/20"
+                        >
                           Ver detalle
-                        </button>
+                        </a>
                       </td>
                     </tr>
                   );

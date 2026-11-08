@@ -92,11 +92,6 @@ export default function SolicitudTercerosPage() {
       return false;
     }
 
-    if (!form.requester_position.trim()) {
-      alert("Debes ingresar el cargo del solicitante.");
-      return false;
-    }
-
     if (!form.requester_email.trim()) {
       alert("Debes ingresar el correo electrónico.");
       return false;
@@ -109,16 +104,6 @@ export default function SolicitudTercerosPage() {
 
     if (!rutFile) {
       alert("Debes adjuntar el RUT. Este documento es obligatorio.");
-      return false;
-    }
-
-    if (form.category === "Cliente" && !customerKnowledgeFile) {
-      alert("Para cliente debes adjuntar el conocimiento de cliente.");
-      return false;
-    }
-
-    if (form.category === "Proveedor" && !supplierKnowledgeFile) {
-      alert("Para proveedor debes adjuntar el conocimiento de proveedor.");
       return false;
     }
 
@@ -155,7 +140,7 @@ export default function SolicitudTercerosPage() {
 
         requester_area: form.requester_area.trim(),
         requester_name: form.requester_name.trim(),
-        requester_position: form.requester_position.trim(),
+        requester_position: form.requester_position.trim() || "Sin cargo registrado",
         requester_email: form.requester_email.trim(),
 
         request_type: form.request_type,
@@ -367,9 +352,7 @@ export default function SolicitudTercerosPage() {
               />
 
               <FileField
-                label={`Subir Conocimiento proveedor ${
-                  form.category === "Proveedor" ? "*" : ""
-                }`}
+                label="Subir Conocimiento proveedor (opcional)"
                 file={supplierKnowledgeFile}
                 onChange={setSupplierKnowledgeFile}
               />

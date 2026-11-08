@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import {
+  syncThirdPartyToSiigo,
+} from "@/lib/integrations/siigo/thirdParties";
+import {
   ApiAuthorizationError,
   requireSystemPermission,
 } from "@/lib/server/requireSystemPermission";
@@ -300,8 +303,39 @@ export async function POST(request: Request) {
       throw new Error(error.message);
     }
 
+    const thirdPartyId =
+      String(
+        (
+          data as {
+            id?: string;
+          }
+        )?.id ??
+          "",
+      ).trim();
+
+    let siigoSync = null;
+
+    if (thirdPartyId) {
+      siigoSync =
+        await syncThirdPartyToSiigo(
+          thirdPartyId,
+        );
+
+      if (!siigoSync.ok) {
+        console.error(
+          "Tercero guardado en CLAP, pero la sincronización automática con SIIGO presentó una novedad:",
+          siigoSync.error,
+        );
+      }
+    } else {
+      console.error(
+        "El tercero fue guardado, pero save_third_party no devolvió id para sincronizar con SIIGO.",
+      );
+    }
+
     return NextResponse.json({
       thirdParty: data,
+      siigoSync,
     });
   } catch (error) {
     return handleError(error);

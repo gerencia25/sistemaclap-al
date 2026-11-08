@@ -45,7 +45,7 @@ function normalizeFieldKey(value: unknown) {
 }
 
 // =========================================================
-// GET · Consultar opciones de clasificación
+// GET
 // =========================================================
 
 export async function GET(request: Request) {
@@ -72,7 +72,9 @@ export async function GET(request: Request) {
         .order("full_code"),
 
       supabaseAdmin
-        .from("item_classification_template_fields")
+        .from(
+          "item_classification_template_fields",
+        )
         .select(`
           id,
           template_id,
@@ -85,12 +87,20 @@ export async function GET(request: Request) {
           contributes_to_code,
           contributes_to_name,
           allow_new_options,
-          status
+          status,
+          option_catalog_id
         `)
         .order("display_order"),
 
+      /*
+       * Esta tabla ahora funciona como espejo compatible.
+       * Los catálogos transversales se sincronizan aquí
+       * automáticamente mediante triggers.
+       */
       supabaseAdmin
-        .from("item_classification_field_options")
+        .from(
+          "item_classification_field_options",
+        )
         .select(`
           id,
           template_id,
@@ -135,12 +145,15 @@ export async function GET(request: Request) {
           fields
             .filter(
               (field) =>
-                field.template_id === template.id &&
-                field.field_type === "select",
+                field.template_id ===
+                  template.id &&
+                field.field_type ===
+                  "select",
             )
             .sort(
               (a, b) =>
-                a.display_order - b.display_order,
+                a.display_order -
+                b.display_order,
             )
             .map((field) => {
               const fieldOptions =
@@ -153,33 +166,48 @@ export async function GET(request: Request) {
                         field.field_key,
                   )
                   .sort((a, b) =>
-                    String(a.code).localeCompare(
-                      String(b.code),
-                      undefined,
-                      {
-                        numeric: true,
-                      },
-                    ),
+                    String(a.code)
+                      .localeCompare(
+                        String(b.code),
+                        undefined,
+                        {
+                          numeric: true,
+                        },
+                      ),
                   );
 
               return {
                 ...field,
-                options: fieldOptions,
+
+                options:
+                  fieldOptions,
+
                 options_count:
                   fieldOptions.length,
+
                 active_options_count:
                   fieldOptions.filter(
                     (option) =>
-                      option.status === "Activo",
+                      option.status ===
+                      "Activo",
                   ).length,
+
+                options_scope:
+                  field.option_catalog_id
+                    ? "Transversal"
+                    : "Plantilla",
               };
             });
 
         return {
           ...template,
-          fields: templateFields,
+
+          fields:
+            templateFields,
+
           fields_count:
             templateFields.length,
+
           options_count:
             templateFields.reduce(
               (total, field) =>
@@ -199,27 +227,34 @@ export async function GET(request: Request) {
 }
 
 // =========================================================
-// POST · Crear opción de clasificación
+// POST
 // =========================================================
 
 export async function POST(request: Request) {
   try {
-    await requireSystemPermission(
-      request,
-      REQUIRED_PERMISSION,
-    );
+    const systemUser =
+      await requireSystemPermission(
+        request,
+        REQUIRED_PERMISSION,
+      );
 
     const body =
       await request.json();
 
     const templateId =
-      normalizeText(body.template_id);
+      normalizeText(
+        body.template_id,
+      );
 
     const fieldKey =
-      normalizeFieldKey(body.field_key);
+      normalizeFieldKey(
+        body.field_key,
+      );
 
     const name =
-      normalizeText(body.name);
+      normalizeText(
+        body.name,
+      );
 
     if (!templateId) {
       return NextResponse.json(
@@ -252,14 +287,196 @@ export async function POST(request: Request) {
     }
 
     const {
+      data: field,
+      error: fieldError,
+    } = await supabaseAdmin
+      .from(
+        "item_classification_template_fields",
+      )
+      .select(`
+        id,
+        template_id,
+        field_key,
+        field_label,
+        field_type,
+        code_length,
+        allow_new_options,
+        status,
+        option_catalog_id
+      `)
+      .eq(
+        "template_id",
+        templateId,
+      )
+      .eq(
+        "field_key",
+        fieldKey,
+      )
+      .maybeSingle();
+
+    if (fieldError) {
+      throw new Error(
+        `No se pudo consultar el campo: ${fieldError.message}`,
+      );
+    }
+
+    if (!field) {
+      return NextResponse.json(
+        {
+          error:
+            "El campo seleccionado no existe.",
+        },
+        { status: 404 },
+      );
+    }
+
+    if (
+      field.status !== "Activo"
+    ) {
+      return NextResponse.json(
+        {
+          error:
+            "El campo seleccionado está inactivo.",
+        },
+        { status: 409 },
+      );
+    }
+
+    if (
+      !field.allow_new_options
+    ) {
+      return NextResponse.json(
+        {
+          error:
+            "Este campo no permite crear nuevas opciones.",
+        },
+        { status: 409 },
+      );
+    }
+
+    // -----------------------------------------------------
+    // CATÁLOGO TRANSVERSAL
+    // -----------------------------------------------------
+
+    if (
+      field.option_catalog_id
+    ) {
+      const {
+        data: created,
+        error: createError,
+      } = await supabaseAdmin.rpc(
+        "config_create_shared_catalog_option",
+        {
+          p_catalog_id:
+            field.option_catalog_id,
+
+          p_name:
+            name,
+
+          p_code_length:
+            field.code_length,
+        },
+      );
+
+      if (createError) {
+        const message =
+          createError.message ??
+          "No se pudo crear la opción transversal.";
+
+        return NextResponse.json(
+          { error: message },
+          {
+            status:
+              message
+                .toLowerCase()
+                .includes(
+                  "ya existe",
+                )
+                ? 409
+                : 400,
+          },
+        );
+      }
+
+      const sharedOption =
+        Array.isArray(created)
+          ? created[0]
+          : created;
+
+      /*
+       * El trigger ya creó el espejo para todas las
+       * plantillas. Recuperamos la fila correspondiente
+       * a esta plantilla para mantener la respuesta
+       * compatible con la interfaz actual.
+       */
+      const {
+        data: mirrored,
+        error: mirrorError,
+      } = await supabaseAdmin
+        .from(
+          "item_classification_field_options",
+        )
+        .select(`
+          id,
+          template_id,
+          field_key,
+          code,
+          name,
+          status,
+          created_at
+        `)
+        .eq(
+          "template_id",
+          templateId,
+        )
+        .eq(
+          "field_key",
+          fieldKey,
+        )
+        .eq(
+          "code",
+          sharedOption.code,
+        )
+        .single();
+
+      if (mirrorError) {
+        throw new Error(
+          `El catálogo se actualizó, pero no se pudo consultar su espejo: ${mirrorError.message}`,
+        );
+      }
+
+      console.info(
+        `Opción transversal creada por ${systemUser.email}: ${field.field_label} · ${mirrored.code} · ${mirrored.name}`,
+      );
+
+      return NextResponse.json(
+        {
+          data: mirrored,
+          scope:
+            "Transversal",
+        },
+        { status: 201 },
+      );
+    }
+
+    // -----------------------------------------------------
+    // OPCIÓN ESPECÍFICA DE PLANTILLA
+    // -----------------------------------------------------
+
+    const {
       data,
       error,
     } = await supabaseAdmin.rpc(
       "config_create_classification_option",
       {
-        p_template_id: templateId,
-        p_field_key: fieldKey,
-        p_name: name,
+        p_template_id:
+          templateId,
+
+        p_field_key:
+          fieldKey,
+
+        p_name:
+          name,
       },
     );
 
@@ -268,26 +485,26 @@ export async function POST(request: Request) {
         error.message ??
         "No se pudo crear la opción.";
 
-      if (
-        message
-          .toLowerCase()
-          .includes("ya existe")
-      ) {
-        return NextResponse.json(
-          { error: message },
-          { status: 409 },
-        );
-      }
-
       return NextResponse.json(
         { error: message },
-        { status: 400 },
+        {
+          status:
+            message
+              .toLowerCase()
+              .includes(
+                "ya existe",
+              )
+              ? 409
+              : 400,
+        },
       );
     }
 
     return NextResponse.json(
       {
         data,
+        scope:
+          "Plantilla",
       },
       { status: 201 },
     );
@@ -297,23 +514,29 @@ export async function POST(request: Request) {
 }
 
 // =========================================================
-// PATCH · Activar / inactivar opción de clasificación
+// PATCH
 // =========================================================
 
 export async function PATCH(request: Request) {
   try {
-    await requireSystemPermission(
-      request,
-      REQUIRED_PERMISSION,
-    );
+    const systemUser =
+      await requireSystemPermission(
+        request,
+        REQUIRED_PERMISSION,
+      );
 
-    const body = await request.json();
+    const body =
+      await request.json();
 
     const id =
-      normalizeText(body.id);
+      normalizeText(
+        body.id,
+      );
 
     const status =
-      normalizeText(body.status);
+      normalizeText(
+        body.status,
+      );
 
     if (!id) {
       return NextResponse.json(
@@ -342,7 +565,9 @@ export async function PATCH(request: Request) {
       data: existing,
       error: existingError,
     } = await supabaseAdmin
-      .from("item_classification_field_options")
+      .from(
+        "item_classification_field_options",
+      )
       .select(`
         id,
         template_id,
@@ -371,10 +596,125 @@ export async function PATCH(request: Request) {
     }
 
     const {
+      data: field,
+      error: fieldError,
+    } = await supabaseAdmin
+      .from(
+        "item_classification_template_fields",
+      )
+      .select(`
+        id,
+        option_catalog_id,
+        field_label
+      `)
+      .eq(
+        "template_id",
+        existing.template_id,
+      )
+      .eq(
+        "field_key",
+        existing.field_key,
+      )
+      .maybeSingle();
+
+    if (fieldError) {
+      throw new Error(
+        `No se pudo consultar el campo: ${fieldError.message}`,
+      );
+    }
+
+    // -----------------------------------------------------
+    // CATÁLOGO TRANSVERSAL
+    // -----------------------------------------------------
+
+    if (
+      field?.option_catalog_id
+    ) {
+      const {
+        data: shared,
+        error: sharedError,
+      } = await supabaseAdmin
+        .from(
+          "item_option_catalog_values",
+        )
+        .update({
+          status,
+          updated_at:
+            new Date()
+              .toISOString(),
+        })
+        .eq(
+          "catalog_id",
+          field.option_catalog_id,
+        )
+        .eq(
+          "code",
+          existing.code,
+        )
+        .select(`
+          id,
+          catalog_id,
+          code,
+          name,
+          status
+        `)
+        .single();
+
+      if (sharedError) {
+        throw new Error(
+          `No se pudo actualizar la opción transversal: ${sharedError.message}`,
+        );
+      }
+
+      /*
+       * El trigger actualizó todas las filas espejo.
+       */
+      const {
+        data: mirrored,
+        error: mirrorError,
+      } = await supabaseAdmin
+        .from(
+          "item_classification_field_options",
+        )
+        .select(`
+          id,
+          template_id,
+          field_key,
+          code,
+          name,
+          status
+        `)
+        .eq("id", id)
+        .single();
+
+      if (mirrorError) {
+        throw new Error(
+          `La opción se actualizó, pero no se pudo consultar su espejo: ${mirrorError.message}`,
+        );
+      }
+
+      console.info(
+        `Opción transversal ${status} por ${systemUser.email}: ${field.field_label} · ${shared.code} · ${shared.name}`,
+      );
+
+      return NextResponse.json({
+        data: mirrored,
+        scope:
+          "Transversal",
+      });
+    }
+
+    // -----------------------------------------------------
+    // OPCIÓN ESPECÍFICA
+    // -----------------------------------------------------
+
+    const {
       data,
       error,
     } = await supabaseAdmin
-      .from("item_classification_field_options")
+      .from(
+        "item_classification_field_options",
+      )
       .update({
         status,
       })
@@ -397,6 +737,8 @@ export async function PATCH(request: Request) {
 
     return NextResponse.json({
       data,
+      scope:
+        "Plantilla",
     });
   } catch (error) {
     return handleError(error);

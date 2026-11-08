@@ -8,6 +8,10 @@ import {
   requireSystemPermission,
 } from "@/lib/server/requireSystemPermission";
 
+import {
+  syncProductToSiigo,
+} from "@/lib/integrations/siigo/products";
+
 export const runtime = "nodejs";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -817,6 +821,43 @@ export async function POST(request: Request) {
     if (!result) {
       throw new Error(
         "La creación terminó sin devolver información del producto.",
+      );
+    }
+
+    /*
+     * =====================================================
+     * SINCRONIZACIÓN AUTOMÁTICA CLAP → SIIGO
+     * =====================================================
+     *
+     * El producto oficial ya existe en CLAP.
+     * Una falla de SIIGO NO revierte la creación ni vuelve
+     * a abrir la solicitud de codificación.
+     */
+    const createdProductId =
+      String(
+        (
+          result as {
+            product_id?: string;
+          }
+        )?.product_id ??
+          "",
+      ).trim();
+
+    if (createdProductId) {
+      const siigoSync =
+        await syncProductToSiigo(
+          createdProductId,
+        );
+
+      if (!siigoSync.ok) {
+        console.error(
+          "Producto creado en CLAP, pero la sincronización automática con SIIGO no terminó correctamente:",
+          siigoSync.error,
+        );
+      }
+    } else {
+      console.error(
+        "Producto creado en CLAP, pero el RPC no devolvió product_id para sincronizar con SIIGO.",
       );
     }
 

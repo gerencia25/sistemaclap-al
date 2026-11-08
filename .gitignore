@@ -42,4 +42,5 @@ next-env.d.ts
 
 /secrets
 
-google-service-account.json
+google-service-account.jsonsupabase/.temp/
+supabase/.temp/

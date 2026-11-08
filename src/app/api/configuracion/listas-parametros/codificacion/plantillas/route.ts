@@ -622,3 +622,279 @@ export async function POST(request: Request) {
     return handleError(error);
   }
 }
+
+// =========================================================
+// PATCH · Activar / inactivar plantilla
+// =========================================================
+
+export async function PATCH(request: Request) {
+  try {
+    const systemUser =
+      await requireSystemPermission(
+        request,
+        REQUIRED_PERMISSION,
+      );
+
+    const body = await request.json();
+
+    const id =
+      String(body?.id ?? "").trim();
+
+    const status =
+      String(body?.status ?? "").trim();
+
+    if (!id) {
+      return NextResponse.json(
+        {
+          error:
+            "No se recibió la plantilla que deseas actualizar.",
+        },
+        { status: 400 },
+      );
+    }
+
+    if (
+      status !== "Activo" &&
+      status !== "Inactivo"
+    ) {
+      return NextResponse.json(
+        {
+          error:
+            "El estado de la plantilla no es válido.",
+        },
+        { status: 400 },
+      );
+    }
+
+    const {
+      data: template,
+      error: templateError,
+    } = await supabaseAdmin
+      .from(
+        "item_classification_templates",
+      )
+      .select(`
+        id,
+        full_code,
+        numeric_code_length,
+        status
+      `)
+      .eq("id", id)
+      .single();
+
+    if (templateError || !template) {
+      return NextResponse.json(
+        {
+          error:
+            "No se encontró la plantilla.",
+        },
+        { status: 404 },
+      );
+    }
+
+    /*
+     * Antes de activar validamos que la plantilla
+     * realmente esté lista para generar productos.
+     */
+    if (status === "Activo") {
+      const {
+        data: fields,
+        error: fieldsError,
+      } = await supabaseAdmin
+        .from(
+          "item_classification_template_fields",
+        )
+        .select(`
+          id,
+          field_key,
+          field_label,
+          field_type,
+          required,
+          code_length,
+          contributes_to_code,
+          contributes_to_name,
+          status
+        `)
+        .eq("template_id", id)
+        .eq("status", "Activo")
+        .order("display_order");
+
+      if (fieldsError) {
+        throw new Error(
+          `No se pudo validar la estructura: ${fieldsError.message}`,
+        );
+      }
+
+      if (!fields || fields.length === 0) {
+        return NextResponse.json(
+          {
+            error:
+              "La plantilla no tiene campos activos.",
+          },
+          { status: 409 },
+        );
+      }
+
+      const hasCodeContribution =
+        fields.some(
+          (field) =>
+            field.contributes_to_code,
+        );
+
+      const hasNameContribution =
+        fields.some(
+          (field) =>
+            field.contributes_to_name,
+        );
+
+      if (!hasCodeContribution) {
+        return NextResponse.json(
+          {
+            error:
+              "La plantilla debe tener al menos un campo que aporte al código.",
+          },
+          { status: 409 },
+        );
+      }
+
+      if (!hasNameContribution) {
+        return NextResponse.json(
+          {
+            error:
+              "La plantilla debe tener al menos un campo que aporte al nombre.",
+          },
+          { status: 409 },
+        );
+      }
+
+      const calculatedLength =
+        fields
+          .filter(
+            (field) =>
+              field.contributes_to_code,
+          )
+          .reduce(
+            (total, field) =>
+              total +
+              Number(
+                field.code_length ?? 0,
+              ),
+            0,
+          );
+
+      if (
+        calculatedLength !==
+        Number(
+          template.numeric_code_length,
+        )
+      ) {
+        return NextResponse.json(
+          {
+            error:
+              `La longitud configurada (${template.numeric_code_length}) no coincide con la suma de los campos (${calculatedLength}).`,
+          },
+          { status: 409 },
+        );
+      }
+
+      /*
+       * Un select obligatorio debe tener al menos
+       * una opción activa antes de habilitar la plantilla.
+       */
+      const requiredSelectFields =
+        fields.filter(
+          (field) =>
+            field.field_type ===
+              "select" &&
+            field.required,
+        );
+
+      if (
+        requiredSelectFields.length > 0
+      ) {
+        const {
+          data: options,
+          error: optionsError,
+        } = await supabaseAdmin
+          .from(
+            "item_classification_field_options",
+          )
+          .select(`
+            id,
+            field_key
+          `)
+          .eq("template_id", id)
+          .eq("status", "Activo");
+
+        if (optionsError) {
+          throw new Error(
+            `No se pudieron validar las opciones: ${optionsError.message}`,
+          );
+        }
+
+        const fieldsWithoutOptions =
+          requiredSelectFields.filter(
+            (field) =>
+              !(options ?? []).some(
+                (option) =>
+                  option.field_key ===
+                  field.field_key,
+              ),
+          );
+
+        if (
+          fieldsWithoutOptions.length > 0
+        ) {
+          return NextResponse.json(
+            {
+              error:
+                `Antes de activar debes configurar opciones para: ${fieldsWithoutOptions
+                  .map(
+                    (field) =>
+                      field.field_label,
+                  )
+                  .join(", ")}.`,
+            },
+            { status: 409 },
+          );
+        }
+      }
+    }
+
+    const {
+      data,
+      error,
+    } = await supabaseAdmin
+      .from(
+        "item_classification_templates",
+      )
+      .update({
+        status,
+        updated_at:
+          new Date().toISOString(),
+      })
+      .eq("id", id)
+      .select(`
+        id,
+        full_code,
+        status
+      `)
+      .single();
+
+    if (error) {
+      throw new Error(
+        `No se pudo actualizar la plantilla: ${error.message}`,
+      );
+    }
+
+    console.info(
+      `Plantilla ${data.full_code} ${status === "Activo" ? "activada" : "inactivada"} por ${systemUser.email}`,
+    );
+
+    return NextResponse.json({
+      data,
+    });
+  } catch (error) {
+    return handleError(error);
+  }
+}

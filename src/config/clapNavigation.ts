@@ -627,7 +627,7 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
     parentId: "al",
     departmentCode: "AL",
     type: "section",
-    status: "construction",
+    status: "active",
     permission: "ABASTECIMIENTO_VIEW",
     description:
       "Compras y aprovisionamiento de materias primas, insumos y demás requerimientos.",
@@ -648,6 +648,20 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
   },
 
   {
+    id: "al-ab-solicitud-terceros",
+    code: "ST",
+    label: "Solicitud de terceros",
+    href: "/abastecimiento-logistica/abastecimiento/solicitud-terceros",
+    parentId: "al-ab",
+    departmentCode: "AL",
+    type: "page",
+    status: "active",
+    permission: "ABASTECIMIENTO_VIEW",
+    description:
+      "Solicita a Dirección Financiera la creación o revisión de proveedores y demás terceros requeridos por Abastecimiento.",
+  },
+
+  {
     id: "al-ab-compras",
     code: "CO",
     label: "Compras",
@@ -655,7 +669,7 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
     parentId: "al-ab",
     departmentCode: "AL",
     type: "page",
-    status: "construction",
+    status: "active",
     permission: "ABASTECIMIENTO_VIEW",
     description:
       "Gestión de órdenes de compra de materias primas, insumos, repuestos y demás requerimientos.",

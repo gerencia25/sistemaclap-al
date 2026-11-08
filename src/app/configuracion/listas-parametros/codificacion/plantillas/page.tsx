@@ -496,6 +496,76 @@ export default function PlantillasCodificacionPage() {
         field.contributes_to_name,
     );
 
+  async function toggleTemplateStatus(
+    item: NonNullable<typeof selectedTemplate>,
+  ) {
+    if (!session?.access_token) return;
+
+    const nextStatus =
+      item.status === "Activo"
+        ? "Inactivo"
+        : "Activo";
+
+    const confirmed =
+      window.confirm(
+        nextStatus === "Activo"
+          ? `¿Deseas activar la plantilla ${item.full_code}? Quedará disponible para crear nuevos productos.`
+          : `¿Deseas inactivar la plantilla ${item.full_code}? Dejará de estar disponible para nuevos productos, pero conservará su historial.`,
+      );
+
+    if (!confirmed) return;
+
+    setIsSaving(true);
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    try {
+      const response = await fetch(
+        "/api/configuracion/listas-parametros/codificacion/plantillas",
+        {
+          method: "PATCH",
+          headers: getHeaders(),
+          body: JSON.stringify({
+            id: item.id,
+            status: nextStatus,
+          }),
+        },
+      );
+
+      const result =
+        await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          result.error ||
+            "No se pudo cambiar el estado de la plantilla.",
+        );
+      }
+
+      setSuccessMessage(
+        nextStatus === "Activo"
+          ? `Plantilla ${item.full_code} activada correctamente.`
+          : `Plantilla ${item.full_code} inactivada correctamente.`,
+      );
+
+      setSelectedTemplate(null);
+
+      /*
+       * Recargamos la información para reflejar
+       * estado, estructura y dependencias reales.
+       */
+      window.location.reload();
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "No se pudo cambiar el estado de la plantilla.",
+      );
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
   return (
     <div className="space-y-8">
       <section className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
@@ -692,7 +762,7 @@ export default function PlantillasCodificacionPage() {
                     </td>
 
                     <td className="px-5 py-4">
-                      <div className="flex justify-end">
+                      <div className="flex justify-end gap-2">
                         <button
                           type="button"
                           onClick={() =>
@@ -701,6 +771,23 @@ export default function PlantillasCodificacionPage() {
                           className="rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700"
                         >
                           Ver estructura
+                        </button>
+
+                        <button
+                          type="button"
+                          disabled={isSaving}
+                          onClick={() =>
+                            toggleTemplateStatus(item)
+                          }
+                          className={`rounded-lg border px-3 py-2 text-xs font-semibold disabled:opacity-40 ${
+                            item.status === "Activo"
+                              ? "border-amber-200 text-amber-700 hover:bg-amber-50"
+                              : "border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                          }`}
+                        >
+                          {item.status === "Activo"
+                            ? "Inactivar"
+                            : "Activar"}
                         </button>
                       </div>
                     </td>
