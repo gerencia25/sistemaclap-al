@@ -1,0 +1,5418 @@
+{
+  "generated_at": "2026-11-09T00:19:43.348Z",
+  "read_only": true,
+  "total_siigo_products": 86,
+  "safe_for_phase2a": 78,
+  "review_count": 8,
+  "change_code_cases": 0,
+  "change_code_validated": 0,
+  "results": [
+    {
+      "product_id": "4aa58e80-003c-446c-9f4d-da9e4a52b92e",
+      "siigo_product_id": "d3489322-a336-491c-ad41-d93afc7eb8eb",
+      "current_code": "MPC-AD-PG-1001001001012",
+      "proposed_code": "MPC-AD-PG-1001001001012",
+      "name": "PURGA GRANULADA NPT NuPurge 451 LIBRAS NATURAL",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "MPC-AD-PG",
+      "category_id": "695dc4ad-e0b8-485b-becd-fbe7cfd1ac4c",
+      "group_id": "48a98522-d2da-4660-8bb5-f655169abf9e",
+      "subgroup_id": "b6a9f32b-b66d-4775-8af1-6fa169faa294",
+      "numeric_tail": "1001001001012",
+      "parsed_fields": [
+        {
+          "field_key": "tipo_purga",
+          "field_label": "Tipo de purga",
+          "segment": "1001",
+          "value": "PURGA GRANULADA",
+          "resolved": true
+        },
+        {
+          "field_key": "referencia",
+          "field_label": "Referencia",
+          "segment": "001",
+          "value": "NPT NuPurge 451",
+          "resolved": true
+        },
+        {
+          "field_key": "presentacion",
+          "field_label": "Presentación",
+          "segment": "001",
+          "value": "LIBRAS",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "012",
+          "value": "NATURAL",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo_purga": "PURGA GRANULADA",
+        "referencia": "NPT NuPurge 451",
+        "presentacion": "LIBRAS",
+        "color": "NATURAL"
+      },
+      "canonical_code": "MPC-AD-PG-1001001001012",
+      "canonical_dynamic_code_data": {
+        "tipo_purga": "PURGA GRANULADA",
+        "referencia": "NPT NuPurge 451",
+        "presentacion": "LIBRAS",
+        "color": "NATURAL"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "e637b859-695b-485f-9b24-a59996227391",
+      "siigo_product_id": "7c2c522b-d2fc-4d91-9982-5d362657d0b9",
+      "current_code": "PTF-FM-JG-1002010040507",
+      "proposed_code": "PTF-FM-JG-1002010040507",
+      "name": "JERINGA CONO DOSIFICADOR MASTITIS CANULA CORTA 10 mL BLANCO PE",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-FM-JG",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "cc0b5f62-0a31-485d-802c-3c0904e3691d",
+      "subgroup_id": "e15c2b5c-a5c6-4d9a-a26b-738df41f3b77",
+      "numeric_tail": "1002010040507",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo de jeringa",
+          "segment": "1002",
+          "value": "CONO DOSIFICADOR",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "01",
+          "value": "MASTITIS CANULA CORTA",
+          "resolved": true
+        },
+        {
+          "field_key": "capacidad",
+          "field_label": "Capacidad [mL]",
+          "segment": "004",
+          "value": "10 mL",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "05",
+          "value": "BLANCO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "07",
+          "value": "PE",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "CONO DOSIFICADOR",
+        "acabado": "MASTITIS CANULA CORTA",
+        "capacidad": "10 mL",
+        "color": "BLANCO",
+        "material": "PE"
+      },
+      "canonical_code": "PTF-FM-JG-1002010040507",
+      "canonical_dynamic_code_data": {
+        "tipo": "CONO DOSIFICADOR",
+        "acabado": "MASTITIS CANULA CORTA",
+        "capacidad": "10 mL",
+        "color": "BLANCO",
+        "material": "PE"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "5b86b9da-505d-4d48-834e-160f341095e5",
+      "siigo_product_id": "8845de99-56a6-4b17-9b31-238cc44e5116",
+      "current_code": "PTF-FM-CJ-1003030040508",
+      "proposed_code": "PTF-FM-CJ-1003030040508",
+      "name": "PISTÓN CONO REGULAR 10 mL BLANCO TPE",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-FM-CJ",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "cc0b5f62-0a31-485d-802c-3c0904e3691d",
+      "subgroup_id": "0c6810a1-dd75-457f-a7e1-c25d4a0b221a",
+      "numeric_tail": "1003030040508",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo de componente",
+          "segment": "1003",
+          "value": "PISTÓN",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "03",
+          "value": "CONO REGULAR",
+          "resolved": true
+        },
+        {
+          "field_key": "capacidad",
+          "field_label": "Capacidad [mL]",
+          "segment": "004",
+          "value": "10 mL",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "05",
+          "value": "BLANCO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "08",
+          "value": "TPE",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "PISTÓN",
+        "acabado": "CONO REGULAR",
+        "capacidad": "10 mL",
+        "color": "BLANCO",
+        "material": "TPE"
+      },
+      "canonical_code": "PTF-FM-CJ-1003030040508",
+      "canonical_dynamic_code_data": {
+        "tipo": "PISTÓN",
+        "acabado": "CONO REGULAR",
+        "capacidad": "10 mL",
+        "color": "BLANCO",
+        "material": "TPE"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "314f02ac-9e34-40d0-bee5-38cbf4ba4d42",
+      "siigo_product_id": "992b2c1c-863f-458b-8dbe-e274bda4c9f0",
+      "current_code": "PTF-FM-CJ-1002020040507",
+      "proposed_code": "PTF-FM-CJ-1002020040507",
+      "name": "ÉMBOLO PARA PISTÓN DOSIFICADOR 10 mL BLANCO PE",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-FM-CJ",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "cc0b5f62-0a31-485d-802c-3c0904e3691d",
+      "subgroup_id": "0c6810a1-dd75-457f-a7e1-c25d4a0b221a",
+      "numeric_tail": "1002020040507",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo de componente",
+          "segment": "1002",
+          "value": "ÉMBOLO",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "02",
+          "value": "PARA PISTÓN DOSIFICADOR",
+          "resolved": true
+        },
+        {
+          "field_key": "capacidad",
+          "field_label": "Capacidad [mL]",
+          "segment": "004",
+          "value": "10 mL",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "05",
+          "value": "BLANCO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "07",
+          "value": "PE",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "ÉMBOLO",
+        "acabado": "PARA PISTÓN DOSIFICADOR",
+        "capacidad": "10 mL",
+        "color": "BLANCO",
+        "material": "PE"
+      },
+      "canonical_code": "PTF-FM-CJ-1002020040507",
+      "canonical_dynamic_code_data": {
+        "tipo": "ÉMBOLO",
+        "acabado": "PARA PISTÓN DOSIFICADOR",
+        "capacidad": "10 mL",
+        "color": "BLANCO",
+        "material": "PE"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "a4906a52-7424-47f7-a691-48552de474ec",
+      "siigo_product_id": "2efc5ae4-5eab-495b-bcd1-8fe46f6a7196",
+      "current_code": "PTF-FM-CJ-1001010040507",
+      "proposed_code": "PTF-FM-CJ-1001010040507",
+      "name": "CILINDRO MASTITIS CANULA CORTA 10 mL BLANCO PE",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-FM-CJ",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "cc0b5f62-0a31-485d-802c-3c0904e3691d",
+      "subgroup_id": "0c6810a1-dd75-457f-a7e1-c25d4a0b221a",
+      "numeric_tail": "1001010040507",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo de componente",
+          "segment": "1001",
+          "value": "CILINDRO",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "01",
+          "value": "MASTITIS CANULA CORTA",
+          "resolved": true
+        },
+        {
+          "field_key": "capacidad",
+          "field_label": "Capacidad [mL]",
+          "segment": "004",
+          "value": "10 mL",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "05",
+          "value": "BLANCO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "07",
+          "value": "PE",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "CILINDRO",
+        "acabado": "MASTITIS CANULA CORTA",
+        "capacidad": "10 mL",
+        "color": "BLANCO",
+        "material": "PE"
+      },
+      "canonical_code": "PTF-FM-CJ-1001010040507",
+      "canonical_dynamic_code_data": {
+        "tipo": "CILINDRO",
+        "acabado": "MASTITIS CANULA CORTA",
+        "capacidad": "10 mL",
+        "color": "BLANCO",
+        "material": "PE"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "d96af9e9-775d-446d-9830-68fa5195cb8e",
+      "siigo_product_id": "841b9b96-9719-43d1-94d5-95ad58cae3ce",
+      "current_code": "PTF-RT-PO-1020120040106",
+      "proposed_code": "PTF-RT-PO-1020120040106",
+      "name": "SEPARADOR PUNTO DE PAGO 30 * 4 cm AMARILLO PVC",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-RT-PO",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "15b0ac9d-05e5-4cad-b0aa-0a15bd3b05dc",
+      "subgroup_id": "43d3643f-9518-4087-a22d-6d505bca0cf0",
+      "numeric_tail": "1020120040106",
+      "parsed_fields": [
+        {
+          "field_key": "linea",
+          "field_label": "Línea",
+          "segment": "102",
+          "value": "SEPARADOR",
+          "resolved": true
+        },
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "012",
+          "value": "PUNTO DE PAGO",
+          "resolved": true
+        },
+        {
+          "field_key": "dimensiones",
+          "field_label": "Dimensiones",
+          "segment": "004",
+          "value": "30 x 4 cm",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "01",
+          "value": "AMARILLO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "06",
+          "value": "PVC",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "linea": "SEPARADOR",
+        "tipo": "PUNTO DE PAGO",
+        "dimensiones": "30 x 4 cm",
+        "color": "AMARILLO",
+        "material": "PVC"
+      },
+      "canonical_code": "PTF-RT-PO-1020120040106",
+      "canonical_dynamic_code_data": {
+        "linea": "SEPARADOR",
+        "tipo": "PUNTO DE PAGO",
+        "dimensiones": "30 x 4 cm",
+        "color": "AMARILLO",
+        "material": "PVC"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "83e4e375-bd24-4f93-8070-253878f9ab7b",
+      "siigo_product_id": "c75473fb-f4a2-4861-9174-d428d0c749a0",
+      "current_code": "PTF-RT-PO-1010070021206",
+      "proposed_code": "PTF-RT-PO-1010070021206",
+      "name": "GRIP ROPETRÁFICO P-37 3,7 * 2,5 cm NATURAL PVC",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-RT-PO",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "15b0ac9d-05e5-4cad-b0aa-0a15bd3b05dc",
+      "subgroup_id": "43d3643f-9518-4087-a22d-6d505bca0cf0",
+      "numeric_tail": "1010070021206",
+      "parsed_fields": [
+        {
+          "field_key": "linea",
+          "field_label": "Línea",
+          "segment": "101",
+          "value": "HABLADOR",
+          "resolved": true
+        },
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "007",
+          "value": "ROPETRÁFICO P-37",
+          "resolved": true
+        },
+        {
+          "field_key": "dimensiones",
+          "field_label": "Dimensiones",
+          "segment": "002",
+          "value": "3,7 x 2,5 cm",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "06",
+          "value": "PVC",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "linea": "HABLADOR",
+        "tipo": "ROPETRÁFICO P-37",
+        "dimensiones": "3,7 x 2,5 cm",
+        "color": "NATURAL",
+        "material": "PVC"
+      },
+      "canonical_code": "PTF-RT-PO-1010070021206",
+      "canonical_dynamic_code_data": {
+        "linea": "HABLADOR",
+        "tipo": "ROPETRÁFICO P-37",
+        "dimensiones": "3,7 x 2,5 cm",
+        "color": "NATURAL",
+        "material": "PVC"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "39f02097-f28a-4892-9b1e-d2d3585376a9",
+      "siigo_product_id": "07695cc5-5c0a-4838-a321-d47bfd2b7259",
+      "current_code": "MPP-OR-PV-1000010102513",
+      "proposed_code": "MPP-OR-PV-1000010102513",
+      "name": "PVC BLANDO D-87 BULTO 25 NEGRO",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "MPP-OR-PV",
+      "category_id": "7935634a-baf0-43fa-913b-7ef05d1c3853",
+      "group_id": "8bee6e61-754a-4ef0-a098-eb86af69c4d3",
+      "subgroup_id": "8c8a53fc-2d90-447e-92b1-fabc5287f056",
+      "numeric_tail": "1000010102513",
+      "parsed_fields": [
+        {
+          "field_key": "referencia",
+          "field_label": "Referencia",
+          "segment": "10",
+          "value": "PVC BLANDO",
+          "resolved": true
+        },
+        {
+          "field_key": "codigo",
+          "field_label": "Código",
+          "segment": "0001",
+          "value": "D-87",
+          "resolved": true
+        },
+        {
+          "field_key": "presentacion",
+          "field_label": "Presentación",
+          "segment": "01",
+          "value": "BULTO",
+          "resolved": true
+        },
+        {
+          "field_key": "peso",
+          "field_label": "Peso [kg]",
+          "segment": "025",
+          "value": "25",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "13",
+          "value": "NEGRO",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "referencia": "PVC BLANDO",
+        "codigo": "D-87",
+        "presentacion": "BULTO",
+        "peso": "25",
+        "color": "NEGRO"
+      },
+      "canonical_code": "MPP-OR-PV-1000010102513",
+      "canonical_dynamic_code_data": {
+        "referencia": "PVC BLANDO",
+        "codigo": "D-87",
+        "presentacion": "BULTO",
+        "peso": "25",
+        "color": "NEGRO"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "4f87fd59-893f-4840-9775-b6a3b434ee0d",
+      "siigo_product_id": "a7160e54-98f5-437f-b118-aebbbec6704e",
+      "current_code": "MPP-OR-PP-1000020102512",
+      "proposed_code": "MPP-OR-PP-1000020102512",
+      "name": "POLIPROPILENO RJ970Z BULTO 25 NATURAL",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "MPP-OR-PP",
+      "category_id": "7935634a-baf0-43fa-913b-7ef05d1c3853",
+      "group_id": "8bee6e61-754a-4ef0-a098-eb86af69c4d3",
+      "subgroup_id": "9d12efee-2f3f-43da-a9cf-79fa1b06f54f",
+      "numeric_tail": "1000020102512",
+      "parsed_fields": [
+        {
+          "field_key": "referencia",
+          "field_label": "Referencia",
+          "segment": "10",
+          "value": "POLIPROPILENO",
+          "resolved": true
+        },
+        {
+          "field_key": "codigo",
+          "field_label": "Código",
+          "segment": "0002",
+          "value": "RJ970Z",
+          "resolved": true
+        },
+        {
+          "field_key": "presentacion",
+          "field_label": "Presentación",
+          "segment": "01",
+          "value": "BULTO",
+          "resolved": true
+        },
+        {
+          "field_key": "peso",
+          "field_label": "Peso [kg]",
+          "segment": "025",
+          "value": "25",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "referencia": "POLIPROPILENO",
+        "codigo": "RJ970Z",
+        "presentacion": "BULTO",
+        "peso": "25",
+        "color": "NATURAL"
+      },
+      "canonical_code": "MPP-OR-PP-1000020102512",
+      "canonical_dynamic_code_data": {
+        "referencia": "POLIPROPILENO",
+        "codigo": "RJ970Z",
+        "presentacion": "BULTO",
+        "peso": "25",
+        "color": "NATURAL"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "3a4fabbd-0505-47e1-af22-52de724921cd",
+      "siigo_product_id": "687381c8-fef3-4cb3-a5ff-4ddf7844c33c",
+      "current_code": "MPC-CP-MB-1100010100105",
+      "proposed_code": "MPC-CP-MB-1100010100105",
+      "name": "MASTERBATCH PE PL-WH0817-70% BOLSA 1000g BLANCO",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "MPC-CP-MB",
+      "category_id": "695dc4ad-e0b8-485b-becd-fbe7cfd1ac4c",
+      "group_id": "e3d25402-f334-4e49-816e-2b4924d3def4",
+      "subgroup_id": "504ef9f3-1f7b-48b8-8a60-ae444888965c",
+      "numeric_tail": "1100010100105",
+      "parsed_fields": [
+        {
+          "field_key": "referencia",
+          "field_label": "Referencia",
+          "segment": "11",
+          "value": "MASTERBATCH PL",
+          "resolved": true
+        },
+        {
+          "field_key": "codigo",
+          "field_label": "Código",
+          "segment": "0001",
+          "value": "PE-43789",
+          "resolved": true
+        },
+        {
+          "field_key": "presentacion",
+          "field_label": "Presentación",
+          "segment": "01",
+          "value": "BOLSA",
+          "resolved": true
+        },
+        {
+          "field_key": "peso",
+          "field_label": "Peso [g]",
+          "segment": "001",
+          "value": "100g",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "05",
+          "value": "BLANCO",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "referencia": "MASTERBATCH PL",
+        "codigo": "PE-43789",
+        "presentacion": "BOLSA",
+        "peso": "100g",
+        "color": "BLANCO"
+      },
+      "canonical_code": "MPC-CP-MB-1100010100105",
+      "canonical_dynamic_code_data": {
+        "referencia": "MASTERBATCH PL",
+        "codigo": "PE-43789",
+        "presentacion": "BOLSA",
+        "peso": "100g",
+        "color": "BLANCO"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "7141167a-dc53-48bb-bc40-9cb9799fdf24",
+      "siigo_product_id": "0adec530-1663-4e5d-9492-58c57a3ca037",
+      "current_code": "MPP-OR-PP-1000040102512",
+      "proposed_code": "MPP-OR-PP-1000040102512",
+      "name": "POLIPROPILENO 11H01A BULTO 25Kg NATURAL",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "MPP-OR-PP",
+      "category_id": "7935634a-baf0-43fa-913b-7ef05d1c3853",
+      "group_id": "8bee6e61-754a-4ef0-a098-eb86af69c4d3",
+      "subgroup_id": "9d12efee-2f3f-43da-a9cf-79fa1b06f54f",
+      "numeric_tail": "1000040102512",
+      "parsed_fields": [
+        {
+          "field_key": "referencia",
+          "field_label": "Referencia",
+          "segment": "10",
+          "value": "POLIPROPILENO",
+          "resolved": true
+        },
+        {
+          "field_key": "codigo",
+          "field_label": "Código",
+          "segment": "0004",
+          "value": "PRUEBA",
+          "resolved": true
+        },
+        {
+          "field_key": "presentacion",
+          "field_label": "Presentación",
+          "segment": "01",
+          "value": "BULTO",
+          "resolved": true
+        },
+        {
+          "field_key": "peso",
+          "field_label": "Peso [kg]",
+          "segment": "025",
+          "value": "25",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "referencia": "POLIPROPILENO",
+        "codigo": "PRUEBA",
+        "presentacion": "BULTO",
+        "peso": "25",
+        "color": "NATURAL"
+      },
+      "canonical_code": "MPP-OR-PP-1000040102512",
+      "canonical_dynamic_code_data": {
+        "referencia": "POLIPROPILENO",
+        "codigo": "PRUEBA",
+        "presentacion": "BULTO",
+        "peso": "25",
+        "color": "NATURAL"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "0f1d5887-699a-4743-91ad-fcb95e81e737",
+      "siigo_product_id": "c1d4eafc-5cdd-4328-b755-3742429138c1",
+      "current_code": "PTF-FM-CJ-1004010041207",
+      "proposed_code": "PTF-FM-CJ-1004010041207",
+      "name": "TAPÓN MASTITIS CANULA CORTA 10 mL NATURAL PE",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-FM-CJ",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "cc0b5f62-0a31-485d-802c-3c0904e3691d",
+      "subgroup_id": "0c6810a1-dd75-457f-a7e1-c25d4a0b221a",
+      "numeric_tail": "1004010041207",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo de componente",
+          "segment": "1004",
+          "value": "TAPÓN",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "01",
+          "value": "MASTITIS CANULA CORTA",
+          "resolved": true
+        },
+        {
+          "field_key": "capacidad",
+          "field_label": "Capacidad [mL]",
+          "segment": "004",
+          "value": "10 mL",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "07",
+          "value": "PE",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "TAPÓN",
+        "acabado": "MASTITIS CANULA CORTA",
+        "capacidad": "10 mL",
+        "color": "NATURAL",
+        "material": "PE"
+      },
+      "canonical_code": "PTF-FM-CJ-1004010041207",
+      "canonical_dynamic_code_data": {
+        "tipo": "TAPÓN",
+        "acabado": "MASTITIS CANULA CORTA",
+        "capacidad": "10 mL",
+        "color": "NATURAL",
+        "material": "PE"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "c6bb0f17-d0e8-470d-89af-ee7475fc673b",
+      "siigo_product_id": "44050adb-38f9-4685-991b-bf494275618f",
+      "current_code": "PTC-TT-CC-1020001000104",
+      "proposed_code": "PTC-TT-CC-1020001000104",
+      "name": "COLADA CALIENTE MULTIPLE CIRCULAR LATERAL 4 CAV",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTC-TT-CC",
+      "category_id": "f7e7fb82-44a3-43c1-8783-e09359c36e69",
+      "group_id": "1c86cea4-4d67-4592-ac77-ee7490ee3cd9",
+      "subgroup_id": "6b77ed46-1590-4af9-ac1e-40eed390eefb",
+      "numeric_tail": "1020001000104",
+      "parsed_fields": [
+        {
+          "field_key": "categoria",
+          "field_label": "Categoría",
+          "segment": "102",
+          "value": "COLADA CALIENTE MULTIPLE",
+          "resolved": true
+        },
+        {
+          "field_key": "forma",
+          "field_label": "Forma",
+          "segment": "0001",
+          "value": "CIRCULAR",
+          "resolved": true
+        },
+        {
+          "field_key": "punto_entrada",
+          "field_label": "Punto de entrada",
+          "segment": "0001",
+          "value": "LATERAL",
+          "resolved": true
+        },
+        {
+          "field_key": "cavidades",
+          "field_label": "Cavidades",
+          "segment": "04",
+          "value": "4 CAV",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "categoria": "COLADA CALIENTE MULTIPLE",
+        "forma": "CIRCULAR",
+        "punto_entrada": "LATERAL",
+        "cavidades": "4 CAV"
+      },
+      "canonical_code": "PTC-TT-CC-1020001000104",
+      "canonical_dynamic_code_data": {
+        "categoria": "COLADA CALIENTE MULTIPLE",
+        "forma": "CIRCULAR",
+        "punto_entrada": "LATERAL",
+        "cavidades": "4 CAV"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "247cfb26-9d30-44b9-bf0b-bf07c0cb7c2b",
+      "siigo_product_id": "3b02a2f4-ea1a-4c95-9f8b-7fb87ea9631e",
+      "current_code": "MPC-CP-MB-1100030100101",
+      "proposed_code": "MPC-CP-MB-1100030100101",
+      "name": "MASTERBATCH PE PL-YE0017 BOLSA 1000g AMARILLO",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "MPC-CP-MB",
+      "category_id": "695dc4ad-e0b8-485b-becd-fbe7cfd1ac4c",
+      "group_id": "e3d25402-f334-4e49-816e-2b4924d3def4",
+      "subgroup_id": "504ef9f3-1f7b-48b8-8a60-ae444888965c",
+      "numeric_tail": "1100030100101",
+      "parsed_fields": [
+        {
+          "field_key": "referencia",
+          "field_label": "Referencia",
+          "segment": "11",
+          "value": "MASTERBATCH PL",
+          "resolved": true
+        },
+        {
+          "field_key": "codigo",
+          "field_label": "Código",
+          "segment": "0003",
+          "value": "PL-YE0017",
+          "resolved": true
+        },
+        {
+          "field_key": "presentacion",
+          "field_label": "Presentación",
+          "segment": "01",
+          "value": "BOLSA",
+          "resolved": true
+        },
+        {
+          "field_key": "peso",
+          "field_label": "Peso [g]",
+          "segment": "001",
+          "value": "100g",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "01",
+          "value": "AMARILLO",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "referencia": "MASTERBATCH PL",
+        "codigo": "PL-YE0017",
+        "presentacion": "BOLSA",
+        "peso": "100g",
+        "color": "AMARILLO"
+      },
+      "canonical_code": "MPC-CP-MB-1100030100101",
+      "canonical_dynamic_code_data": {
+        "referencia": "MASTERBATCH PL",
+        "codigo": "PL-YE0017",
+        "presentacion": "BOLSA",
+        "peso": "100g",
+        "color": "AMARILLO"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "b4d13b52-afca-4a4c-b22a-273e6fc97003",
+      "siigo_product_id": "13f99512-0dd9-4466-b08c-cd53f4cb4024",
+      "current_code": "INS-EM-AC-1010001000302",
+      "proposed_code": "INS-EM-AC-1010001000302",
+      "name": "CARTÓN KRAF ROLLO 1,5 mt 3,5 mm",
+      "status": "REQUIERE_REVISION",
+      "reason": "2 segmento(s) no existen en los catálogos vigentes.",
+      "classification": "INS-EM-AC",
+      "category_id": "c4139dfb-87cd-4010-b6f6-668f244ff742",
+      "group_id": "ee876299-a675-4fe5-a5bb-4a668f8d388e",
+      "subgroup_id": "dae0e01a-0211-4827-882a-b89b359f0fc6",
+      "numeric_tail": "1010001000302",
+      "parsed_fields": [
+        {
+          "field_key": "referencia",
+          "field_label": "Referencia",
+          "segment": "101",
+          "value": "CARTÓN KRAF",
+          "resolved": true
+        },
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "0001",
+          "value": "ROLLO",
+          "resolved": true
+        },
+        {
+          "field_key": "medida",
+          "field_label": "Medida",
+          "segment": "000",
+          "value": null,
+          "resolved": false
+        },
+        {
+          "field_key": "calibre",
+          "field_label": "Calibre",
+          "segment": "302",
+          "value": null,
+          "resolved": false
+        }
+      ],
+      "unresolved_fields": [
+        {
+          "field_key": "medida",
+          "field_label": "Medida",
+          "segment": "000",
+          "option_catalog_id": null
+        },
+        {
+          "field_key": "calibre",
+          "field_label": "Calibre",
+          "segment": "302",
+          "option_catalog_id": null
+        }
+      ],
+      "dynamic_code_data": null,
+      "canonical_code": "INS-EM-AC-1010001000302",
+      "canonical_dynamic_code_data": null,
+      "canonical_parse_ok": false
+    },
+    {
+      "product_id": "3474f33e-d0c2-441e-afaf-bdb90c2bb8f9",
+      "siigo_product_id": "4be2d4d5-3848-455b-9b5c-d9cfd713b463",
+      "current_code": "INS-PL-PG-10200010010007",
+      "proposed_code": "INS-PL-PG-10200010010007",
+      "name": "PURGA NPT 451-45 Bulto 454 g",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "INS-PL-PG",
+      "category_id": "c4139dfb-87cd-4010-b6f6-668f244ff742",
+      "group_id": "789750e5-1034-4b9f-bb08-60e386fa2fe3",
+      "subgroup_id": "a73058ee-7275-4064-b5da-23c91634503f",
+      "numeric_tail": "10200010010007",
+      "parsed_fields": [
+        {
+          "field_key": "referencia",
+          "field_label": "Referencia",
+          "segment": "102",
+          "value": "PURGA",
+          "resolved": true
+        },
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "0001",
+          "value": "NPT 451-45",
+          "resolved": true
+        },
+        {
+          "field_key": "medida",
+          "field_label": "Medida",
+          "segment": "001",
+          "value": "Bulto",
+          "resolved": true
+        },
+        {
+          "field_key": "presentacion",
+          "field_label": "Presentación",
+          "segment": "0007",
+          "value": "454 g",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "referencia": "PURGA",
+        "tipo": "NPT 451-45",
+        "medida": "Bulto",
+        "presentacion": "454 g"
+      },
+      "canonical_code": "INS-PL-PG-10200010010007",
+      "canonical_dynamic_code_data": {
+        "referencia": "PURGA",
+        "tipo": "NPT 451-45",
+        "medida": "Bulto",
+        "presentacion": "454 g"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "33f2ab9b-73a9-4b82-bdbd-2dfaec28badf",
+      "siigo_product_id": "1b083e55-7b8f-4ec2-b76e-040a8b0137de",
+      "current_code": "MPP-OR-PD-1200050102512",
+      "proposed_code": "MPP-OR-PD-1200050102512",
+      "name": "PELBD DOW DNDB 7147 NT7 BULTO 25Kg NATURAL",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "MPP-OR-PD",
+      "category_id": "7935634a-baf0-43fa-913b-7ef05d1c3853",
+      "group_id": "8bee6e61-754a-4ef0-a098-eb86af69c4d3",
+      "subgroup_id": "93f86ac5-c943-4164-a698-58075cce1ea8",
+      "numeric_tail": "1200050102512",
+      "parsed_fields": [
+        {
+          "field_key": "referencia",
+          "field_label": "Referencia",
+          "segment": "12",
+          "value": "PELBD",
+          "resolved": true
+        },
+        {
+          "field_key": "codigo",
+          "field_label": "Código",
+          "segment": "0005",
+          "value": "DOW DNDB 7147 NT7",
+          "resolved": true
+        },
+        {
+          "field_key": "presentacion",
+          "field_label": "Presentación",
+          "segment": "01",
+          "value": "BULTO",
+          "resolved": true
+        },
+        {
+          "field_key": "peso",
+          "field_label": "Peso [kg]",
+          "segment": "025",
+          "value": "25 KG",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "referencia": "PELBD",
+        "codigo": "DOW DNDB 7147 NT7",
+        "presentacion": "BULTO",
+        "peso": "25 KG",
+        "color": "NATURAL"
+      },
+      "canonical_code": "MPP-OR-PD-1200050102512",
+      "canonical_dynamic_code_data": {
+        "referencia": "PELBD",
+        "codigo": "DOW DNDB 7147 NT7",
+        "presentacion": "BULTO",
+        "peso": "25 KG",
+        "color": "NATURAL"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "486e85f4-877b-42d9-9c7c-0d1801bce6b3",
+      "siigo_product_id": "26b3e27e-6295-40be-b2c0-544926b1935e",
+      "current_code": "PTF-RT-PP-1080040052006",
+      "proposed_code": "PTF-RT-PP-1080040052006",
+      "name": "PORTA PRECIO PLANO 4 cm ADH ESPUMOSO SENCILLO DE 1/2\"TRANSPARENTE PVC",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-RT-PP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "15b0ac9d-05e5-4cad-b0aa-0a15bd3b05dc",
+      "subgroup_id": "fb357c05-6d35-4250-90dd-ed7aadfab104",
+      "numeric_tail": "1080040052006",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "108",
+          "value": "PORTA PRECIO PLANO",
+          "resolved": true
+        },
+        {
+          "field_key": "altura",
+          "field_label": "Altura [cm]",
+          "segment": "004",
+          "value": "4 cm",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "005",
+          "value": "ADH ESPUMOSO SENCILLO DE 1/2\"",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "20",
+          "value": "TRANSPARENTE",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "06",
+          "value": "PVC",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "PORTA PRECIO PLANO",
+        "altura": "4 cm",
+        "acabado": "ADH ESPUMOSO SENCILLO DE 1/2\"",
+        "color": "TRANSPARENTE",
+        "material": "PVC"
+      },
+      "canonical_code": "PTF-RT-PP-1080040052006",
+      "canonical_dynamic_code_data": {
+        "tipo": "PORTA PRECIO PLANO",
+        "altura": "4 cm",
+        "acabado": "ADH ESPUMOSO SENCILLO DE 1/2\"",
+        "color": "TRANSPARENTE",
+        "material": "PVC"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "dae8bb39-e79f-4ed6-9967-1efeeea17b2b",
+      "siigo_product_id": "ae37621c-c59f-4823-8103-9f31bd3d5913",
+      "current_code": "PTF-AL-TP-1006030291207",
+      "proposed_code": "PTF-AL-TP-1006030291207",
+      "name": "SOBRE TAPA CIRCULAR LISA B. 502-129 EM NATURAL PEBD",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-AL-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "25f7aaa7-5d8c-4d54-a874-a2edec735819",
+      "subgroup_id": "a8ccf4b5-119d-4d3b-ae7c-4cfb2570d3a0",
+      "numeric_tail": "1006030291207",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "value": "SOBRE TAPA",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "03",
+          "value": "CIRCULAR LISA",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "029",
+          "value": "B. 502-129 EM",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "07",
+          "value": "PEBD",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "SOBRE TAPA",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 502-129 EM",
+        "color": "NATURAL",
+        "material": "PEBD"
+      },
+      "canonical_code": "PTF-AL-TP-1006030291207",
+      "canonical_dynamic_code_data": {
+        "tipo": "SOBRE TAPA",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 502-129 EM",
+        "color": "NATURAL",
+        "material": "PEBD"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "e07eec2d-d2f9-4929-9803-8d8914e2dd67",
+      "siigo_product_id": "f27267ff-51d1-4b27-bd81-74e4149e4639",
+      "current_code": "PTF-AL-TP-1006030282107",
+      "proposed_code": "PTF-AL-TP-1006030282107",
+      "name": "SOBRE TAPA CIRCULAR LISA B. 401-103 EC DORADO PEBD",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-AL-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "25f7aaa7-5d8c-4d54-a874-a2edec735819",
+      "subgroup_id": "a8ccf4b5-119d-4d3b-ae7c-4cfb2570d3a0",
+      "numeric_tail": "1006030282107",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "value": "SOBRE TAPA",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "03",
+          "value": "CIRCULAR LISA",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "028",
+          "value": "B. 401-103 EC",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "21",
+          "value": "DORADO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "07",
+          "value": "PEBD",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "SOBRE TAPA",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 401-103 EC",
+        "color": "DORADO",
+        "material": "PEBD"
+      },
+      "canonical_code": "PTF-AL-TP-1006030282107",
+      "canonical_dynamic_code_data": {
+        "tipo": "SOBRE TAPA",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 401-103 EC",
+        "color": "DORADO",
+        "material": "PEBD"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "f7a6d4c1-3ed9-4bd6-8c8f-3c7875e713e7",
+      "siigo_product_id": "87e252dc-538f-492f-b14a-5bb427ea8e08",
+      "current_code": "PTF-AL-CH-1001010090304",
+      "proposed_code": "PTF-AL-CH-1001010090304",
+      "name": "CUCHARA DOSIFICADORA CIRCULAR 29,6 cc AZUL CLARO PP",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-AL-CH",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "25f7aaa7-5d8c-4d54-a874-a2edec735819",
+      "subgroup_id": "038c9132-5aff-4538-b1ac-dddb79c319d7",
+      "numeric_tail": "1001010090304",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo de cuchara",
+          "segment": "1001",
+          "value": "CUCHARA DOSIFICADORA",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "01",
+          "value": "CIRCULAR",
+          "resolved": true
+        },
+        {
+          "field_key": "capacidad",
+          "field_label": "Capacidad [cc]",
+          "segment": "009",
+          "value": "29,6 cc",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "03",
+          "value": "AZUL CLARO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "04",
+          "value": "PP",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "CUCHARA DOSIFICADORA",
+        "acabado": "CIRCULAR",
+        "capacidad": "29,6 cc",
+        "color": "AZUL CLARO",
+        "material": "PP"
+      },
+      "canonical_code": "PTF-AL-CH-1001010090304",
+      "canonical_dynamic_code_data": {
+        "tipo": "CUCHARA DOSIFICADORA",
+        "acabado": "CIRCULAR",
+        "capacidad": "29,6 cc",
+        "color": "AZUL CLARO",
+        "material": "PP"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "e22a9206-1376-4800-854b-e92cb6d46a41",
+      "siigo_product_id": "b75d23ae-af2b-4fe9-8cf1-4706cd1b4168",
+      "current_code": "PTF-FM-EN-1060230190502",
+      "proposed_code": "PTF-FM-EN-1060230190502",
+      "name": "ENVASE PASTILLERO B. 59mm *350mL BLANCO PEAD",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-FM-EN",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "cc0b5f62-0a31-485d-802c-3c0904e3691d",
+      "subgroup_id": "f07cc759-d7dc-4127-bee5-4055de4555aa",
+      "numeric_tail": "1060230190502",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "106",
+          "value": "ENVASE PASTILLERO",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "023",
+          "value": "B. 59 mm",
+          "resolved": true
+        },
+        {
+          "field_key": "capacidad",
+          "field_label": "Capacidad [g o ml]",
+          "segment": "019",
+          "value": "350 mL",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "05",
+          "value": "BLANCO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "02",
+          "value": "PEAD",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "ENVASE PASTILLERO",
+        "boca": "B. 59 mm",
+        "capacidad": "350 mL",
+        "color": "BLANCO",
+        "material": "PEAD"
+      },
+      "canonical_code": "PTF-FM-EN-1060230190502",
+      "canonical_dynamic_code_data": {
+        "tipo": "ENVASE PASTILLERO",
+        "boca": "B. 59 mm",
+        "capacidad": "350 mL",
+        "color": "BLANCO",
+        "material": "PEAD"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "ffda50e3-1502-45ef-be60-fcc612b8d797",
+      "siigo_product_id": "a09a6087-59b7-4efe-adb2-e1d78cdabe80",
+      "current_code": "PTF-FM-EN-1020010051202",
+      "proposed_code": "PTF-FM-EN-1020010051202",
+      "name": "ENVASE CILÍNDRICO B. 20mm *50mL NATURAL PEAD",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-FM-EN",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "cc0b5f62-0a31-485d-802c-3c0904e3691d",
+      "subgroup_id": "f07cc759-d7dc-4127-bee5-4055de4555aa",
+      "numeric_tail": "1020010051202",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "102",
+          "value": "ENVASE CILINDRICO",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "001",
+          "value": "B. 20mm",
+          "resolved": true
+        },
+        {
+          "field_key": "capacidad",
+          "field_label": "Capacidad [g o ml]",
+          "segment": "005",
+          "value": "50",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "02",
+          "value": "PEAD",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "ENVASE CILINDRICO",
+        "boca": "B. 20mm",
+        "capacidad": "50",
+        "color": "NATURAL",
+        "material": "PEAD"
+      },
+      "canonical_code": "PTF-FM-EN-1020010051202",
+      "canonical_dynamic_code_data": {
+        "tipo": "ENVASE CILINDRICO",
+        "boca": "B. 20mm",
+        "capacidad": "50",
+        "color": "NATURAL",
+        "material": "PEAD"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "b7758789-085e-48b7-85a3-be1b248b2cfe",
+      "siigo_product_id": "6897707b-b012-4764-ba4c-b1454134a4cd",
+      "current_code": "PTF-ES-TP-1003030051201",
+      "proposed_code": "PTF-ES-TP-1003030051201",
+      "name": "TAPA SUB MASTER ESTRELLA B.90 mm NATURAL ABS",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-ES-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "7f805e1a-ff9a-49da-a02b-57f812ba5ffa",
+      "subgroup_id": "da0b55e9-731a-4303-bc6c-63ae9ed897cf",
+      "numeric_tail": "1003030051201",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1003",
+          "value": "SUB MASTER",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "03",
+          "value": "ESTRELLA",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "005",
+          "value": "B. 90 mm",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "01",
+          "value": "ABS",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "SUB MASTER",
+        "acabado": "ESTRELLA",
+        "boca": "B. 90 mm",
+        "color": "NATURAL",
+        "material": "ABS"
+      },
+      "canonical_code": "PTF-ES-TP-1003030051201",
+      "canonical_dynamic_code_data": {
+        "tipo": "SUB MASTER",
+        "acabado": "ESTRELLA",
+        "boca": "B. 90 mm",
+        "color": "NATURAL",
+        "material": "ABS"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "34c20ebd-58b8-4423-9f38-39d3784acf95",
+      "siigo_product_id": "8e42c6fb-81be-43dd-b382-52d8e734ff4b",
+      "current_code": "SER-PP-TR-0000000031004",
+      "proposed_code": "SER-PP-TR-0000000031004",
+      "name": "SOPLADO ESPECIALES",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "SER-PP-TR",
+      "category_id": "ec285314-99d9-4bd6-95b4-5a20dda446ed",
+      "group_id": "e10232ad-b3d1-4cd8-9ead-66898c45ba27",
+      "subgroup_id": "4608a633-ddad-4da8-8cb2-470ae536354f",
+      "numeric_tail": "0000000031004",
+      "parsed_fields": [
+        {
+          "field_key": "tipo_servicio",
+          "field_label": "Tipo de servicio",
+          "segment": "000000003",
+          "value": "SOPLADO",
+          "resolved": true
+        },
+        {
+          "field_key": "linea",
+          "field_label": "Línea",
+          "segment": "1004",
+          "value": "ESPECIALES",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo_servicio": "SOPLADO",
+        "linea": "ESPECIALES"
+      },
+      "canonical_code": "SER-PP-TR-0000000031004",
+      "canonical_dynamic_code_data": {
+        "tipo_servicio": "SOPLADO",
+        "linea": "ESPECIALES"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "f733ab33-662f-483d-b656-1f142bf1fd99",
+      "siigo_product_id": "332d02f4-2553-441b-a8eb-3ab44f7d51b5",
+      "current_code": "SER-PP-TR-0000000091004",
+      "proposed_code": "SER-PP-TR-0000000091004",
+      "name": "RECTIFICADO ESPECIALES",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "SER-PP-TR",
+      "category_id": "ec285314-99d9-4bd6-95b4-5a20dda446ed",
+      "group_id": "e10232ad-b3d1-4cd8-9ead-66898c45ba27",
+      "subgroup_id": "4608a633-ddad-4da8-8cb2-470ae536354f",
+      "numeric_tail": "0000000091004",
+      "parsed_fields": [
+        {
+          "field_key": "tipo_servicio",
+          "field_label": "Tipo de servicio",
+          "segment": "000000009",
+          "value": "RECTIFICADO",
+          "resolved": true
+        },
+        {
+          "field_key": "linea",
+          "field_label": "Línea",
+          "segment": "1004",
+          "value": "ESPECIALES",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo_servicio": "RECTIFICADO",
+        "linea": "ESPECIALES"
+      },
+      "canonical_code": "SER-PP-TR-0000000091004",
+      "canonical_dynamic_code_data": {
+        "tipo_servicio": "RECTIFICADO",
+        "linea": "ESPECIALES"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "ebadcc91-6f5f-4bc9-9f19-823acffbaf29",
+      "siigo_product_id": "df3158e8-d397-4978-9910-9c9e68b73ad1",
+      "current_code": "PTF-RT-PO-1010030030506",
+      "proposed_code": "PTF-RT-PO-1010030030506",
+      "name": "GRIP RÍGIDO 2,5 cm BLANCO PVC",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-RT-PO",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "15b0ac9d-05e5-4cad-b0aa-0a15bd3b05dc",
+      "subgroup_id": "43d3643f-9518-4087-a22d-6d505bca0cf0",
+      "numeric_tail": "1010030030506",
+      "parsed_fields": [
+        {
+          "field_key": "linea",
+          "field_label": "Línea",
+          "segment": "101",
+          "value": "HABLADOR",
+          "resolved": true
+        },
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "003",
+          "value": "RÍGIDO",
+          "resolved": true
+        },
+        {
+          "field_key": "dimensiones",
+          "field_label": "Dimensiones",
+          "segment": "003",
+          "value": "2,5 cm",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "05",
+          "value": "BLANCO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "06",
+          "value": "PVC",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "linea": "HABLADOR",
+        "tipo": "RÍGIDO",
+        "dimensiones": "2,5 cm",
+        "color": "BLANCO",
+        "material": "PVC"
+      },
+      "canonical_code": "PTF-RT-PO-1010030030506",
+      "canonical_dynamic_code_data": {
+        "linea": "HABLADOR",
+        "tipo": "RÍGIDO",
+        "dimensiones": "2,5 cm",
+        "color": "BLANCO",
+        "material": "PVC"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "2b640cbd-f816-4225-8ae4-dfe4f5391667",
+      "siigo_product_id": "0b24a058-c3b4-449c-ad58-4058a0c19dbc",
+      "current_code": "PTF-AL-TP-1001090261104",
+      "proposed_code": "PTF-AL-TP-1001090261104",
+      "name": "TAPA A PRESIÓN RECTANGULAR LISA 3 DIVISIONES B. 190mm x 230mm NARANJA PP",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-AL-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "25f7aaa7-5d8c-4d54-a874-a2edec735819",
+      "subgroup_id": "a8ccf4b5-119d-4d3b-ae7c-4cfb2570d3a0",
+      "numeric_tail": "1001090261104",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1001",
+          "value": "TAPA A PRESIÓN",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "09",
+          "value": "RECTANGULAR LISA 3 DIVISIONES",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "026",
+          "value": "B. 190 mm x 230 mm",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "11",
+          "value": "NARANJA",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "04",
+          "value": "PP",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "TAPA A PRESIÓN",
+        "acabado": "RECTANGULAR LISA 3 DIVISIONES",
+        "boca": "B. 190 mm x 230 mm",
+        "color": "NARANJA",
+        "material": "PP"
+      },
+      "canonical_code": "PTF-AL-TP-1001090261104",
+      "canonical_dynamic_code_data": {
+        "tipo": "TAPA A PRESIÓN",
+        "acabado": "RECTANGULAR LISA 3 DIVISIONES",
+        "boca": "B. 190 mm x 230 mm",
+        "color": "NARANJA",
+        "material": "PP"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "758263f6-82b4-4ddb-8333-0ab41cd17b57",
+      "siigo_product_id": "284b188c-2389-4bf2-8b57-9cc1a489121d",
+      "current_code": "PTF-RT-PP-1160040102006",
+      "proposed_code": "PTF-RT-PP-1160040102006",
+      "name": "PORTA PRECIO ENGANCHE INTERNO 4 cm S.A TRANSPARENTE PVC",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-RT-PP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "15b0ac9d-05e5-4cad-b0aa-0a15bd3b05dc",
+      "subgroup_id": "fb357c05-6d35-4250-90dd-ed7aadfab104",
+      "numeric_tail": "1160040102006",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "116",
+          "value": "PORTA PRECIO ENGANCHE INTERNO",
+          "resolved": true
+        },
+        {
+          "field_key": "altura",
+          "field_label": "Altura [cm]",
+          "segment": "004",
+          "value": "4 cm",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "010",
+          "value": "S.A",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "20",
+          "value": "TRANSPARENTE",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "06",
+          "value": "PVC",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "PORTA PRECIO ENGANCHE INTERNO",
+        "altura": "4 cm",
+        "acabado": "S.A",
+        "color": "TRANSPARENTE",
+        "material": "PVC"
+      },
+      "canonical_code": "PTF-RT-PP-1160040102006",
+      "canonical_dynamic_code_data": {
+        "tipo": "PORTA PRECIO ENGANCHE INTERNO",
+        "altura": "4 cm",
+        "acabado": "S.A",
+        "color": "TRANSPARENTE",
+        "material": "PVC"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "24c50cf9-33a8-4425-bb16-d041cd3fb2e9",
+      "siigo_product_id": "ca868e6d-8332-463a-8596-655f0f422c59",
+      "current_code": "MPC-AH-CN-1000020100105",
+      "proposed_code": "MPC-AH-CN-1000020100105",
+      "name": "CINTA DOBLE FAZ ESPUMOSA ROLLO *50 Mts 12 MM BLANCO",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "MPC-AH-CN",
+      "category_id": "695dc4ad-e0b8-485b-becd-fbe7cfd1ac4c",
+      "group_id": "2a08fac2-423c-48ba-9c8b-21dcd13bf858",
+      "subgroup_id": "15b33a3b-cece-439c-8b68-771de86d4773",
+      "numeric_tail": "1000020100105",
+      "parsed_fields": [
+        {
+          "field_key": "referencia",
+          "field_label": "Referencia",
+          "segment": "10",
+          "value": "CINTA DOBLE FAZ",
+          "resolved": true
+        },
+        {
+          "field_key": "codigo",
+          "field_label": "Código",
+          "segment": "0002",
+          "value": "ESPUMOSA",
+          "resolved": true
+        },
+        {
+          "field_key": "presentacion",
+          "field_label": "Presentación",
+          "segment": "01",
+          "value": "ROLLO *50 Mts",
+          "resolved": true
+        },
+        {
+          "field_key": "dimension",
+          "field_label": "Dimensión [mm]",
+          "segment": "001",
+          "value": "12 MM",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "05",
+          "value": "BLANCO",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "referencia": "CINTA DOBLE FAZ",
+        "codigo": "ESPUMOSA",
+        "presentacion": "ROLLO *50 Mts",
+        "dimension": "12 MM",
+        "color": "BLANCO"
+      },
+      "canonical_code": "MPC-AH-CN-1000020100105",
+      "canonical_dynamic_code_data": {
+        "referencia": "CINTA DOBLE FAZ",
+        "codigo": "ESPUMOSA",
+        "presentacion": "ROLLO *50 Mts",
+        "dimension": "12 MM",
+        "color": "BLANCO"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "fbadb546-838f-4670-9222-bbc12efa07a6",
+      "siigo_product_id": "fea31443-5598-4eab-a82c-c4a1b726b6db",
+      "current_code": "PTF-ES-TP-1001020040804",
+      "proposed_code": "PTF-ES-TP-1001020040804",
+      "name": "TAPÓN A PRESIÓN ESTRIADO B. 30 mm GRIS PP",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-ES-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "7f805e1a-ff9a-49da-a02b-57f812ba5ffa",
+      "subgroup_id": "da0b55e9-731a-4303-bc6c-63ae9ed897cf",
+      "numeric_tail": "1001020040804",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1001",
+          "value": "TAPÓN A PRESIÓN",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "02",
+          "value": "ESTRIADO",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "004",
+          "value": "B. 30 mm",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "08",
+          "value": "GRIS",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "04",
+          "value": "PP",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "TAPÓN A PRESIÓN",
+        "acabado": "ESTRIADO",
+        "boca": "B. 30 mm",
+        "color": "GRIS",
+        "material": "PP"
+      },
+      "canonical_code": "PTF-ES-TP-1001020040804",
+      "canonical_dynamic_code_data": {
+        "tipo": "TAPÓN A PRESIÓN",
+        "acabado": "ESTRIADO",
+        "boca": "B. 30 mm",
+        "color": "GRIS",
+        "material": "PP"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "f9143d5b-37aa-4a00-94a5-290405082d85",
+      "siigo_product_id": "fc7ab787-2fc4-4c4c-9942-67d47e9ce9c4",
+      "current_code": "PTF-RT-PP-1080050032006",
+      "proposed_code": "PTF-RT-PP-1080050032006",
+      "name": "PORTA PRECIO PLANO 6.5 cm ADH DOBLE DE 1/2\" TRANSPARENTE PVC",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-RT-PP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "15b0ac9d-05e5-4cad-b0aa-0a15bd3b05dc",
+      "subgroup_id": "fb357c05-6d35-4250-90dd-ed7aadfab104",
+      "numeric_tail": "1080050032006",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "108",
+          "value": "PORTA PRECIO PLANO",
+          "resolved": true
+        },
+        {
+          "field_key": "altura",
+          "field_label": "Altura [cm]",
+          "segment": "005",
+          "value": "6.5 cm",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "003",
+          "value": "ADH DOBLE DE 1/2\"",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "20",
+          "value": "TRANSPARENTE",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "06",
+          "value": "PVC",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "PORTA PRECIO PLANO",
+        "altura": "6.5 cm",
+        "acabado": "ADH DOBLE DE 1/2\"",
+        "color": "TRANSPARENTE",
+        "material": "PVC"
+      },
+      "canonical_code": "PTF-RT-PP-1080050032006",
+      "canonical_dynamic_code_data": {
+        "tipo": "PORTA PRECIO PLANO",
+        "altura": "6.5 cm",
+        "acabado": "ADH DOBLE DE 1/2\"",
+        "color": "TRANSPARENTE",
+        "material": "PVC"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "6210f5ed-f44f-43c5-b05e-8dce6720ca8d",
+      "siigo_product_id": "584cdef1-9c78-49d2-941b-ec830d2eccc8",
+      "current_code": "MPC-AH-CN-1000010100112",
+      "proposed_code": "MPC-AH-CN-1000010100112",
+      "name": "CINTA DOBLE FAZ 3M ROLLO *50 Mts 12 MM NATURAL",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "MPC-AH-CN",
+      "category_id": "695dc4ad-e0b8-485b-becd-fbe7cfd1ac4c",
+      "group_id": "2a08fac2-423c-48ba-9c8b-21dcd13bf858",
+      "subgroup_id": "15b33a3b-cece-439c-8b68-771de86d4773",
+      "numeric_tail": "1000010100112",
+      "parsed_fields": [
+        {
+          "field_key": "referencia",
+          "field_label": "Referencia",
+          "segment": "10",
+          "value": "CINTA DOBLE FAZ",
+          "resolved": true
+        },
+        {
+          "field_key": "codigo",
+          "field_label": "Código",
+          "segment": "0001",
+          "value": "3M",
+          "resolved": true
+        },
+        {
+          "field_key": "presentacion",
+          "field_label": "Presentación",
+          "segment": "01",
+          "value": "ROLLO *50 Mts",
+          "resolved": true
+        },
+        {
+          "field_key": "dimension",
+          "field_label": "Dimensión [mm]",
+          "segment": "001",
+          "value": "12 MM",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "referencia": "CINTA DOBLE FAZ",
+        "codigo": "3M",
+        "presentacion": "ROLLO *50 Mts",
+        "dimension": "12 MM",
+        "color": "NATURAL"
+      },
+      "canonical_code": "MPC-AH-CN-1000010100112",
+      "canonical_dynamic_code_data": {
+        "referencia": "CINTA DOBLE FAZ",
+        "codigo": "3M",
+        "presentacion": "ROLLO *50 Mts",
+        "dimension": "12 MM",
+        "color": "NATURAL"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "19a24ddd-7bdc-4a7c-8d47-d62cd271f11e",
+      "siigo_product_id": "c418ed9e-d293-4113-8f73-b788a4a54051",
+      "current_code": "PTF-FM-TP-1006070261207",
+      "proposed_code": "PTF-FM-TP-1006070261207",
+      "name": "TAPÓN A PRESIÓN PERFORADO B. 19 mm NATURAL PEBD",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-FM-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "cc0b5f62-0a31-485d-802c-3c0904e3691d",
+      "subgroup_id": "621142f5-4f51-4ed6-88e6-4e44dc254c65",
+      "numeric_tail": "1006070261207",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "value": "TAPÓN A PRESIÓN",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "07",
+          "value": "PERFORADO",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "026",
+          "value": "B. 19 mm",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "07",
+          "value": "HIPS",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "TAPÓN A PRESIÓN",
+        "acabado": "PERFORADO",
+        "boca": "B. 19 mm",
+        "color": "NATURAL",
+        "material": "HIPS"
+      },
+      "canonical_code": "PTF-FM-TP-1006070261207",
+      "canonical_dynamic_code_data": {
+        "tipo": "TAPÓN A PRESIÓN",
+        "acabado": "PERFORADO",
+        "boca": "B. 19 mm",
+        "color": "NATURAL",
+        "material": "HIPS"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "8add43db-1de7-46e2-ba42-66feec7de71a",
+      "siigo_product_id": "42b3afd4-4793-4e75-8fae-ff57bd2c1094",
+      "current_code": "PTC-RT-PO-1010010011203",
+      "proposed_code": "PTC-RT-PO-1010010011203",
+      "name": "BOLSILLO 1/4 CARTA VERTICAL PESTAÑA C. 510 mm 14x10,5cm/Pestaña 4,3x2cm NATURAL PET",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTC-RT-PO",
+      "category_id": "f7e7fb82-44a3-43c1-8783-e09359c36e69",
+      "group_id": "237b3849-7530-4aeb-b673-8471d5f61433",
+      "subgroup_id": "c8c93d53-58ae-49da-9b17-2b752f98f69e",
+      "numeric_tail": "1010010011203",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo de POP",
+          "segment": "101",
+          "value": "BOLSILLO",
+          "resolved": true
+        },
+        {
+          "field_key": "detalle",
+          "field_label": "Detalle",
+          "segment": "001",
+          "value": "1/4 CARTA VERTICAL PESTAÑA C. 510 mm",
+          "resolved": true
+        },
+        {
+          "field_key": "dimension",
+          "field_label": "Dimensión",
+          "segment": "001",
+          "value": "14x10,5 cm / Pestaña 4,3x2 cm",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "03",
+          "value": "PET",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "BOLSILLO",
+        "detalle": "1/4 CARTA VERTICAL PESTAÑA C. 510 mm",
+        "dimension": "14x10,5 cm / Pestaña 4,3x2 cm",
+        "color": "NATURAL",
+        "material": "PET"
+      },
+      "canonical_code": "PTC-RT-PO-1010010011203",
+      "canonical_dynamic_code_data": {
+        "tipo": "BOLSILLO",
+        "detalle": "1/4 CARTA VERTICAL PESTAÑA C. 510 mm",
+        "dimension": "14x10,5 cm / Pestaña 4,3x2 cm",
+        "color": "NATURAL",
+        "material": "PET"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "da229beb-bf16-408f-8097-e557454a4541",
+      "siigo_product_id": "19999c88-6a55-4499-9d55-8b63078d7fe6",
+      "current_code": "PTF-AL-CJ-1010210181204",
+      "proposed_code": "PTF-AL-CJ-1010210181204",
+      "name": "CONJUNTO DE ENVASE CUADRADO CON TAPA B. 120mm *1000 ml NATURAL PP",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-AL-CJ",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "25f7aaa7-5d8c-4d54-a874-a2edec735819",
+      "subgroup_id": "56bdd644-06c6-452f-acfa-3d434cbd82d8",
+      "numeric_tail": "1010210181204",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo de conjunto",
+          "segment": "101",
+          "value": "CONJUNTO DE ENVASE CUADRADO  CON TAPA",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "021",
+          "value": "B. 120mm",
+          "resolved": true
+        },
+        {
+          "field_key": "capacidad",
+          "field_label": "Capacidad [mL]",
+          "segment": "018",
+          "value": "1000 mL",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "04",
+          "value": "PP",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "CONJUNTO DE ENVASE CUADRADO  CON TAPA",
+        "boca": "B. 120mm",
+        "capacidad": "1000 mL",
+        "color": "NATURAL",
+        "material": "PP"
+      },
+      "canonical_code": "PTF-AL-CJ-1010210181204",
+      "canonical_dynamic_code_data": {
+        "tipo": "CONJUNTO DE ENVASE CUADRADO  CON TAPA",
+        "boca": "B. 120mm",
+        "capacidad": "1000 mL",
+        "color": "NATURAL",
+        "material": "PP"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "4fed4d88-2c3e-4081-9f54-d1afd0e192da",
+      "siigo_product_id": "55d9c18e-fc8c-4f90-8f76-41df37af1e0c",
+      "current_code": "MPP-OR-PD-1000030102512",
+      "proposed_code": "MPP-OR-PD-1000030102512",
+      "name": "PEAD PAXON-AS55-003 BULTO 25Kg NATURAL",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "MPP-OR-PD",
+      "category_id": "7935634a-baf0-43fa-913b-7ef05d1c3853",
+      "group_id": "8bee6e61-754a-4ef0-a098-eb86af69c4d3",
+      "subgroup_id": "93f86ac5-c943-4164-a698-58075cce1ea8",
+      "numeric_tail": "1000030102512",
+      "parsed_fields": [
+        {
+          "field_key": "referencia",
+          "field_label": "Referencia",
+          "segment": "10",
+          "value": "PEAD",
+          "resolved": true
+        },
+        {
+          "field_key": "codigo",
+          "field_label": "Código",
+          "segment": "0003",
+          "value": "PAXON-AS55-003",
+          "resolved": true
+        },
+        {
+          "field_key": "presentacion",
+          "field_label": "Presentación",
+          "segment": "01",
+          "value": "BULTO",
+          "resolved": true
+        },
+        {
+          "field_key": "peso",
+          "field_label": "Peso [kg]",
+          "segment": "025",
+          "value": "25 KG",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "referencia": "PEAD",
+        "codigo": "PAXON-AS55-003",
+        "presentacion": "BULTO",
+        "peso": "25 KG",
+        "color": "NATURAL"
+      },
+      "canonical_code": "MPP-OR-PD-1000030102512",
+      "canonical_dynamic_code_data": {
+        "referencia": "PEAD",
+        "codigo": "PAXON-AS55-003",
+        "presentacion": "BULTO",
+        "peso": "25 KG",
+        "color": "NATURAL"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "17b4607f-ca6e-493c-8192-096636dabbc6",
+      "siigo_product_id": "4d8c04cc-3df6-4b55-a38a-6275d6d124cc",
+      "current_code": "MPC-CP-MB-1100020200214",
+      "proposed_code": "MPC-CP-MB-1100020200214",
+      "name": "MASTERBATCH PE PE-33194-02 BULTO 25000g ROJO",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "MPC-CP-MB",
+      "category_id": "695dc4ad-e0b8-485b-becd-fbe7cfd1ac4c",
+      "group_id": "e3d25402-f334-4e49-816e-2b4924d3def4",
+      "subgroup_id": "504ef9f3-1f7b-48b8-8a60-ae444888965c",
+      "numeric_tail": "1100020200214",
+      "parsed_fields": [
+        {
+          "field_key": "referencia",
+          "field_label": "Referencia",
+          "segment": "11",
+          "value": "MASTERBATCH PL",
+          "resolved": true
+        },
+        {
+          "field_key": "codigo",
+          "field_label": "Código",
+          "segment": "0002",
+          "value": "PE-33194-02",
+          "resolved": true
+        },
+        {
+          "field_key": "presentacion",
+          "field_label": "Presentación",
+          "segment": "02",
+          "value": "BULTO",
+          "resolved": true
+        },
+        {
+          "field_key": "peso",
+          "field_label": "Peso [g]",
+          "segment": "002",
+          "value": "250g",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "14",
+          "value": "ROJO",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "referencia": "MASTERBATCH PL",
+        "codigo": "PE-33194-02",
+        "presentacion": "BULTO",
+        "peso": "250g",
+        "color": "ROJO"
+      },
+      "canonical_code": "MPC-CP-MB-1100020200214",
+      "canonical_dynamic_code_data": {
+        "referencia": "MASTERBATCH PL",
+        "codigo": "PE-33194-02",
+        "presentacion": "BULTO",
+        "peso": "250g",
+        "color": "ROJO"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "ed3e1653-64a8-49c9-aa0d-e9c02358ab74",
+      "siigo_product_id": "d0895f32-528e-4661-9ed0-de0f1dfd5026",
+      "current_code": "PTF-RT-PO-1020120011407",
+      "proposed_code": "PTF-RT-PO-1020120011407",
+      "name": "SEPARADOR PUNTO DE PAGO 34,5 * 4,5 cm ROJO HIPS",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-RT-PO",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "15b0ac9d-05e5-4cad-b0aa-0a15bd3b05dc",
+      "subgroup_id": "43d3643f-9518-4087-a22d-6d505bca0cf0",
+      "numeric_tail": "1020120011407",
+      "parsed_fields": [
+        {
+          "field_key": "linea",
+          "field_label": "Línea",
+          "segment": "102",
+          "value": "SEPARADOR",
+          "resolved": true
+        },
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "012",
+          "value": "PUNTO DE PAGO",
+          "resolved": true
+        },
+        {
+          "field_key": "dimensiones",
+          "field_label": "Dimensiones",
+          "segment": "001",
+          "value": "34,5 * 4,5 cm",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "14",
+          "value": "ROJO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "07",
+          "value": "HIPS",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "linea": "SEPARADOR",
+        "tipo": "PUNTO DE PAGO",
+        "dimensiones": "34,5 * 4,5 cm",
+        "color": "ROJO",
+        "material": "HIPS"
+      },
+      "canonical_code": "PTF-RT-PO-1020120011407",
+      "canonical_dynamic_code_data": {
+        "linea": "SEPARADOR",
+        "tipo": "PUNTO DE PAGO",
+        "dimensiones": "34,5 * 4,5 cm",
+        "color": "ROJO",
+        "material": "HIPS"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "bc3da226-b270-4cec-b33a-0294dc8769a9",
+      "siigo_product_id": "f96a815f-663c-42fe-b6d9-d8596952e00f",
+      "current_code": "PTF-FM-EN-1020020161202",
+      "proposed_code": "PTF-FM-EN-1020020161202",
+      "name": "ENVASE CILÍNDRICO B. 20mm agrafe *500mL NATURAL PEAD",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-FM-EN",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "cc0b5f62-0a31-485d-802c-3c0904e3691d",
+      "subgroup_id": "f07cc759-d7dc-4127-bee5-4055de4555aa",
+      "numeric_tail": "1020020161202",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "102",
+          "value": "ENVASE CILINDRICO",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "002",
+          "value": "B. 20mm agrafe",
+          "resolved": true
+        },
+        {
+          "field_key": "capacidad",
+          "field_label": "Capacidad [g o ml]",
+          "segment": "016",
+          "value": "500",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "02",
+          "value": "PEAD",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "ENVASE CILINDRICO",
+        "boca": "B. 20mm agrafe",
+        "capacidad": "500",
+        "color": "NATURAL",
+        "material": "PEAD"
+      },
+      "canonical_code": "PTF-FM-EN-1020020161202",
+      "canonical_dynamic_code_data": {
+        "tipo": "ENVASE CILINDRICO",
+        "boca": "B. 20mm agrafe",
+        "capacidad": "500",
+        "color": "NATURAL",
+        "material": "PEAD"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "c1763bdd-8059-4636-80d9-f3a932df65ea",
+      "siigo_product_id": "8904e17c-cf14-422d-b419-c7150349ca84",
+      "current_code": "INS-EM-AC-1030001000201",
+      "proposed_code": "INS-EM-AC-1030001000201",
+      "name": "CINTA PEGANTE SIN LOGO ROLLO 100 m 48 MICRAS",
+      "status": "REQUIERE_REVISION",
+      "reason": "2 segmento(s) no existen en los catálogos vigentes.",
+      "classification": "INS-EM-AC",
+      "category_id": "c4139dfb-87cd-4010-b6f6-668f244ff742",
+      "group_id": "ee876299-a675-4fe5-a5bb-4a668f8d388e",
+      "subgroup_id": "dae0e01a-0211-4827-882a-b89b359f0fc6",
+      "numeric_tail": "1030001000201",
+      "parsed_fields": [
+        {
+          "field_key": "referencia",
+          "field_label": "Referencia",
+          "segment": "103",
+          "value": "CINTA PEGANTE SIN LOGO",
+          "resolved": true
+        },
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "0001",
+          "value": "ROLLO",
+          "resolved": true
+        },
+        {
+          "field_key": "medida",
+          "field_label": "Medida",
+          "segment": "000",
+          "value": null,
+          "resolved": false
+        },
+        {
+          "field_key": "calibre",
+          "field_label": "Calibre",
+          "segment": "201",
+          "value": null,
+          "resolved": false
+        }
+      ],
+      "unresolved_fields": [
+        {
+          "field_key": "medida",
+          "field_label": "Medida",
+          "segment": "000",
+          "option_catalog_id": null
+        },
+        {
+          "field_key": "calibre",
+          "field_label": "Calibre",
+          "segment": "201",
+          "option_catalog_id": null
+        }
+      ],
+      "dynamic_code_data": null,
+      "canonical_code": "INS-EM-AC-1030001000201",
+      "canonical_dynamic_code_data": null,
+      "canonical_parse_ok": false
+    },
+    {
+      "product_id": "949d85bf-7201-434d-a527-5717884dd63b",
+      "siigo_product_id": "3a5bf77b-f441-4dff-beb4-8e2f3919f67b",
+      "current_code": "INS-EM-BL-1010001000112",
+      "proposed_code": "INS-EM-BL-1010001000112",
+      "name": "BOLSA PLÁSTICA CALIBRE 1 100*120 cm NATURAL",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "INS-EM-BL",
+      "category_id": "c4139dfb-87cd-4010-b6f6-668f244ff742",
+      "group_id": "ee876299-a675-4fe5-a5bb-4a668f8d388e",
+      "subgroup_id": "dd0a6244-7087-4d89-a6f7-7ad45a79ab75",
+      "numeric_tail": "1010001000112",
+      "parsed_fields": [
+        {
+          "field_key": "referencia",
+          "field_label": "Referencia",
+          "segment": "101",
+          "value": "BOLSA PLÁSTICA",
+          "resolved": true
+        },
+        {
+          "field_key": "calibre",
+          "field_label": "Calibre",
+          "segment": "0001",
+          "value": "CALIBRE 1",
+          "resolved": true
+        },
+        {
+          "field_key": "medida",
+          "field_label": "Medida",
+          "segment": "0001",
+          "value": "100*120 cm",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "referencia": "BOLSA PLÁSTICA",
+        "calibre": "CALIBRE 1",
+        "medida": "100*120 cm",
+        "color": "NATURAL"
+      },
+      "canonical_code": "INS-EM-BL-1010001000112",
+      "canonical_dynamic_code_data": {
+        "referencia": "BOLSA PLÁSTICA",
+        "calibre": "CALIBRE 1",
+        "medida": "100*120 cm",
+        "color": "NATURAL"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "7cf27f38-b4d6-4f33-9028-7fc0a538b804",
+      "siigo_product_id": "ed681fd0-f292-4f10-bc83-25d8d7c279e7",
+      "current_code": "INS-EM-CJ-1020001000103",
+      "proposed_code": "INS-EM-CJ-1020001000103",
+      "name": "CAJA SIN LOGO ESTANDAR 60*40*40 cm C 620",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "INS-EM-CJ",
+      "category_id": "c4139dfb-87cd-4010-b6f6-668f244ff742",
+      "group_id": "ee876299-a675-4fe5-a5bb-4a668f8d388e",
+      "subgroup_id": "f6ba302a-a6bc-4970-ac90-59e1e3a9c2fa",
+      "numeric_tail": "1020001000103",
+      "parsed_fields": [
+        {
+          "field_key": "referencia",
+          "field_label": "Referencia",
+          "segment": "102",
+          "value": "CAJA SIN LOGO",
+          "resolved": true
+        },
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "0001",
+          "value": "ESTANDAR",
+          "resolved": true
+        },
+        {
+          "field_key": "medida",
+          "field_label": "Medida",
+          "segment": "0001",
+          "value": "60*40*40 cm",
+          "resolved": true
+        },
+        {
+          "field_key": "calibre",
+          "field_label": "Calibre",
+          "segment": "03",
+          "value": "C 620",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "referencia": "CAJA SIN LOGO",
+        "tipo": "ESTANDAR",
+        "medida": "60*40*40 cm",
+        "calibre": "C 620"
+      },
+      "canonical_code": "INS-EM-CJ-1020001000103",
+      "canonical_dynamic_code_data": {
+        "referencia": "CAJA SIN LOGO",
+        "tipo": "ESTANDAR",
+        "medida": "60*40*40 cm",
+        "calibre": "C 620"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "caee5ea6-c787-40e3-98b1-056c38235303",
+      "siigo_product_id": "d23184cd-e297-4e99-a46d-72d2f1bd6f47",
+      "current_code": "PTF-AL-TP-1001030251404",
+      "proposed_code": "PTF-AL-TP-1001030251404",
+      "name": "TAPA A PRESIÓN CUADRADA LISA B. 120mm ROJO PP",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-AL-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "25f7aaa7-5d8c-4d54-a874-a2edec735819",
+      "subgroup_id": "a8ccf4b5-119d-4d3b-ae7c-4cfb2570d3a0",
+      "numeric_tail": "1001030251404",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1001",
+          "value": "TAPA A PRESIÓN",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "03",
+          "value": "CIRCULAR LISA",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "025",
+          "value": "B. 120mm",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "14",
+          "value": "ROJO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "04",
+          "value": "PP",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "TAPA A PRESIÓN",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 120mm",
+        "color": "ROJO",
+        "material": "PP"
+      },
+      "canonical_code": "PTF-AL-TP-1001030251404",
+      "canonical_dynamic_code_data": {
+        "tipo": "TAPA A PRESIÓN",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 120mm",
+        "color": "ROJO",
+        "material": "PP"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "f616c7db-b70e-4ca7-ac2e-c759a1f6372e",
+      "siigo_product_id": "4d1f086f-486b-4cb9-9110-49bbdd913b1f",
+      "current_code": "PTF-ES-TP-1001020020804",
+      "proposed_code": "PTF-ES-TP-1001020020804",
+      "name": "TAPÓN A PRESIÓN ESTRIADO B. 3/4 GRIS PP",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-ES-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "7f805e1a-ff9a-49da-a02b-57f812ba5ffa",
+      "subgroup_id": "da0b55e9-731a-4303-bc6c-63ae9ed897cf",
+      "numeric_tail": "1001020020804",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1001",
+          "value": "TAPÓN A PRESIÓN",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "02",
+          "value": "ESTRIADO",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "002",
+          "value": "B. 3/4",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "08",
+          "value": "GRIS",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "04",
+          "value": "PP",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "TAPÓN A PRESIÓN",
+        "acabado": "ESTRIADO",
+        "boca": "B. 3/4",
+        "color": "GRIS",
+        "material": "PP"
+      },
+      "canonical_code": "PTF-ES-TP-1001020020804",
+      "canonical_dynamic_code_data": {
+        "tipo": "TAPÓN A PRESIÓN",
+        "acabado": "ESTRIADO",
+        "boca": "B. 3/4",
+        "color": "GRIS",
+        "material": "PP"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "fc60ef28-4d54-4c74-8532-224dbd3f6236",
+      "siigo_product_id": "8a677ef7-7458-4e5d-863b-94d38473fc02",
+      "current_code": "PTF-FM-TP-1005020050204",
+      "proposed_code": "PTF-FM-TP-1005020050204",
+      "name": "TAPA ROSCADA ESTRIADA B26mm AZUL PP",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-FM-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "cc0b5f62-0a31-485d-802c-3c0904e3691d",
+      "subgroup_id": "621142f5-4f51-4ed6-88e6-4e44dc254c65",
+      "numeric_tail": "1005020050204",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1005",
+          "value": "TAPA ROSCADA",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "02",
+          "value": "ESTRIADA",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "005",
+          "value": "B. 26 mm",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "02",
+          "value": "AZUL",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "04",
+          "value": "PP",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "TAPA ROSCADA",
+        "acabado": "ESTRIADA",
+        "boca": "B. 26 mm",
+        "color": "AZUL",
+        "material": "PP"
+      },
+      "canonical_code": "PTF-FM-TP-1005020050204",
+      "canonical_dynamic_code_data": {
+        "tipo": "TAPA ROSCADA",
+        "acabado": "ESTRIADA",
+        "boca": "B. 26 mm",
+        "color": "AZUL",
+        "material": "PP"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "f9fc3d67-7285-4d3b-a1a0-bdf9f47e849a",
+      "siigo_product_id": "154ba7e0-d2fd-4f9a-8765-6271d1054ddb",
+      "current_code": "ALQ-MC-PF-1010400100101",
+      "proposed_code": "ALQ-MC-PF-1010400100101",
+      "name": "ALQUILER PROBADOR DE FUGAS NEUMÁTICA MT BOQUILLA 60MM 1TON",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "ALQ-MC-PF",
+      "category_id": "5d1a9bcf-e9f2-4591-b577-1c831e54d31f",
+      "group_id": "37acabb4-52e1-449d-985d-a3821e9a8a18",
+      "subgroup_id": "a0328bc7-a721-4e05-a205-5a845f730c5d",
+      "numeric_tail": "1010400100101",
+      "parsed_fields": [
+        {
+          "field_key": "maquina",
+          "field_label": "Máquina",
+          "segment": "101",
+          "value": "PROBADOR DE FUGAS",
+          "resolved": true
+        },
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "04",
+          "value": "NEUMÁTICA",
+          "resolved": true
+        },
+        {
+          "field_key": "marca",
+          "field_label": "Marca",
+          "segment": "001",
+          "value": "MT",
+          "resolved": true
+        },
+        {
+          "field_key": "referencia",
+          "field_label": "Referencia",
+          "segment": "001",
+          "value": "BOQUILLA 60MM",
+          "resolved": true
+        },
+        {
+          "field_key": "capacidad",
+          "field_label": "Capacidad [t]",
+          "segment": "01",
+          "value": "1",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "maquina": "PROBADOR DE FUGAS",
+        "tipo": "NEUMÁTICA",
+        "marca": "MT",
+        "referencia": "BOQUILLA 60MM",
+        "capacidad": "1"
+      },
+      "canonical_code": "ALQ-MC-PF-1010400100101",
+      "canonical_dynamic_code_data": {
+        "maquina": "PROBADOR DE FUGAS",
+        "tipo": "NEUMÁTICA",
+        "marca": "MT",
+        "referencia": "BOQUILLA 60MM",
+        "capacidad": "1"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "ca9d2651-4642-4b25-83f9-a035179d2563",
+      "current_code": "305-0002-0200-03",
+      "name": "PVC 110ZR BLANCO",
+      "status": "REQUIERE_REVISION",
+      "reason": "No se reconoce una clasificación activa por el prefijo del código.",
+      "classification": null,
+      "proposed_code": null,
+      "dynamic_code_data": null,
+      "canonical_code": "305-0002-0200-03",
+      "canonical_dynamic_code_data": null,
+      "canonical_parse_ok": false
+    },
+    {
+      "product_id": "c918e5de-71df-407c-baa9-6ef6d76f1fd1",
+      "current_code": "305-0002-0200-02",
+      "name": "PVC 110ZR CRISTAL",
+      "status": "REQUIERE_REVISION",
+      "reason": "No se reconoce una clasificación activa por el prefijo del código.",
+      "classification": null,
+      "proposed_code": null,
+      "dynamic_code_data": null,
+      "canonical_code": "305-0002-0200-02",
+      "canonical_dynamic_code_data": null,
+      "canonical_parse_ok": false
+    },
+    {
+      "product_id": "78f15a44-6be1-40bc-bfcb-ac2f5952ddf1",
+      "siigo_product_id": "4575ac00-5272-4f08-ab3f-3f8caa3585b4",
+      "current_code": "PTC-FM-EN-1080030130503",
+      "proposed_code": "PTC-FM-EN-1080030130503",
+      "name": "ENVASE ESPECIAL ZEP B24mm *180mL BLANCO PET",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTC-FM-EN",
+      "category_id": "f7e7fb82-44a3-43c1-8783-e09359c36e69",
+      "group_id": "634c5a9d-76ba-430b-a388-64a03c31e5a1",
+      "subgroup_id": "c81f35fc-ebc1-41a2-875b-9cfb3c9c7761",
+      "numeric_tail": "1080030130503",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "108",
+          "value": "ENVASE ESPECIAL ZEP",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "003",
+          "value": "B. 24mm",
+          "resolved": true
+        },
+        {
+          "field_key": "capacidad",
+          "field_label": "Capacidad [g o ml]",
+          "segment": "013",
+          "value": "180",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "05",
+          "value": "BLANCO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "03",
+          "value": "PET",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "ENVASE ESPECIAL ZEP",
+        "boca": "B. 24mm",
+        "capacidad": "180",
+        "color": "BLANCO",
+        "material": "PET"
+      },
+      "canonical_code": "PTC-FM-EN-1080030130503",
+      "canonical_dynamic_code_data": {
+        "tipo": "ENVASE ESPECIAL ZEP",
+        "boca": "B. 24mm",
+        "capacidad": "180",
+        "color": "BLANCO",
+        "material": "PET"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "a0c73be0-2f0c-4272-a07b-480f32c92ae7",
+      "current_code": "110111",
+      "name": "ARRIENDO PROBADOR DE FUGAS",
+      "status": "REQUIERE_REVISION",
+      "reason": "No se reconoce una clasificación activa por el prefijo del código.",
+      "classification": null,
+      "proposed_code": null,
+      "dynamic_code_data": null,
+      "canonical_code": "110111",
+      "canonical_dynamic_code_data": null,
+      "canonical_parse_ok": false
+    },
+    {
+      "product_id": "c65f43f3-88c8-4152-bb8a-68ac61b25d6a",
+      "current_code": "106-0001-0102-05",
+      "name": "CADENA PLÁSTICA PLUS 25 MM X 28 MM PP AZUL",
+      "status": "REQUIERE_REVISION",
+      "reason": "No se reconoce una clasificación activa por el prefijo del código.",
+      "classification": null,
+      "proposed_code": null,
+      "dynamic_code_data": null,
+      "canonical_code": "106-0001-0102-05",
+      "canonical_dynamic_code_data": null,
+      "canonical_parse_ok": false
+    },
+    {
+      "product_id": "7143b727-81e6-45d4-96e5-cfadb0c72401",
+      "current_code": "109-0300-1002-03",
+      "name": "TAPÓN BOCA 38 mm TRANSPARENTE PEBD",
+      "status": "REQUIERE_REVISION",
+      "reason": "No se reconoce una clasificación activa por el prefijo del código.",
+      "classification": null,
+      "proposed_code": null,
+      "dynamic_code_data": null,
+      "canonical_code": "109-0300-1002-03",
+      "canonical_dynamic_code_data": null,
+      "canonical_parse_ok": false
+    },
+    {
+      "product_id": "dca45d7f-f314-46d7-85f6-5aeee73ef057",
+      "current_code": "PRODUCTOGENERICONUBE",
+      "name": "Producto genérico del sistema Siigo Nube (POS - WhatsApp)",
+      "status": "REQUIERE_REVISION",
+      "reason": "No se reconoce una clasificación activa por el prefijo del código.",
+      "classification": null,
+      "proposed_code": null,
+      "dynamic_code_data": null,
+      "canonical_code": "PRODUCTOGENERICONUBE",
+      "canonical_dynamic_code_data": null,
+      "canonical_parse_ok": false
+    },
+    {
+      "product_id": "da01e52e-1af0-484f-bdb2-34503e5a7572",
+      "siigo_product_id": "77682aba-7c3f-4653-9944-a048df20437c",
+      "current_code": "MPP-OR-PD-1200020102512",
+      "proposed_code": "MPP-OR-PD-1200020102512",
+      "name": "PELBD BRASKEM IF 33 BULTO 25Kg NATURAL",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "MPP-OR-PD",
+      "category_id": "7935634a-baf0-43fa-913b-7ef05d1c3853",
+      "group_id": "8bee6e61-754a-4ef0-a098-eb86af69c4d3",
+      "subgroup_id": "93f86ac5-c943-4164-a698-58075cce1ea8",
+      "numeric_tail": "1200020102512",
+      "parsed_fields": [
+        {
+          "field_key": "referencia",
+          "field_label": "Referencia",
+          "segment": "12",
+          "value": "PELBD",
+          "resolved": true
+        },
+        {
+          "field_key": "codigo",
+          "field_label": "Código",
+          "segment": "0002",
+          "value": "BRASKEM IF 33",
+          "resolved": true
+        },
+        {
+          "field_key": "presentacion",
+          "field_label": "Presentación",
+          "segment": "01",
+          "value": "BULTO",
+          "resolved": true
+        },
+        {
+          "field_key": "peso",
+          "field_label": "Peso [kg]",
+          "segment": "025",
+          "value": "25 KG",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "referencia": "PELBD",
+        "codigo": "BRASKEM IF 33",
+        "presentacion": "BULTO",
+        "peso": "25 KG",
+        "color": "NATURAL"
+      },
+      "canonical_code": "MPP-OR-PD-1200020102512",
+      "canonical_dynamic_code_data": {
+        "referencia": "PELBD",
+        "codigo": "BRASKEM IF 33",
+        "presentacion": "BULTO",
+        "peso": "25 KG",
+        "color": "NATURAL"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "01c01057-19c6-42e7-bb3f-c10cb9f87f0b",
+      "siigo_product_id": "0f5b691c-2020-4d63-a7e5-cb29b327fe91",
+      "current_code": "PTF-AL-TP-1006030291007",
+      "proposed_code": "PTF-AL-TP-1006030291007",
+      "name": "SOBRE TAPA CIRCULAR LISA B. 502-129 EM MORADO PEBD",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-AL-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "25f7aaa7-5d8c-4d54-a874-a2edec735819",
+      "subgroup_id": "a8ccf4b5-119d-4d3b-ae7c-4cfb2570d3a0",
+      "numeric_tail": "1006030291007",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "value": "SOBRE TAPA",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "03",
+          "value": "CIRCULAR LISA",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "029",
+          "value": "B. 502-129 EM",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "10",
+          "value": "MORADO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "07",
+          "value": "PEBD",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "SOBRE TAPA",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 502-129 EM",
+        "color": "MORADO",
+        "material": "PEBD"
+      },
+      "canonical_code": "PTF-AL-TP-1006030291007",
+      "canonical_dynamic_code_data": {
+        "tipo": "SOBRE TAPA",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 502-129 EM",
+        "color": "MORADO",
+        "material": "PEBD"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "06d60706-1791-4cfd-bca7-3886d28470be",
+      "siigo_product_id": "70dd6d2a-5aff-4e56-8ad6-1478272707b2",
+      "current_code": "PTF-AL-TP-1006030310107",
+      "proposed_code": "PTF-AL-TP-1006030310107",
+      "name": "SOBRE TAPA CIRCULAR LISA B. 211 EC AMARILLO PEBD",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-AL-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "25f7aaa7-5d8c-4d54-a874-a2edec735819",
+      "subgroup_id": "a8ccf4b5-119d-4d3b-ae7c-4cfb2570d3a0",
+      "numeric_tail": "1006030310107",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "value": "SOBRE TAPA",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "03",
+          "value": "CIRCULAR LISA",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "031",
+          "value": "B. 211 EC",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "01",
+          "value": "AMARILLO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "07",
+          "value": "PEBD",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "SOBRE TAPA",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 211 EC",
+        "color": "AMARILLO",
+        "material": "PEBD"
+      },
+      "canonical_code": "PTF-AL-TP-1006030310107",
+      "canonical_dynamic_code_data": {
+        "tipo": "SOBRE TAPA",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 211 EC",
+        "color": "AMARILLO",
+        "material": "PEBD"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "eda190c6-983d-4272-a55c-d2e9dad1ee1a",
+      "siigo_product_id": "5054915c-96da-4f15-b7d0-24d61d3982a6",
+      "current_code": "PTF-AL-TP-1006030300107",
+      "proposed_code": "PTF-AL-TP-1006030300107",
+      "name": "SOBRE TAPA CIRCULAR LISA B. 307 EC AMARILLO PEBD",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-AL-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "25f7aaa7-5d8c-4d54-a874-a2edec735819",
+      "subgroup_id": "a8ccf4b5-119d-4d3b-ae7c-4cfb2570d3a0",
+      "numeric_tail": "1006030300107",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "value": "SOBRE TAPA",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "03",
+          "value": "CIRCULAR LISA",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "030",
+          "value": "B. 307 EC",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "01",
+          "value": "AMARILLO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "07",
+          "value": "PEBD",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "SOBRE TAPA",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 307 EC",
+        "color": "AMARILLO",
+        "material": "PEBD"
+      },
+      "canonical_code": "PTF-AL-TP-1006030300107",
+      "canonical_dynamic_code_data": {
+        "tipo": "SOBRE TAPA",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 307 EC",
+        "color": "AMARILLO",
+        "material": "PEBD"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "cb5360c4-86ac-42ac-a814-56e09f1f0837",
+      "siigo_product_id": "cd694e52-74f6-407d-84e5-23f35836389c",
+      "current_code": "PTF-AL-TP-1006030271507",
+      "proposed_code": "PTF-AL-TP-1006030271507",
+      "name": "SOBRE TAPA CIRCULAR LISA B. 401-101 EM ROSADO PEBD",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-AL-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "25f7aaa7-5d8c-4d54-a874-a2edec735819",
+      "subgroup_id": "a8ccf4b5-119d-4d3b-ae7c-4cfb2570d3a0",
+      "numeric_tail": "1006030271507",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "value": "SOBRE TAPA",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "03",
+          "value": "CIRCULAR LISA",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "027",
+          "value": "B. 401-101 EM",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "15",
+          "value": "ROSADO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "07",
+          "value": "PEBD",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "SOBRE TAPA",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 401-101 EM",
+        "color": "ROSADO",
+        "material": "PEBD"
+      },
+      "canonical_code": "PTF-AL-TP-1006030271507",
+      "canonical_dynamic_code_data": {
+        "tipo": "SOBRE TAPA",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 401-101 EM",
+        "color": "ROSADO",
+        "material": "PEBD"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "3c66ce03-4201-420f-8dd9-25cbbb92e8f5",
+      "siigo_product_id": "d7e76d7e-e306-4d16-8fd7-0ca69321f928",
+      "current_code": "PTF-AL-TP-1006030290507",
+      "proposed_code": "PTF-AL-TP-1006030290507",
+      "name": "SOBRE TAPA CIRCULAR LISA B. 502-129 EM BLANCO PEBD",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-AL-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "25f7aaa7-5d8c-4d54-a874-a2edec735819",
+      "subgroup_id": "a8ccf4b5-119d-4d3b-ae7c-4cfb2570d3a0",
+      "numeric_tail": "1006030290507",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "value": "SOBRE TAPA",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "03",
+          "value": "CIRCULAR LISA",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "029",
+          "value": "B. 502-129 EM",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "05",
+          "value": "BLANCO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "07",
+          "value": "PEBD",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "SOBRE TAPA",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 502-129 EM",
+        "color": "BLANCO",
+        "material": "PEBD"
+      },
+      "canonical_code": "PTF-AL-TP-1006030290507",
+      "canonical_dynamic_code_data": {
+        "tipo": "SOBRE TAPA",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 502-129 EM",
+        "color": "BLANCO",
+        "material": "PEBD"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "75b99a00-800c-42f7-bbac-839ab06c57f3",
+      "siigo_product_id": "44ab1f47-cb32-415f-863f-ee15d3543baa",
+      "current_code": "PTF-AL-TP-1006030280107",
+      "proposed_code": "PTF-AL-TP-1006030280107",
+      "name": "SOBRE TAPA CIRCULAR LISA B. 401-103 EC AMARILLO PEBD",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-AL-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "25f7aaa7-5d8c-4d54-a874-a2edec735819",
+      "subgroup_id": "a8ccf4b5-119d-4d3b-ae7c-4cfb2570d3a0",
+      "numeric_tail": "1006030280107",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "value": "SOBRE TAPA",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "03",
+          "value": "CIRCULAR LISA",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "028",
+          "value": "B. 401-103 EC",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "01",
+          "value": "AMARILLO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "07",
+          "value": "PEBD",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "SOBRE TAPA",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 401-103 EC",
+        "color": "AMARILLO",
+        "material": "PEBD"
+      },
+      "canonical_code": "PTF-AL-TP-1006030280107",
+      "canonical_dynamic_code_data": {
+        "tipo": "SOBRE TAPA",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 401-103 EC",
+        "color": "AMARILLO",
+        "material": "PEBD"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "f907c335-1dd9-46cd-a66a-f5194fcd2d70",
+      "siigo_product_id": "6e8dbefa-1838-4198-8411-ad54cc4e6a80",
+      "current_code": "PTF-AL-TP-1006030270507",
+      "proposed_code": "PTF-AL-TP-1006030270507",
+      "name": "SOBRE TAPA CIRCULAR LISA B. 401-101 EM BLANCO PEBD",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-AL-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "25f7aaa7-5d8c-4d54-a874-a2edec735819",
+      "subgroup_id": "a8ccf4b5-119d-4d3b-ae7c-4cfb2570d3a0",
+      "numeric_tail": "1006030270507",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "value": "SOBRE TAPA",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "03",
+          "value": "CIRCULAR LISA",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "027",
+          "value": "B. 401-101 EM",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "05",
+          "value": "BLANCO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "07",
+          "value": "PEBD",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "SOBRE TAPA",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 401-101 EM",
+        "color": "BLANCO",
+        "material": "PEBD"
+      },
+      "canonical_code": "PTF-AL-TP-1006030270507",
+      "canonical_dynamic_code_data": {
+        "tipo": "SOBRE TAPA",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 401-101 EM",
+        "color": "BLANCO",
+        "material": "PEBD"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "115bfff5-2147-4aac-bc51-a4bd7c2d8ec6",
+      "siigo_product_id": "fe34aa20-cf61-4a66-8267-851f6831d912",
+      "current_code": "PTF-AL-TP-1007030171707",
+      "proposed_code": "PTF-AL-TP-1007030171707",
+      "name": "TAPÓN A PRESIÓN CIRCULAR LISA B. 53 mm VERDE PEBD",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-AL-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "25f7aaa7-5d8c-4d54-a874-a2edec735819",
+      "subgroup_id": "a8ccf4b5-119d-4d3b-ae7c-4cfb2570d3a0",
+      "numeric_tail": "1007030171707",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1007",
+          "value": "TAPÓN A PRESIÓN",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "03",
+          "value": "CIRCULAR LISA",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "017",
+          "value": "B. 53 mm",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "17",
+          "value": "VERDE",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "07",
+          "value": "PEBD",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "TAPÓN A PRESIÓN",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 53 mm",
+        "color": "VERDE",
+        "material": "PEBD"
+      },
+      "canonical_code": "PTF-AL-TP-1007030171707",
+      "canonical_dynamic_code_data": {
+        "tipo": "TAPÓN A PRESIÓN",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 53 mm",
+        "color": "VERDE",
+        "material": "PEBD"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "cae95b49-8746-46d4-a18f-d50fdf87cc27",
+      "siigo_product_id": "3ef9b3e7-5285-45be-9098-521b6dfd46e9",
+      "current_code": "PTF-FM-TP-1005010270504",
+      "proposed_code": "PTF-FM-TP-1005010270504",
+      "name": "TAPA ROSCADA LISA B. 59 mm BLANCO PP",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-FM-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "cc0b5f62-0a31-485d-802c-3c0904e3691d",
+      "subgroup_id": "621142f5-4f51-4ed6-88e6-4e44dc254c65",
+      "numeric_tail": "1005010270504",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1005",
+          "value": "TAPA ROSCADA",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "01",
+          "value": "LISA",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "027",
+          "value": "B. 59 mm",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "05",
+          "value": "BLANCO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "04",
+          "value": "PP",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "TAPA ROSCADA",
+        "acabado": "LISA",
+        "boca": "B. 59 mm",
+        "color": "BLANCO",
+        "material": "PP"
+      },
+      "canonical_code": "PTF-FM-TP-1005010270504",
+      "canonical_dynamic_code_data": {
+        "tipo": "TAPA ROSCADA",
+        "acabado": "LISA",
+        "boca": "B. 59 mm",
+        "color": "BLANCO",
+        "material": "PP"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "d8d0e72f-ed38-471d-a200-d8a6d5a1b51e",
+      "siigo_product_id": "137c1ccc-ac5f-4364-8b0e-e8329577135e",
+      "current_code": "PTF-AL-TP-1006030281207",
+      "proposed_code": "PTF-AL-TP-1006030281207",
+      "name": "SOBRE TAPA CIRCULAR LISA B. 401-103 EC NATURAL PEBD",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-AL-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "25f7aaa7-5d8c-4d54-a874-a2edec735819",
+      "subgroup_id": "a8ccf4b5-119d-4d3b-ae7c-4cfb2570d3a0",
+      "numeric_tail": "1006030281207",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "value": "SOBRE TAPA",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "03",
+          "value": "CIRCULAR LISA",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "028",
+          "value": "B. 401-103 EC",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "07",
+          "value": "PEBD",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "SOBRE TAPA",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 401-103 EC",
+        "color": "NATURAL",
+        "material": "PEBD"
+      },
+      "canonical_code": "PTF-AL-TP-1006030281207",
+      "canonical_dynamic_code_data": {
+        "tipo": "SOBRE TAPA",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 401-103 EC",
+        "color": "NATURAL",
+        "material": "PEBD"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "b8c29a56-7d4d-4c26-9f73-2e9eacb32087",
+      "siigo_product_id": "2794d82d-ebc1-4d6f-bf84-6ba204e980fa",
+      "current_code": "PTF-AL-TP-1001090261404",
+      "proposed_code": "PTF-AL-TP-1001090261404",
+      "name": "TAPA A PRESIÓN RECTANGULAR LISA 3 DIVISIONES B. 190mm x 230mm ROJO PP",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-AL-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "25f7aaa7-5d8c-4d54-a874-a2edec735819",
+      "subgroup_id": "a8ccf4b5-119d-4d3b-ae7c-4cfb2570d3a0",
+      "numeric_tail": "1001090261404",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1001",
+          "value": "TAPA A PRESIÓN",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "09",
+          "value": "RECTANGULAR LISA 3 DIVISIONES",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "026",
+          "value": "B. 190 mm x 230 mm",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "14",
+          "value": "ROJO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "04",
+          "value": "PP",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "TAPA A PRESIÓN",
+        "acabado": "RECTANGULAR LISA 3 DIVISIONES",
+        "boca": "B. 190 mm x 230 mm",
+        "color": "ROJO",
+        "material": "PP"
+      },
+      "canonical_code": "PTF-AL-TP-1001090261404",
+      "canonical_dynamic_code_data": {
+        "tipo": "TAPA A PRESIÓN",
+        "acabado": "RECTANGULAR LISA 3 DIVISIONES",
+        "boca": "B. 190 mm x 230 mm",
+        "color": "ROJO",
+        "material": "PP"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "0d3fffb4-39e2-42cb-93d4-c1a2063dbb13",
+      "siigo_product_id": "bf298384-8321-412c-a671-d62db9b5820f",
+      "current_code": "PTF-FM-EN-1020030150502",
+      "proposed_code": "PTF-FM-EN-1020030150502",
+      "name": "ENVASE CILÍNDRICO B. 24mm *250mL BLANCO PEAD",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-FM-EN",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "cc0b5f62-0a31-485d-802c-3c0904e3691d",
+      "subgroup_id": "f07cc759-d7dc-4127-bee5-4055de4555aa",
+      "numeric_tail": "1020030150502",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "102",
+          "value": "ENVASE CILINDRICO",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "003",
+          "value": "B. 24mm",
+          "resolved": true
+        },
+        {
+          "field_key": "capacidad",
+          "field_label": "Capacidad [g o ml]",
+          "segment": "015",
+          "value": "250",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "05",
+          "value": "BLANCO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "02",
+          "value": "PEAD",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "ENVASE CILINDRICO",
+        "boca": "B. 24mm",
+        "capacidad": "250",
+        "color": "BLANCO",
+        "material": "PEAD"
+      },
+      "canonical_code": "PTF-FM-EN-1020030150502",
+      "canonical_dynamic_code_data": {
+        "tipo": "ENVASE CILINDRICO",
+        "boca": "B. 24mm",
+        "capacidad": "250",
+        "color": "BLANCO",
+        "material": "PEAD"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "27736d09-b87d-445e-b88f-980f99d4a174",
+      "siigo_product_id": "6af9ad0d-5081-4500-bbb6-6690ca9c4ce0",
+      "current_code": "PTF-FM-TP-1005020250204",
+      "proposed_code": "PTF-FM-TP-1005020250204",
+      "name": "TAPA ROSCADA ESTRIADA B. 22mm AZUL PP",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-FM-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "cc0b5f62-0a31-485d-802c-3c0904e3691d",
+      "subgroup_id": "621142f5-4f51-4ed6-88e6-4e44dc254c65",
+      "numeric_tail": "1005020250204",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1005",
+          "value": "TAPA ROSCADA",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "02",
+          "value": "ESTRIADA",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "025",
+          "value": "B. 22 mm",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "02",
+          "value": "AZUL",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "04",
+          "value": "PP",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "TAPA ROSCADA",
+        "acabado": "ESTRIADA",
+        "boca": "B. 22 mm",
+        "color": "AZUL",
+        "material": "PP"
+      },
+      "canonical_code": "PTF-FM-TP-1005020250204",
+      "canonical_dynamic_code_data": {
+        "tipo": "TAPA ROSCADA",
+        "acabado": "ESTRIADA",
+        "boca": "B. 22 mm",
+        "color": "AZUL",
+        "material": "PP"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "bedaab33-e0df-4952-9433-625ddc4a4dc1",
+      "siigo_product_id": "37ad7c26-31ca-4664-a671-8d1abf9dda32",
+      "current_code": "PTF-AL-TP-1006030271207",
+      "proposed_code": "PTF-AL-TP-1006030271207",
+      "name": "SOBRE TAPA CIRCULAR LISA B. 401-101 EM NATURAL PEBD",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-AL-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "25f7aaa7-5d8c-4d54-a874-a2edec735819",
+      "subgroup_id": "a8ccf4b5-119d-4d3b-ae7c-4cfb2570d3a0",
+      "numeric_tail": "1006030271207",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "value": "SOBRE TAPA",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "03",
+          "value": "CIRCULAR LISA",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "027",
+          "value": "B. 401-101 EM",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "07",
+          "value": "PEBD",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "SOBRE TAPA",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 401-101 EM",
+        "color": "NATURAL",
+        "material": "PEBD"
+      },
+      "canonical_code": "PTF-AL-TP-1006030271207",
+      "canonical_dynamic_code_data": {
+        "tipo": "SOBRE TAPA",
+        "acabado": "CIRCULAR LISA",
+        "boca": "B. 401-101 EM",
+        "color": "NATURAL",
+        "material": "PEBD"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "ea84d297-6338-4a0e-9c89-bbbcc4c9c6e8",
+      "siigo_product_id": "1d6cae91-751e-4ef2-be08-2d5eaac6ccee",
+      "current_code": "PTF-AL-CH-1001010091004",
+      "proposed_code": "PTF-AL-CH-1001010091004",
+      "name": "CUCHARA DOSIFICADORA CIRCULAR 29,6 cc MORADO PP",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-AL-CH",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "25f7aaa7-5d8c-4d54-a874-a2edec735819",
+      "subgroup_id": "038c9132-5aff-4538-b1ac-dddb79c319d7",
+      "numeric_tail": "1001010091004",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo de cuchara",
+          "segment": "1001",
+          "value": "CUCHARA DOSIFICADORA",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "01",
+          "value": "CIRCULAR",
+          "resolved": true
+        },
+        {
+          "field_key": "capacidad",
+          "field_label": "Capacidad [cc]",
+          "segment": "009",
+          "value": "29,6 cc",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "10",
+          "value": "MORADO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "04",
+          "value": "PP",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "CUCHARA DOSIFICADORA",
+        "acabado": "CIRCULAR",
+        "capacidad": "29,6 cc",
+        "color": "MORADO",
+        "material": "PP"
+      },
+      "canonical_code": "PTF-AL-CH-1001010091004",
+      "canonical_dynamic_code_data": {
+        "tipo": "CUCHARA DOSIFICADORA",
+        "acabado": "CIRCULAR",
+        "capacidad": "29,6 cc",
+        "color": "MORADO",
+        "material": "PP"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "eb88a0ce-04a6-4e41-82df-3e33b5521e28",
+      "siigo_product_id": "1cbdd453-0be8-4cb8-a6ae-c8fc861091de",
+      "current_code": "PTF-ES-TP-1001020010804",
+      "proposed_code": "PTF-ES-TP-1001020010804",
+      "name": "TAPÓN A PRESIÓN ESTRIADO B. 1 GRIS PP",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-ES-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "7f805e1a-ff9a-49da-a02b-57f812ba5ffa",
+      "subgroup_id": "da0b55e9-731a-4303-bc6c-63ae9ed897cf",
+      "numeric_tail": "1001020010804",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1001",
+          "value": "TAPÓN A PRESIÓN",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "02",
+          "value": "ESTRIADO",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "001",
+          "value": "B. 1",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "08",
+          "value": "GRIS",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "04",
+          "value": "PP",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "TAPÓN A PRESIÓN",
+        "acabado": "ESTRIADO",
+        "boca": "B. 1",
+        "color": "GRIS",
+        "material": "PP"
+      },
+      "canonical_code": "PTF-ES-TP-1001020010804",
+      "canonical_dynamic_code_data": {
+        "tipo": "TAPÓN A PRESIÓN",
+        "acabado": "ESTRIADO",
+        "boca": "B. 1",
+        "color": "GRIS",
+        "material": "PP"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "98078b4c-9bce-4318-9bc1-4017662dae95",
+      "siigo_product_id": "bd875a90-e4db-462d-b94b-a677921d73b7",
+      "current_code": "PTF-ES-TP-1002030031201",
+      "proposed_code": "PTF-ES-TP-1002030031201",
+      "name": "TAPA MASTER ESTRELLA B185 mm NATURAL ABS",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-ES-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "7f805e1a-ff9a-49da-a02b-57f812ba5ffa",
+      "subgroup_id": "da0b55e9-731a-4303-bc6c-63ae9ed897cf",
+      "numeric_tail": "1002030031201",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1002",
+          "value": "TAPA MASTER",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "03",
+          "value": "ESTRELLA",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "003",
+          "value": "B. 185 mm",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "01",
+          "value": "ABS",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "TAPA MASTER",
+        "acabado": "ESTRELLA",
+        "boca": "B. 185 mm",
+        "color": "NATURAL",
+        "material": "ABS"
+      },
+      "canonical_code": "PTF-ES-TP-1002030031201",
+      "canonical_dynamic_code_data": {
+        "tipo": "TAPA MASTER",
+        "acabado": "ESTRELLA",
+        "boca": "B. 185 mm",
+        "color": "NATURAL",
+        "material": "ABS"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "7e782d6a-3891-4371-a956-ab396d85e3e9",
+      "siigo_product_id": "56f2b598-4d77-47ca-b383-90703b081335",
+      "current_code": "PTF-AL-TP-1001090261704",
+      "proposed_code": "PTF-AL-TP-1001090261704",
+      "name": "TAPA A PRESIÓN RECTANGULAR LISA 3 DIVISIONES B. 190mm x 230mm VERDE PP",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-AL-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "25f7aaa7-5d8c-4d54-a874-a2edec735819",
+      "subgroup_id": "a8ccf4b5-119d-4d3b-ae7c-4cfb2570d3a0",
+      "numeric_tail": "1001090261704",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1001",
+          "value": "TAPA A PRESIÓN",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "09",
+          "value": "RECTANGULAR LISA 3 DIVISIONES",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "026",
+          "value": "B. 190 mm x 230 mm",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "17",
+          "value": "VERDE",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "04",
+          "value": "PP",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "TAPA A PRESIÓN",
+        "acabado": "RECTANGULAR LISA 3 DIVISIONES",
+        "boca": "B. 190 mm x 230 mm",
+        "color": "VERDE",
+        "material": "PP"
+      },
+      "canonical_code": "PTF-AL-TP-1001090261704",
+      "canonical_dynamic_code_data": {
+        "tipo": "TAPA A PRESIÓN",
+        "acabado": "RECTANGULAR LISA 3 DIVISIONES",
+        "boca": "B. 190 mm x 230 mm",
+        "color": "VERDE",
+        "material": "PP"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "c0f05afe-0964-455d-96cb-7167148f7075",
+      "siigo_product_id": "f10de39b-19d7-4219-af81-bb1f7f85d048",
+      "current_code": "PTC-RT-PO-1010020021203",
+      "proposed_code": "PTC-RT-PO-1010020021203",
+      "name": "BOLSILLO 1/4 CARTA VERTICAL COLLARIN C. 510 mm 14x10cm/Pestaña 16,5x4,3cm NATURAL PET",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTC-RT-PO",
+      "category_id": "f7e7fb82-44a3-43c1-8783-e09359c36e69",
+      "group_id": "237b3849-7530-4aeb-b673-8471d5f61433",
+      "subgroup_id": "c8c93d53-58ae-49da-9b17-2b752f98f69e",
+      "numeric_tail": "1010020021203",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo de POP",
+          "segment": "101",
+          "value": "BOLSILLO",
+          "resolved": true
+        },
+        {
+          "field_key": "detalle",
+          "field_label": "Detalle",
+          "segment": "002",
+          "value": "1/4 CARTA VERTICAL COLLARIN C. 510 mm",
+          "resolved": true
+        },
+        {
+          "field_key": "dimension",
+          "field_label": "Dimensión",
+          "segment": "002",
+          "value": "14x10 cm / Pestaña 16,5x4,3 cm",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "03",
+          "value": "PET",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "BOLSILLO",
+        "detalle": "1/4 CARTA VERTICAL COLLARIN C. 510 mm",
+        "dimension": "14x10 cm / Pestaña 16,5x4,3 cm",
+        "color": "NATURAL",
+        "material": "PET"
+      },
+      "canonical_code": "PTC-RT-PO-1010020021203",
+      "canonical_dynamic_code_data": {
+        "tipo": "BOLSILLO",
+        "detalle": "1/4 CARTA VERTICAL COLLARIN C. 510 mm",
+        "dimension": "14x10 cm / Pestaña 16,5x4,3 cm",
+        "color": "NATURAL",
+        "material": "PET"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "f2057858-fa9b-4362-a1c0-798d71c8245d",
+      "siigo_product_id": "0586f559-ba38-41e7-81a3-e8893782cff4",
+      "current_code": "PTF-ES-EN-1010010161202",
+      "proposed_code": "PTF-ES-EN-1010010161202",
+      "name": "ENVASE CRISTO B.20mm *446 mL NATURAL PEAD",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-ES-EN",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "7f805e1a-ff9a-49da-a02b-57f812ba5ffa",
+      "subgroup_id": "e7095bcf-bcf8-441b-b3ab-fe7ab6086eaa",
+      "numeric_tail": "1010010161202",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo de envase",
+          "segment": "101",
+          "value": "CRISTO",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "001",
+          "value": "B. 20mm",
+          "resolved": true
+        },
+        {
+          "field_key": "capacidad",
+          "field_label": "Capacidad [mL]",
+          "segment": "016",
+          "value": "446 mL",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "02",
+          "value": "PEAD",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "CRISTO",
+        "boca": "B. 20mm",
+        "capacidad": "446 mL",
+        "color": "NATURAL",
+        "material": "PEAD"
+      },
+      "canonical_code": "PTF-ES-EN-1010010161202",
+      "canonical_dynamic_code_data": {
+        "tipo": "CRISTO",
+        "boca": "B. 20mm",
+        "capacidad": "446 mL",
+        "color": "NATURAL",
+        "material": "PEAD"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "17b1470b-3648-4dae-acf6-b1b41858ede0",
+      "siigo_product_id": "d1b028b3-6357-447a-b43c-677a512844a4",
+      "current_code": "MPP-OR-PE-1000040102512",
+      "proposed_code": "MPP-OR-PE-1000040102512",
+      "name": "PEAD DOW DMDA 8907 NT7 BULTO 25Kg NATURAL",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "MPP-OR-PE",
+      "category_id": "7935634a-baf0-43fa-913b-7ef05d1c3853",
+      "group_id": "8bee6e61-754a-4ef0-a098-eb86af69c4d3",
+      "subgroup_id": "79ff55d9-8239-4436-84b0-d3261a9750ad",
+      "numeric_tail": "1000040102512",
+      "parsed_fields": [
+        {
+          "field_key": "referencia",
+          "field_label": "Referencia",
+          "segment": "10",
+          "value": "PEAD",
+          "resolved": true
+        },
+        {
+          "field_key": "codigo",
+          "field_label": "Código",
+          "segment": "0004",
+          "value": "DOW DMDA 8907 NT7",
+          "resolved": true
+        },
+        {
+          "field_key": "presentacion",
+          "field_label": "Presentación",
+          "segment": "01",
+          "value": "BULTO",
+          "resolved": true
+        },
+        {
+          "field_key": "peso",
+          "field_label": "Peso [kg]",
+          "segment": "025",
+          "value": "25",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "referencia": "PEAD",
+        "codigo": "DOW DMDA 8907 NT7",
+        "presentacion": "BULTO",
+        "peso": "25",
+        "color": "NATURAL"
+      },
+      "canonical_code": "MPP-OR-PE-1000040102512",
+      "canonical_dynamic_code_data": {
+        "referencia": "PEAD",
+        "codigo": "DOW DMDA 8907 NT7",
+        "presentacion": "BULTO",
+        "peso": "25",
+        "color": "NATURAL"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "f41ccfb4-f9cb-4012-9cc1-a25ea7b44900",
+      "siigo_product_id": "4e603a8c-d0a8-4923-8e72-00430bb12201",
+      "current_code": "MPP-OR-PP-1000030102512",
+      "proposed_code": "MPP-OR-PP-1000030102512",
+      "name": "POLIPROPILENO COPOLIMERO R 80R90C BULTO 25Kg NATURAL",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "MPP-OR-PP",
+      "category_id": "7935634a-baf0-43fa-913b-7ef05d1c3853",
+      "group_id": "8bee6e61-754a-4ef0-a098-eb86af69c4d3",
+      "subgroup_id": "9d12efee-2f3f-43da-a9cf-79fa1b06f54f",
+      "numeric_tail": "1000030102512",
+      "parsed_fields": [
+        {
+          "field_key": "referencia",
+          "field_label": "Referencia",
+          "segment": "10",
+          "value": "POLIPROPILENO",
+          "resolved": true
+        },
+        {
+          "field_key": "codigo",
+          "field_label": "Código",
+          "segment": "0003",
+          "value": "COPOLIMERO R. 80R90C",
+          "resolved": true
+        },
+        {
+          "field_key": "presentacion",
+          "field_label": "Presentación",
+          "segment": "01",
+          "value": "BULTO",
+          "resolved": true
+        },
+        {
+          "field_key": "peso",
+          "field_label": "Peso [kg]",
+          "segment": "025",
+          "value": "25",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "referencia": "POLIPROPILENO",
+        "codigo": "COPOLIMERO R. 80R90C",
+        "presentacion": "BULTO",
+        "peso": "25",
+        "color": "NATURAL"
+      },
+      "canonical_code": "MPP-OR-PP-1000030102512",
+      "canonical_dynamic_code_data": {
+        "referencia": "POLIPROPILENO",
+        "codigo": "COPOLIMERO R. 80R90C",
+        "presentacion": "BULTO",
+        "peso": "25",
+        "color": "NATURAL"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "ba2dacbe-12d9-468e-ac41-79fae96b118e",
+      "siigo_product_id": "d1745abf-077a-40b7-8d6b-6d7b3ff4ccd1",
+      "current_code": "PTF-FM-EN-1050030110502",
+      "proposed_code": "PTF-FM-EN-1050030110502",
+      "name": "ENVASE OVALADO B. 24mm *120mL BLANCO PEAD",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-FM-EN",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "cc0b5f62-0a31-485d-802c-3c0904e3691d",
+      "subgroup_id": "f07cc759-d7dc-4127-bee5-4055de4555aa",
+      "numeric_tail": "1050030110502",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "105",
+          "value": "ENVASE OVALADO",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "003",
+          "value": "B. 24mm",
+          "resolved": true
+        },
+        {
+          "field_key": "capacidad",
+          "field_label": "Capacidad [g o ml]",
+          "segment": "011",
+          "value": "120",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "05",
+          "value": "BLANCO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "02",
+          "value": "PEAD",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "ENVASE OVALADO",
+        "boca": "B. 24mm",
+        "capacidad": "120",
+        "color": "BLANCO",
+        "material": "PEAD"
+      },
+      "canonical_code": "PTF-FM-EN-1050030110502",
+      "canonical_dynamic_code_data": {
+        "tipo": "ENVASE OVALADO",
+        "boca": "B. 24mm",
+        "capacidad": "120",
+        "color": "BLANCO",
+        "material": "PEAD"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "773e77aa-125b-4600-8555-98f1a52ce266",
+      "siigo_product_id": "74567f1d-8147-4292-9385-609002e7df33",
+      "current_code": "PTF-FM-TP-1005020110204",
+      "proposed_code": "PTF-FM-TP-1005020110204",
+      "name": "TAPA ROSCADA ESTRIADA B. 34mm AZUL PP",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-FM-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "cc0b5f62-0a31-485d-802c-3c0904e3691d",
+      "subgroup_id": "621142f5-4f51-4ed6-88e6-4e44dc254c65",
+      "numeric_tail": "1005020110204",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1005",
+          "value": "TAPA ROSCADA",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "02",
+          "value": "ESTRIADA",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "011",
+          "value": "B. 34mm",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "02",
+          "value": "AZUL",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "04",
+          "value": "PP",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "TAPA ROSCADA",
+        "acabado": "ESTRIADA",
+        "boca": "B. 34mm",
+        "color": "AZUL",
+        "material": "PP"
+      },
+      "canonical_code": "PTF-FM-TP-1005020110204",
+      "canonical_dynamic_code_data": {
+        "tipo": "TAPA ROSCADA",
+        "acabado": "ESTRIADA",
+        "boca": "B. 34mm",
+        "color": "AZUL",
+        "material": "PP"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "44f67357-4a3a-4e96-ae38-db696e3a9297",
+      "siigo_product_id": "1bce47bf-b30a-4a1d-9535-0ca2a3610724",
+      "current_code": "PTC-FM-EN-1020120140502",
+      "proposed_code": "PTC-FM-EN-1020120140502",
+      "name": "ENVASE CILÍNDRICO B38mm Agrafe 200mL BLANCO PEAD",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTC-FM-EN",
+      "category_id": "f7e7fb82-44a3-43c1-8783-e09359c36e69",
+      "group_id": "634c5a9d-76ba-430b-a388-64a03c31e5a1",
+      "subgroup_id": "c81f35fc-ebc1-41a2-875b-9cfb3c9c7761",
+      "numeric_tail": "1020120140502",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "102",
+          "value": "ENVASE CILINDRICO",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "012",
+          "value": "B. 38mm agrafe",
+          "resolved": true
+        },
+        {
+          "field_key": "capacidad",
+          "field_label": "Capacidad [g o ml]",
+          "segment": "014",
+          "value": "200",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "05",
+          "value": "BLANCO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "02",
+          "value": "PEAD",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "ENVASE CILINDRICO",
+        "boca": "B. 38mm agrafe",
+        "capacidad": "200",
+        "color": "BLANCO",
+        "material": "PEAD"
+      },
+      "canonical_code": "PTC-FM-EN-1020120140502",
+      "canonical_dynamic_code_data": {
+        "tipo": "ENVASE CILINDRICO",
+        "boca": "B. 38mm agrafe",
+        "capacidad": "200",
+        "color": "BLANCO",
+        "material": "PEAD"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "3a5d457d-b5f9-4200-85c1-9c7bc579c625",
+      "siigo_product_id": "e297ab1d-1ea1-459d-a569-9d9f24637d88",
+      "current_code": "MPP-OR-PP-1000010102512",
+      "proposed_code": "MPP-OR-PP-1000010102512",
+      "name": "POLIPROPILENO BAPOLENE 4072NA BULTO 25Kg NATURAL",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "MPP-OR-PP",
+      "category_id": "7935634a-baf0-43fa-913b-7ef05d1c3853",
+      "group_id": "8bee6e61-754a-4ef0-a098-eb86af69c4d3",
+      "subgroup_id": "9d12efee-2f3f-43da-a9cf-79fa1b06f54f",
+      "numeric_tail": "1000010102512",
+      "parsed_fields": [
+        {
+          "field_key": "referencia",
+          "field_label": "Referencia",
+          "segment": "10",
+          "value": "POLIPROPILENO",
+          "resolved": true
+        },
+        {
+          "field_key": "codigo",
+          "field_label": "Código",
+          "segment": "0001",
+          "value": "BAPOLENE 4072NA",
+          "resolved": true
+        },
+        {
+          "field_key": "presentacion",
+          "field_label": "Presentación",
+          "segment": "01",
+          "value": "BULTO",
+          "resolved": true
+        },
+        {
+          "field_key": "peso",
+          "field_label": "Peso [kg]",
+          "segment": "025",
+          "value": "25",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "referencia": "POLIPROPILENO",
+        "codigo": "BAPOLENE 4072NA",
+        "presentacion": "BULTO",
+        "peso": "25",
+        "color": "NATURAL"
+      },
+      "canonical_code": "MPP-OR-PP-1000010102512",
+      "canonical_dynamic_code_data": {
+        "referencia": "POLIPROPILENO",
+        "codigo": "BAPOLENE 4072NA",
+        "presentacion": "BULTO",
+        "peso": "25",
+        "color": "NATURAL"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "af989405-462e-4bf7-8f61-982949aaed68",
+      "siigo_product_id": "f165bc41-87da-4938-94af-02aed7fdc87a",
+      "current_code": "PTF-AL-EN-1010210181204",
+      "proposed_code": "PTF-AL-EN-1010210181204",
+      "name": "ENVASE CUADRADO B.120mm *1000 mL NATURAL PP",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-AL-EN",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "25f7aaa7-5d8c-4d54-a874-a2edec735819",
+      "subgroup_id": "c49e429c-886a-4acd-ad16-fd8710b5242b",
+      "numeric_tail": "1010210181204",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "101",
+          "value": "ENVASE CUADRADO",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "021",
+          "value": "B. 90mm",
+          "resolved": true
+        },
+        {
+          "field_key": "capacidad",
+          "field_label": "Capacidad [g o ml]",
+          "segment": "018",
+          "value": "1000",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "04",
+          "value": "PP",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "ENVASE CUADRADO",
+        "boca": "B. 90mm",
+        "capacidad": "1000",
+        "color": "NATURAL",
+        "material": "PP"
+      },
+      "canonical_code": "PTF-AL-EN-1010210181204",
+      "canonical_dynamic_code_data": {
+        "tipo": "ENVASE CUADRADO",
+        "boca": "B. 90mm",
+        "capacidad": "1000",
+        "color": "NATURAL",
+        "material": "PP"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "98bd1ec3-6f91-4a36-b4ad-80765aec2bea",
+      "siigo_product_id": "274b1e51-56a3-4bb2-ba60-014b2e3a3a77",
+      "current_code": "PTF-ES-TP-1001020010806",
+      "proposed_code": "PTF-ES-TP-1001020010806",
+      "name": "TAPÓN A PRESIÓN ESTRIADO B. 1 GRIS PVC",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-ES-TP",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "7f805e1a-ff9a-49da-a02b-57f812ba5ffa",
+      "subgroup_id": "da0b55e9-731a-4303-bc6c-63ae9ed897cf",
+      "numeric_tail": "1001020010806",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1001",
+          "value": "TAPÓN A PRESIÓN",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "02",
+          "value": "ESTRIADO",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "001",
+          "value": "B. 1",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "08",
+          "value": "GRIS",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "06",
+          "value": "PVC",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "TAPÓN A PRESIÓN",
+        "acabado": "ESTRIADO",
+        "boca": "B. 1",
+        "color": "GRIS",
+        "material": "PVC"
+      },
+      "canonical_code": "PTF-ES-TP-1001020010806",
+      "canonical_dynamic_code_data": {
+        "tipo": "TAPÓN A PRESIÓN",
+        "acabado": "ESTRIADO",
+        "boca": "B. 1",
+        "color": "GRIS",
+        "material": "PVC"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "5b4ae782-a777-4cf4-8a71-2f2021a8768d",
+      "siigo_product_id": "8cca2bc6-025b-4675-93f5-03219afe46f9",
+      "current_code": "MPP-OR-PD-1000010102512",
+      "proposed_code": "MPP-OR-PD-1000010102512",
+      "name": "PEAD MARLEX HHM 5502BN BULTO 25Kg NATURAL",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "MPP-OR-PD",
+      "category_id": "7935634a-baf0-43fa-913b-7ef05d1c3853",
+      "group_id": "8bee6e61-754a-4ef0-a098-eb86af69c4d3",
+      "subgroup_id": "93f86ac5-c943-4164-a698-58075cce1ea8",
+      "numeric_tail": "1000010102512",
+      "parsed_fields": [
+        {
+          "field_key": "referencia",
+          "field_label": "Referencia",
+          "segment": "10",
+          "value": "PEAD",
+          "resolved": true
+        },
+        {
+          "field_key": "codigo",
+          "field_label": "Código",
+          "segment": "0001",
+          "value": "MARLEX HHM 5502BN",
+          "resolved": true
+        },
+        {
+          "field_key": "presentacion",
+          "field_label": "Presentación",
+          "segment": "01",
+          "value": "BULTO",
+          "resolved": true
+        },
+        {
+          "field_key": "peso",
+          "field_label": "Peso [kg]",
+          "segment": "025",
+          "value": "25 KG",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "referencia": "PEAD",
+        "codigo": "MARLEX HHM 5502BN",
+        "presentacion": "BULTO",
+        "peso": "25 KG",
+        "color": "NATURAL"
+      },
+      "canonical_code": "MPP-OR-PD-1000010102512",
+      "canonical_dynamic_code_data": {
+        "referencia": "PEAD",
+        "codigo": "MARLEX HHM 5502BN",
+        "presentacion": "BULTO",
+        "peso": "25 KG",
+        "color": "NATURAL"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "60c21969-ed95-4507-a7aa-e9b83857a088",
+      "siigo_product_id": "50409a0c-e17f-4dfe-9931-ad843a0e2ea3",
+      "current_code": "PTF-FM-EN-1020020151202",
+      "proposed_code": "PTF-FM-EN-1020020151202",
+      "name": "ENVASE CILÍNDRICO B20mm agrafe *250mL NATURAL PEAD",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTF-FM-EN",
+      "category_id": "1b0bf4ae-491d-44bb-81d8-d6d21b9b14a6",
+      "group_id": "cc0b5f62-0a31-485d-802c-3c0904e3691d",
+      "subgroup_id": "f07cc759-d7dc-4127-bee5-4055de4555aa",
+      "numeric_tail": "1020020151202",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "102",
+          "value": "ENVASE CILINDRICO",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "002",
+          "value": "B. 20mm agrafe",
+          "resolved": true
+        },
+        {
+          "field_key": "capacidad",
+          "field_label": "Capacidad [g o ml]",
+          "segment": "015",
+          "value": "250",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "12",
+          "value": "NATURAL",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "02",
+          "value": "PEAD",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "ENVASE CILINDRICO",
+        "boca": "B. 20mm agrafe",
+        "capacidad": "250",
+        "color": "NATURAL",
+        "material": "PEAD"
+      },
+      "canonical_code": "PTF-FM-EN-1020020151202",
+      "canonical_dynamic_code_data": {
+        "tipo": "ENVASE CILINDRICO",
+        "boca": "B. 20mm agrafe",
+        "capacidad": "250",
+        "color": "NATURAL",
+        "material": "PEAD"
+      },
+      "canonical_parse_ok": true
+    },
+    {
+      "product_id": "f811b9f1-0316-4d35-aca7-d6145eb29404",
+      "siigo_product_id": "32bef95c-9ad3-4cc7-9863-f258411d8eb8",
+      "current_code": "PTC-FM-TP-1002020130504",
+      "proposed_code": "PTC-FM-TP-1002020130504",
+      "name": "TAPA ANILLO DE SEGURIDAD ESTRIADA B38mm BLANCO PP",
+      "status": "ADOPTAR",
+      "reason": "Código y estructura coinciden con la plantilla vigente.",
+      "classification": "PTC-FM-TP",
+      "category_id": "f7e7fb82-44a3-43c1-8783-e09359c36e69",
+      "group_id": "634c5a9d-76ba-430b-a388-64a03c31e5a1",
+      "subgroup_id": "71ffa5cd-b8c5-402b-9f20-4b0fbad5aec2",
+      "numeric_tail": "1002020130504",
+      "parsed_fields": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1002",
+          "value": "TAPA ANILLO DE SEGURIDAD",
+          "resolved": true
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "02",
+          "value": "ESTRIADA",
+          "resolved": true
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "013",
+          "value": "B. 38mm",
+          "resolved": true
+        },
+        {
+          "field_key": "color",
+          "field_label": "Color",
+          "segment": "05",
+          "value": "BLANCO",
+          "resolved": true
+        },
+        {
+          "field_key": "material",
+          "field_label": "Material",
+          "segment": "04",
+          "value": "PP",
+          "resolved": true
+        }
+      ],
+      "unresolved_fields": [],
+      "dynamic_code_data": {
+        "tipo": "TAPA ANILLO DE SEGURIDAD",
+        "acabado": "ESTRIADA",
+        "boca": "B. 38mm",
+        "color": "BLANCO",
+        "material": "PP"
+      },
+      "canonical_code": "PTC-FM-TP-1002020130504",
+      "canonical_dynamic_code_data": {
+        "tipo": "TAPA ANILLO DE SEGURIDAD",
+        "acabado": "ESTRIADA",
+        "boca": "B. 38mm",
+        "color": "BLANCO",
+        "material": "PP"
+      },
+      "canonical_parse_ok": true
+    }
+  ]
+}

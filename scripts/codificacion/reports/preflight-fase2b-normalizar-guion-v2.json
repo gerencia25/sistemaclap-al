@@ -1,0 +1,150 @@
+{
+  "generated_at": "2026-11-08T23:39:03.287Z",
+  "read_only": true,
+  "total": 14,
+  "errors": [],
+  "warnings": [
+    "MPC-AD-PG1001001001012: generated_reference está vacío; en la aplicación se podrá completar con el código canónico.",
+    "PTF-FM-JG1002010040507: generated_reference está vacío; en la aplicación se podrá completar con el código canónico.",
+    "PTF-FM-CJ1004010041207: generated_reference está vacío; en la aplicación se podrá completar con el código canónico.",
+    "PTF-FM-CJ1003030040508: generated_reference está vacío; en la aplicación se podrá completar con el código canónico.",
+    "PTF-FM-CJ1002020040507: generated_reference está vacío; en la aplicación se podrá completar con el código canónico.",
+    "PTF-FM-CJ1001010040507: generated_reference está vacío; en la aplicación se podrá completar con el código canónico.",
+    "PTC-TT-CC1020001000104: generated_reference está vacío; en la aplicación se podrá completar con el código canónico.",
+    "INS-PL-PG10200010010007: generated_reference está vacío; en la aplicación se podrá completar con el código canónico.",
+    "PTF-RT-PO1020120040106: generated_reference está vacío; en la aplicación se podrá completar con el código canónico.",
+    "PTF-RT-PO1010030030506: generated_reference está vacío; en la aplicación se podrá completar con el código canónico.",
+    "MPC-AH-CN1000020100105: generated_reference está vacío; en la aplicación se podrá completar con el código canónico.",
+    "MPC-AH-CN1000010100112: generated_reference está vacío; en la aplicación se podrá completar con el código canónico.",
+    "PTF-RT-PO1010070021206: generated_reference está vacío; en la aplicación se podrá completar con el código canónico.",
+    "PTF-RT-PO1020120011407: generated_reference está vacío; en la aplicación se podrá completar con el código canónico."
+  ],
+  "rows": [
+    {
+      "product_id": "4aa58e80-003c-446c-9f4d-da9e4a52b92e",
+      "actual": "MPC-AD-PG1001001001012",
+      "nuevo": "MPC-AD-PG-1001001001012",
+      "producto": "PURGA GRANULADA NPT NuPurge 451 LIBRAS NATURAL",
+      "generated_reference": null,
+      "alias_preexistente": "NO",
+      "estructura": "ACTUALIZAR"
+    },
+    {
+      "product_id": "e637b859-695b-485f-9b24-a59996227391",
+      "actual": "PTF-FM-JG1002010040507",
+      "nuevo": "PTF-FM-JG-1002010040507",
+      "producto": "JERINGA CONO DOSIFICADOR MASTITIS CANULA CORTA 10 mL BLANCO PE",
+      "generated_reference": null,
+      "alias_preexistente": "NO",
+      "estructura": "ACTUALIZAR"
+    },
+    {
+      "product_id": "0f1d5887-699a-4743-91ad-fcb95e81e737",
+      "actual": "PTF-FM-CJ1004010041207",
+      "nuevo": "PTF-FM-CJ-1004010041207",
+      "producto": "TAPÓN MASTITIS CANULA CORTA 10 mL NATURAL PE",
+      "generated_reference": null,
+      "alias_preexistente": "NO",
+      "estructura": "ACTUALIZAR"
+    },
+    {
+      "product_id": "5b86b9da-505d-4d48-834e-160f341095e5",
+      "actual": "PTF-FM-CJ1003030040508",
+      "nuevo": "PTF-FM-CJ-1003030040508",
+      "producto": "PISTÓN CONO REGULAR 10 mL BLANCO TPE",
+      "generated_reference": null,
+      "alias_preexistente": "NO",
+      "estructura": "ACTUALIZAR"
+    },
+    {
+      "product_id": "314f02ac-9e34-40d0-bee5-38cbf4ba4d42",
+      "actual": "PTF-FM-CJ1002020040507",
+      "nuevo": "PTF-FM-CJ-1002020040507",
+      "producto": "ÉMBOLO PARA PISTÓN DOSIFICADOR 10 mL BLANCO PE",
+      "generated_reference": null,
+      "alias_preexistente": "NO",
+      "estructura": "ACTUALIZAR"
+    },
+    {
+      "product_id": "a4906a52-7424-47f7-a691-48552de474ec",
+      "actual": "PTF-FM-CJ1001010040507",
+      "nuevo": "PTF-FM-CJ-1001010040507",
+      "producto": "CILINDRO MASTITIS CANULA CORTA 10 mL BLANCO PE",
+      "generated_reference": null,
+      "alias_preexistente": "NO",
+      "estructura": "ACTUALIZAR"
+    },
+    {
+      "product_id": "c6bb0f17-d0e8-470d-89af-ee7475fc673b",
+      "actual": "PTC-TT-CC1020001000104",
+      "nuevo": "PTC-TT-CC-1020001000104",
+      "producto": "COLADA CALIENTE MULTIPLE CIRCULAR LATERAL 4 CAV",
+      "generated_reference": null,
+      "alias_preexistente": "NO",
+      "estructura": "ACTUALIZAR"
+    },
+    {
+      "product_id": "3474f33e-d0c2-441e-afaf-bdb90c2bb8f9",
+      "actual": "INS-PL-PG10200010010007",
+      "nuevo": "INS-PL-PG-10200010010007",
+      "producto": "PURGA NPT 451-45 Bulto 454 g",
+      "generated_reference": null,
+      "alias_preexistente": "NO",
+      "estructura": "ACTUALIZAR"
+    },
+    {
+      "product_id": "d96af9e9-775d-446d-9830-68fa5195cb8e",
+      "actual": "PTF-RT-PO1020120040106",
+      "nuevo": "PTF-RT-PO-1020120040106",
+      "producto": "SEPARADOR PUNTO DE PAGO 30 * 4 cm AMARILLO PVC",
+      "generated_reference": null,
+      "alias_preexistente": "NO",
+      "estructura": "ACTUALIZAR"
+    },
+    {
+      "product_id": "ebadcc91-6f5f-4bc9-9f19-823acffbaf29",
+      "actual": "PTF-RT-PO1010030030506",
+      "nuevo": "PTF-RT-PO-1010030030506",
+      "producto": "GRIP RÍGIDO 2,5 cm BLANCO PVC",
+      "generated_reference": null,
+      "alias_preexistente": "NO",
+      "estructura": "ACTUALIZAR"
+    },
+    {
+      "product_id": "24c50cf9-33a8-4425-bb16-d041cd3fb2e9",
+      "actual": "MPC-AH-CN1000020100105",
+      "nuevo": "MPC-AH-CN-1000020100105",
+      "producto": "CINTA DOBLE FAZ ESPUMOSA ROLLO *50 Mts 12 MM BLANCO",
+      "generated_reference": null,
+      "alias_preexistente": "NO",
+      "estructura": "ACTUALIZAR"
+    },
+    {
+      "product_id": "6210f5ed-f44f-43c5-b05e-8dce6720ca8d",
+      "actual": "MPC-AH-CN1000010100112",
+      "nuevo": "MPC-AH-CN-1000010100112",
+      "producto": "CINTA DOBLE FAZ 3M ROLLO *50 Mts 12 MM NATURAL",
+      "generated_reference": null,
+      "alias_preexistente": "NO",
+      "estructura": "ACTUALIZAR"
+    },
+    {
+      "product_id": "83e4e375-bd24-4f93-8070-253878f9ab7b",
+      "actual": "PTF-RT-PO1010070021206",
+      "nuevo": "PTF-RT-PO-1010070021206",
+      "producto": "GRIP ROPETRÁFICO P-37 3,7 * 2,5 cm NATURAL PVC",
+      "generated_reference": null,
+      "alias_preexistente": "NO",
+      "estructura": "ACTUALIZAR"
+    },
+    {
+      "product_id": "ed3e1653-64a8-49c9-aa0d-e9c02358ab74",
+      "actual": "PTF-RT-PO1020120011407",
+      "nuevo": "PTF-RT-PO-1020120011407",
+      "producto": "SEPARADOR PUNTO DE PAGO 34,5 * 4,5 cm ROJO HIPS",
+      "generated_reference": null,
+      "alias_preexistente": "NO",
+      "estructura": "ACTUALIZAR"
+    }
+  ]
+}

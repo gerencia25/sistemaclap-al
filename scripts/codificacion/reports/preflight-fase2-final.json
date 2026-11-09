@@ -1,0 +1,647 @@
+{
+  "generated_at": "2026-11-08T23:26:59.142Z",
+  "read_only": true,
+  "summary": {
+    "report_siigo_products": 86,
+    "safe": 78,
+    "manual": 8,
+    "code_changes": 18,
+    "already_structurally_adopted": 2,
+    "structural_updates_needed": 76,
+    "errors": 0,
+    "warnings": 0
+  },
+  "status_counts": {
+    "ADOPTAR": 60,
+    "NORMALIZAR_GUION": 14,
+    "REQUIERE_CAMBIO_CODIGO": 4
+  },
+  "errors": [],
+  "warnings": [],
+  "details": [
+    {
+      "estado": "ADOPTAR",
+      "actual": "MPP-OR-PV-1000010102513",
+      "canonico": "MPP-OR-PV-1000010102513",
+      "producto": "PVC BLANDO D-87 BULTO 25 NEGRO",
+      "estructura_actual": "YA COINCIDE",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "MPP-OR-PP-1000020102512",
+      "canonico": "MPP-OR-PP-1000020102512",
+      "producto": "POLIPROPILENO RJ970Z BULTO 25 NATURAL",
+      "estructura_actual": "YA COINCIDE",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "NORMALIZAR_GUION",
+      "actual": "MPC-AD-PG1001001001012",
+      "canonico": "MPC-AD-PG-1001001001012",
+      "producto": "PURGA GRANULADA NPT NuPurge 451 LIBRAS NATURAL",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "SÍ"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "MPP-OR-PD-1200020102512",
+      "canonico": "MPP-OR-PD-1200020102512",
+      "producto": "PELBD BRASKEM IF 33 BULTO 25Kg NATURAL",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "MPC-CP-MB-1100010100105",
+      "canonico": "MPC-CP-MB-1100010100105",
+      "producto": "MASTERBATCH PE PL-WH0817-70% BOLSA 1000g BLANCO",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "MPP-OR-PP-1000040102512",
+      "canonico": "MPP-OR-PP-1000040102512",
+      "producto": "POLIPROPILENO 11H01A BULTO 25Kg NATURAL",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "NORMALIZAR_GUION",
+      "actual": "PTF-FM-JG1002010040507",
+      "canonico": "PTF-FM-JG-1002010040507",
+      "producto": "JERINGA CONO DOSIFICADOR MASTITIS CANULA CORTA 10 mL BLANCO PE",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "SÍ"
+    },
+    {
+      "estado": "NORMALIZAR_GUION",
+      "actual": "PTF-FM-CJ1004010041207",
+      "canonico": "PTF-FM-CJ-1004010041207",
+      "producto": "TAPÓN MASTITIS CANULA CORTA 10 mL NATURAL PE",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "SÍ"
+    },
+    {
+      "estado": "NORMALIZAR_GUION",
+      "actual": "PTF-FM-CJ1003030040508",
+      "canonico": "PTF-FM-CJ-1003030040508",
+      "producto": "PISTÓN CONO REGULAR 10 mL BLANCO TPE",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "SÍ"
+    },
+    {
+      "estado": "NORMALIZAR_GUION",
+      "actual": "PTF-FM-CJ1002020040507",
+      "canonico": "PTF-FM-CJ-1002020040507",
+      "producto": "ÉMBOLO PARA PISTÓN DOSIFICADOR 10 mL BLANCO PE",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "SÍ"
+    },
+    {
+      "estado": "NORMALIZAR_GUION",
+      "actual": "PTF-FM-CJ1001010040507",
+      "canonico": "PTF-FM-CJ-1001010040507",
+      "producto": "CILINDRO MASTITIS CANULA CORTA 10 mL BLANCO PE",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "SÍ"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-AL-TP-1006030291007",
+      "canonico": "PTF-AL-TP-1006030291007",
+      "producto": "SOBRE TAPA CIRCULAR LISA B. 502-129 EM MORADO PEBD",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-AL-TP-1006030310107",
+      "canonico": "PTF-AL-TP-1006030310107",
+      "producto": "SOBRE TAPA CIRCULAR LISA B. 211 EC AMARILLO PEBD",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-AL-TP-1006030300107",
+      "canonico": "PTF-AL-TP-1006030300107",
+      "producto": "SOBRE TAPA CIRCULAR LISA B. 307 EC AMARILLO PEBD",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "MPC-CP-MB-1100030100101",
+      "canonico": "MPC-CP-MB-1100030100101",
+      "producto": "MASTERBATCH PE PL-YE0017 BOLSA 1000g AMARILLO",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-AL-TP-1006030280107",
+      "canonico": "PTF-AL-TP-1006030280107",
+      "producto": "SOBRE TAPA CIRCULAR LISA B. 401-103 EC AMARILLO PEBD",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "NORMALIZAR_GUION",
+      "actual": "PTC-TT-CC1020001000104",
+      "canonico": "PTC-TT-CC-1020001000104",
+      "producto": "COLADA CALIENTE MULTIPLE CIRCULAR LATERAL 4 CAV",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "SÍ"
+    },
+    {
+      "estado": "NORMALIZAR_GUION",
+      "actual": "INS-PL-PG10200010010007",
+      "canonico": "INS-PL-PG-10200010010007",
+      "producto": "PURGA NPT 451-45 Bulto 454 g",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "SÍ"
+    },
+    {
+      "estado": "NORMALIZAR_GUION",
+      "actual": "PTF-RT-PO1020120040106",
+      "canonico": "PTF-RT-PO-1020120040106",
+      "producto": "SEPARADOR PUNTO DE PAGO 30 * 4 cm AMARILLO PVC",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "SÍ"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-AL-TP-1006030271507",
+      "canonico": "PTF-AL-TP-1006030271507",
+      "producto": "SOBRE TAPA CIRCULAR LISA B. 401-101 EM ROSADO PEBD",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "MPP-OR-PD-1200050102512",
+      "canonico": "MPP-OR-PD-1200050102512",
+      "producto": "PELBD DOW DNDB 7147 NT7 BULTO 25Kg NATURAL",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-AL-TP-1006030270507",
+      "canonico": "PTF-AL-TP-1006030270507",
+      "producto": "SOBRE TAPA CIRCULAR LISA B. 401-101 EM BLANCO PEBD",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-AL-TP-1006030291207",
+      "canonico": "PTF-AL-TP-1006030291207",
+      "producto": "SOBRE TAPA CIRCULAR LISA B. 502-129 EM NATURAL PEBD",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-AL-TP-1006030290507",
+      "canonico": "PTF-AL-TP-1006030290507",
+      "producto": "SOBRE TAPA CIRCULAR LISA B. 502-129 EM BLANCO PEBD",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "REQUIERE_CAMBIO_CODIGO",
+      "actual": "PTF-RT-PP1080040051606",
+      "canonico": "PTF-RT-PP-1080040052006",
+      "producto": "PORTA PRECIO PLANO 4 cm ADH ESPUMOSO SENCILLO DE 1/2\"TRANSPARENTE PVC",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "SÍ"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-AL-TP-1006030281207",
+      "canonico": "PTF-AL-TP-1006030281207",
+      "producto": "SOBRE TAPA CIRCULAR LISA B. 401-103 EC NATURAL PEBD",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "REQUIERE_CAMBIO_CODIGO",
+      "actual": "PTF-AL-TP-1006030282007",
+      "canonico": "PTF-AL-TP-1006030282107",
+      "producto": "SOBRE TAPA CIRCULAR LISA B. 401-103 EC DORADO PEBD",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "SÍ"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-AL-CH-1001010090304",
+      "canonico": "PTF-AL-CH-1001010090304",
+      "producto": "CUCHARA DOSIFICADORA CIRCULAR 29,6 cc AZUL CLARO PP",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-AL-TP-1007030171707",
+      "canonico": "PTF-AL-TP-1007030171707",
+      "producto": "TAPÓN A PRESIÓN CIRCULAR LISA B. 53 mm VERDE PEBD",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-AL-TP-1006030271207",
+      "canonico": "PTF-AL-TP-1006030271207",
+      "producto": "SOBRE TAPA CIRCULAR LISA B. 401-101 EM NATURAL PEBD",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-FM-EN-1060230190502",
+      "canonico": "PTF-FM-EN-1060230190502",
+      "producto": "ENVASE PASTILLERO B. 59mm *350mL BLANCO PEAD",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-FM-TP-1005010270504",
+      "canonico": "PTF-FM-TP-1005010270504",
+      "producto": "TAPA ROSCADA LISA B. 59 mm BLANCO PP",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-FM-EN-1020010051202",
+      "canonico": "PTF-FM-EN-1020010051202",
+      "producto": "ENVASE CILÍNDRICO B. 20mm *50mL NATURAL PEAD",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-AL-CH-1001010091004",
+      "canonico": "PTF-AL-CH-1001010091004",
+      "producto": "CUCHARA DOSIFICADORA CIRCULAR 29,6 cc MORADO PP",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-ES-TP-1003030051201",
+      "canonico": "PTF-ES-TP-1003030051201",
+      "producto": "TAPA SUB MASTER ESTRELLA B.90 mm NATURAL ABS",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "SER-PP-TR-0000000031004",
+      "canonico": "SER-PP-TR-0000000031004",
+      "producto": "SOPLADO ESPECIALES",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "SER-PP-TR-0000000091004",
+      "canonico": "SER-PP-TR-0000000091004",
+      "producto": "RECTIFICADO ESPECIALES",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-ES-TP-1001020010804",
+      "canonico": "PTF-ES-TP-1001020010804",
+      "producto": "TAPÓN A PRESIÓN ESTRIADO B. 1 GRIS PP",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "NORMALIZAR_GUION",
+      "actual": "PTF-RT-PO1010030030506",
+      "canonico": "PTF-RT-PO-1010030030506",
+      "producto": "GRIP RÍGIDO 2,5 cm BLANCO PVC",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "SÍ"
+    },
+    {
+      "estado": "REQUIERE_CAMBIO_CODIGO",
+      "actual": "PTF-RT-PP1160040101606",
+      "canonico": "PTF-RT-PP-1160040102006",
+      "producto": "PORTA PRECIO ENGANCHE INTERNO 4 cm S.A TRANSPARENTE PVC",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "SÍ"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-AL-TP-1001090261404",
+      "canonico": "PTF-AL-TP-1001090261404",
+      "producto": "TAPA A PRESIÓN RECTANGULAR LISA 3 DIVISIONES B. 190mm x 230mm ROJO PP",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-AL-TP-1001090261104",
+      "canonico": "PTF-AL-TP-1001090261104",
+      "producto": "TAPA A PRESIÓN RECTANGULAR LISA 3 DIVISIONES B. 190mm x 230mm NARANJA PP",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-AL-TP-1001090261704",
+      "canonico": "PTF-AL-TP-1001090261704",
+      "producto": "TAPA A PRESIÓN RECTANGULAR LISA 3 DIVISIONES B. 190mm x 230mm VERDE PP",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "REQUIERE_CAMBIO_CODIGO",
+      "actual": "PTF-RT-PP1080050031606",
+      "canonico": "PTF-RT-PP-1080050032006",
+      "producto": "PORTA PRECIO PLANO 6.5 cm ADH DOBLE DE 1/2\" TRANSPARENTE PVC",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "SÍ"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-ES-TP-1001020040804",
+      "canonico": "PTF-ES-TP-1001020040804",
+      "producto": "TAPÓN A PRESIÓN ESTRIADO B. 30 mm GRIS PP",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "NORMALIZAR_GUION",
+      "actual": "MPC-AH-CN1000020100105",
+      "canonico": "MPC-AH-CN-1000020100105",
+      "producto": "CINTA DOBLE FAZ ESPUMOSA ROLLO *50 Mts 12 MM BLANCO",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "SÍ"
+    },
+    {
+      "estado": "NORMALIZAR_GUION",
+      "actual": "MPC-AH-CN1000010100112",
+      "canonico": "MPC-AH-CN-1000010100112",
+      "producto": "CINTA DOBLE FAZ 3M ROLLO *50 Mts 12 MM NATURAL",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "SÍ"
+    },
+    {
+      "estado": "NORMALIZAR_GUION",
+      "actual": "PTF-RT-PO1010070021206",
+      "canonico": "PTF-RT-PO-1010070021206",
+      "producto": "GRIP ROPETRÁFICO P-37 3,7 * 2,5 cm NATURAL PVC",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "SÍ"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-FM-EN-1020030150502",
+      "canonico": "PTF-FM-EN-1020030150502",
+      "producto": "ENVASE CILÍNDRICO B. 24mm *250mL BLANCO PEAD",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-FM-TP-1006070261207",
+      "canonico": "PTF-FM-TP-1006070261207",
+      "producto": "TAPÓN A PRESIÓN PERFORADO B. 19 mm NATURAL PEBD",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTC-RT-PO-1010020021203",
+      "canonico": "PTC-RT-PO-1010020021203",
+      "producto": "BOLSILLO 1/4 CARTA VERTICAL COLLARIN C. 510 mm 14x10cm/Pestaña 16,5x4,3cm NATURAL PET",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTC-RT-PO-1010010011203",
+      "canonico": "PTC-RT-PO-1010010011203",
+      "producto": "BOLSILLO 1/4 CARTA VERTICAL PESTAÑA C. 510 mm 14x10,5cm/Pestaña 4,3x2cm NATURAL PET",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-FM-TP-1005020250204",
+      "canonico": "PTF-FM-TP-1005020250204",
+      "producto": "TAPA ROSCADA ESTRIADA B. 22mm AZUL PP",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-AL-CJ-1010210181204",
+      "canonico": "PTF-AL-CJ-1010210181204",
+      "producto": "CONJUNTO DE ENVASE CUADRADO CON TAPA B. 120mm *1000 ml NATURAL PP",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-ES-EN-1010010161202",
+      "canonico": "PTF-ES-EN-1010010161202",
+      "producto": "ENVASE CRISTO B.20mm *446 mL NATURAL PEAD",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "MPP-OR-PD-1000030102512",
+      "canonico": "MPP-OR-PD-1000030102512",
+      "producto": "PEAD PAXON-AS55-003 BULTO 25Kg NATURAL",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "MPP-OR-PP-1000030102512",
+      "canonico": "MPP-OR-PP-1000030102512",
+      "producto": "POLIPROPILENO COPOLIMERO R 80R90C BULTO 25Kg NATURAL",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "MPC-CP-MB-1100020200214",
+      "canonico": "MPC-CP-MB-1100020200214",
+      "producto": "MASTERBATCH PE PE-33194-02 BULTO 25000g ROJO",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "MPP-OR-PE-1000040102512",
+      "canonico": "MPP-OR-PE-1000040102512",
+      "producto": "PEAD DOW DMDA 8907 NT7 BULTO 25Kg NATURAL",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-FM-EN-1020020161202",
+      "canonico": "PTF-FM-EN-1020020161202",
+      "producto": "ENVASE CILÍNDRICO B. 20mm agrafe *500mL NATURAL PEAD",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-FM-EN-1050030110502",
+      "canonico": "PTF-FM-EN-1050030110502",
+      "producto": "ENVASE OVALADO B. 24mm *120mL BLANCO PEAD",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "NORMALIZAR_GUION",
+      "actual": "PTF-RT-PO1020120011407",
+      "canonico": "PTF-RT-PO-1020120011407",
+      "producto": "SEPARADOR PUNTO DE PAGO 34,5 * 4,5 cm ROJO HIPS",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "SÍ"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "MPP-OR-PP-1000010102512",
+      "canonico": "MPP-OR-PP-1000010102512",
+      "producto": "POLIPROPILENO BAPOLENE 4072NA BULTO 25Kg NATURAL",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "INS-EM-BL-1010001000112",
+      "canonico": "INS-EM-BL-1010001000112",
+      "producto": "BOLSA PLÁSTICA CALIBRE 1 100*120 cm NATURAL",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "INS-EM-CJ-1020001000103",
+      "canonico": "INS-EM-CJ-1020001000103",
+      "producto": "CAJA SIN LOGO ESTANDAR 60*40*40 cm C 620",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-FM-TP-1005020110204",
+      "canonico": "PTF-FM-TP-1005020110204",
+      "producto": "TAPA ROSCADA ESTRIADA B. 34mm AZUL PP",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-AL-EN-1010210181204",
+      "canonico": "PTF-AL-EN-1010210181204",
+      "producto": "ENVASE CUADRADO B.120mm *1000 mL NATURAL PP",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-AL-TP-1001030251404",
+      "canonico": "PTF-AL-TP-1001030251404",
+      "producto": "TAPA A PRESIÓN CUADRADA LISA B. 120mm ROJO PP",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-ES-TP-1002030031201",
+      "canonico": "PTF-ES-TP-1002030031201",
+      "producto": "TAPA MASTER ESTRELLA B185 mm NATURAL ABS",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-ES-TP-1001020020804",
+      "canonico": "PTF-ES-TP-1001020020804",
+      "producto": "TAPÓN A PRESIÓN ESTRIADO B. 3/4 GRIS PP",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-ES-TP-1001020010806",
+      "canonico": "PTF-ES-TP-1001020010806",
+      "producto": "TAPÓN A PRESIÓN ESTRIADO B. 1 GRIS PVC",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-FM-TP-1005020050204",
+      "canonico": "PTF-FM-TP-1005020050204",
+      "producto": "TAPA ROSCADA ESTRIADA B26mm AZUL PP",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTF-FM-EN-1020020151202",
+      "canonico": "PTF-FM-EN-1020020151202",
+      "producto": "ENVASE CILÍNDRICO B20mm agrafe *250mL NATURAL PEAD",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "ALQ-MC-PF-1010400100101",
+      "canonico": "ALQ-MC-PF-1010400100101",
+      "producto": "ALQUILER PROBADOR DE FUGAS NEUMÁTICA MT BOQUILLA 60MM 1TON",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "MPP-OR-PD-1000010102512",
+      "canonico": "MPP-OR-PD-1000010102512",
+      "producto": "PEAD MARLEX HHM 5502BN BULTO 25Kg NATURAL",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTC-FM-EN-1080030130503",
+      "canonico": "PTC-FM-EN-1080030130503",
+      "producto": "ENVASE ESPECIAL ZEP B24mm *180mL BLANCO PET",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTC-FM-TP-1002020130504",
+      "canonico": "PTC-FM-TP-1002020130504",
+      "producto": "TAPA ANILLO DE SEGURIDAD ESTRIADA B38mm BLANCO PP",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    },
+    {
+      "estado": "ADOPTAR",
+      "actual": "PTC-FM-EN-1020120140502",
+      "canonico": "PTC-FM-EN-1020120140502",
+      "producto": "ENVASE CILÍNDRICO B38mm Agrafe 200mL BLANCO PEAD",
+      "estructura_actual": "ACTUALIZAR",
+      "cambia_codigo": "NO"
+    }
+  ]
+}

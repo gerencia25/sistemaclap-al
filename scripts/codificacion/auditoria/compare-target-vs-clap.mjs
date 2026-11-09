@@ -1,0 +1,1262 @@
+import fs from "node:fs";
+import path from "node:path";
+import { createClient } from "@supabase/supabase-js";
+
+/*
+ * AUDITORÍA DE CODIFICACIÓN CLAP
+ * ------------------------------
+ * SOLO LECTURA.
+ *
+ * Compara:
+ * - jerarquía Categoría → Grupo → Subgrupo
+ * - plantillas activas
+ * - estructura y longitud de campos
+ * - opciones históricas del Excel del cliente
+ * - catálogo transversal de colores objetivo
+ *
+ * Salidas:
+ * scripts/codificacion/reports/comparacion-target-vs-clap.md
+ * scripts/codificacion/reports/comparacion-target-vs-clap.json
+ */
+
+const TARGET = {"source_file": "MATRIZ DE CODIFICACIÓN EN SIIGO_A&L.xlsx", "governance": {"master_system": "CLAP", "canonical_code_format": "CAT-GRU-SUB-BLOQUE", "historical_aliases": true, "single_global_color_catalog": true, "manual_generated_from_templates": true}, "current_clap_snapshot": {"classifications_existing": 97, "templates_active": 20, "products": 87, "used_classifications": 20, "used_without_template": ["PTC-RT-PO", "PTF-FM-CJ", "PTF-FM-JG", "PTF-RT-PP"], "products_without_recognized_classification": 21}, "canonical_colors": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TURQUESA"}, {"code": "17", "name": "VERDE"}, {"code": "18", "name": "VERDE CLARO"}, {"code": "19", "name": "VERDE OSCURO"}, {"code": "20", "name": "TRANSPARENTE"}, {"code": "21", "name": "DORADO"}], "classifications": [{"classification": "MPC-AD-PG", "source_sheet": "MPC-AD-PG", "numeric_length": 13, "fields": [{"source_label": "TIPO DE PURGA", "target_label": "TIPO DE PURGA", "segment": "ABCD", "length": 4, "options": [{"code": "1001", "name": "PURGA GRANULADA"}]}, {"source_label": "REFERENCIA", "target_label": "REFERENCIA", "segment": "EFG", "length": 3, "options": [{"code": "001", "name": "NPT NuPurge 451"}]}, {"source_label": "PRESENTACIÓN", "target_label": "PRESENTACIÓN", "segment": "HIJ", "length": 3, "options": [{"code": "001", "name": "LIBRAS"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "KLM", "length": 3, "options": [{"code": "001", "name": "AMARILLO"}, {"code": "002", "name": "AZUL"}, {"code": "003", "name": "AZUL CLARO"}, {"code": "004", "name": "AZUL OSCURO"}, {"code": "005", "name": "BLANCO"}, {"code": "006", "name": "CAFÉ"}, {"code": "007", "name": "FUCSIA"}, {"code": "008", "name": "GRIS"}, {"code": "009", "name": "LILA"}, {"code": "010", "name": "MORADO"}, {"code": "011", "name": "NARANJA"}, {"code": "012", "name": "NATURAL"}, {"code": "013", "name": "NEGRO"}, {"code": "014", "name": "ROJO"}, {"code": "015", "name": "ROSADO"}, {"code": "016", "name": "TURQUESA"}, {"code": "017", "name": "VERDE"}, {"code": "018", "name": "VERDE CLARO"}, {"code": "019", "name": "VERDE OSCURO"}]}]}, {"classification": "PTF-FM-JG", "source_sheet": "PTF-FM", "numeric_length": 13, "fields": [{"source_label": "TIPO DE JERINGA", "target_label": "TIPO DE JERINGA", "segment": "ABCD", "length": 4, "options": [{"code": "1001", "name": "JERINGA CONO"}, {"code": "1002", "name": "JERINGA CORRIENTE"}, {"code": "1003", "name": "JERINGA DOSIFICADORA"}, {"code": "1004", "name": "JERINGA EQUINA"}, {"code": "1005", "name": "JERIGA INTRAMAMARIA"}]}, {"source_label": "ACABADO", "target_label": "ACABADO", "segment": "EF", "length": 2, "options": [{"code": "01", "name": "ANCHO"}, {"code": "02", "name": "BOCA PLANA"}, {"code": "03", "name": "CANULA CORTA"}]}, {"source_label": "CAPACIDAD", "target_label": "Capacidad [mL]", "segment": "GHI", "length": 3, "options": [{"code": "001", "name": "1 mL"}, {"code": "002", "name": "2 mL"}, {"code": "003", "name": "5 mL"}, {"code": "004", "name": "8 mL"}, {"code": "005", "name": "10 mL"}, {"code": "006", "name": "15 mL"}, {"code": "007", "name": "20 mL"}, {"code": "008", "name": "30 mL"}, {"code": "009", "name": "40 mL"}, {"code": "010", "name": "50 mL"}, {"code": "011", "name": "60 mL"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "JK", "length": 2, "options": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TURQUESA"}, {"code": "17", "name": "VERDE"}, {"code": "18", "name": "VERDE CLARO"}, {"code": "19", "name": "VERDE OSCURO"}]}, {"source_label": "MATERIAL", "target_label": "MATERIAL", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "ABS"}, {"code": "02", "name": "PEAD"}, {"code": "03", "name": "PET"}, {"code": "04", "name": "PP"}, {"code": "05", "name": "PS"}, {"code": "06", "name": "PVC"}, {"code": "07", "name": "PEBD"}]}]}, {"classification": "PTC-TT-CC", "source_sheet": "PTC-TT-CC", "numeric_length": 13, "fields": [{"source_label": "CATEGORÍA", "target_label": "CATEGORÍA", "segment": "ABC", "length": 3, "options": [{"code": "101", "name": "COLADA CALIENTE SENCILLA"}, {"code": "102", "name": "COLADA CALIENTE MULTIPLE"}]}, {"source_label": "FORMA", "target_label": "FORMA", "segment": "DEFG", "length": 4, "options": [{"code": "0001", "name": "CIRCULAR"}]}, {"source_label": "PUNTO DE ENTRADA", "target_label": "PUNTO DE ENTRADA", "segment": "HIJK", "length": 4, "options": [{"code": "0001", "name": "LATERAL"}, {"code": "0002", "name": "CAPILAR"}]}, {"source_label": "CAVIDADES", "target_label": "CAVIDADES", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "1 CAV"}, {"code": "02", "name": "2 CAV"}, {"code": "03", "name": "3 CAV"}, {"code": "04", "name": "4 CAV"}]}]}, {"classification": "INS-PL-PG", "source_sheet": "INS-PL-PG", "numeric_length": 14, "fields": [{"source_label": "REFERENCIA", "target_label": "REFERENCIA", "segment": "ABC", "length": 3, "options": [{"code": "101", "name": "ACEITE"}, {"code": "102", "name": "PURGA"}]}, {"source_label": "TIPO", "target_label": "TIPO", "segment": "DEFG", "length": 4, "options": [{"code": "0001", "name": "NPT 451-45"}]}, {"source_label": "MEDIDA", "target_label": "MEDIDA", "segment": "HIJ", "length": 3, "options": [{"code": "001", "name": "Bulto"}, {"code": "002", "name": "Garrafa"}]}, {"source_label": "PRESENTACIÓN", "target_label": "PRESENTACIÓN", "segment": "KLM", "length": 4, "options": [{"code": "0001", "name": "50 mL"}, {"code": "0002", "name": "100 mL"}, {"code": "0003", "name": "500 mL"}, {"code": "0004", "name": "1000 mL"}, {"code": "0005", "name": "50 g"}, {"code": "0006", "name": "100 g"}, {"code": "0007", "name": "454 g"}, {"code": "0008", "name": "500 g"}, {"code": "0009", "name": "1000 g"}]}]}, {"classification": "SER-PP-TR", "source_sheet": "SER-PR-PR", "numeric_length": 13, "fields": [{"source_label": "TIPO DE SERVICIO", "target_label": "TIPO DE SERVICIO", "segment": "ABCDEFGHI", "length": 9, "options": [{"code": "000000001", "name": "INYECCION"}, {"code": "000000002", "name": "EXTRUSION"}, {"code": "000000003", "name": "SOPLADO"}, {"code": "000000004", "name": "MARCA"}, {"code": "000000005", "name": "ENSAMBLE"}, {"code": "000000006", "name": "CORTE"}, {"code": "000000007", "name": "EMPAQUE"}, {"code": "000000008", "name": "ACONDICIONAMIENTO"}, {"code": "000000009", "name": "RECTIFICADO"}, {"code": "000000010", "name": "DISENO"}]}, {"source_label": "LINEA", "target_label": "LINEA", "segment": "JKLM", "length": 4, "options": [{"code": "1001", "name": "ALIMENTOS"}, {"code": "1002", "name": "FARMACEUTICO"}, {"code": "1003", "name": "RETAIL"}, {"code": "1004", "name": "ESPECIALES"}]}]}, {"classification": "PTC-RT-PO", "source_sheet": "PTC-RT-PO", "numeric_length": 13, "fields": [{"source_label": "TIPO DE POP", "target_label": "Tipo de POP", "segment": "ABC", "length": 3, "options": [{"code": "101", "name": "BOLSILLO"}]}, {"source_label": "DETALLE", "target_label": "DETALLE", "segment": "DEF", "length": 3, "options": [{"code": "001", "name": "1/4 CARTA VERTICAL PESTAÑA C. 510 mm"}, {"code": "002", "name": "1/4 CARTA VERTICAL COLLARIN C. 510 mm"}]}, {"source_label": "DIMENSIÓN cm, gr O mL", "target_label": "Dimensión", "segment": "GHI", "length": 3, "options": [{"code": "001", "name": "14x10,5 cm / Pestaña 4,3x2 cm"}, {"code": "002", "name": "14x10 cm / Pestaña 16,5x4,3 cm"}, {"code": "003", "name": "3,7x 2,5 cm"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "JK", "length": 2, "options": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TURQUESA"}, {"code": "17", "name": "VERDE"}, {"code": "18", "name": "VERDE CLARO"}, {"code": "19", "name": "VERDE OSCURO"}]}, {"source_label": "MATERIAL", "target_label": "MATERIAL", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "ABS"}, {"code": "02", "name": "PEAD"}, {"code": "03", "name": "PET"}, {"code": "04", "name": "PP"}, {"code": "05", "name": "PS"}, {"code": "06", "name": "PVC"}]}]}, {"classification": "PTF-AL-CJ", "source_sheet": "PTF-AL-CJ", "numeric_length": 13, "fields": [{"source_label": "TIPO DE CONJUNTO", "target_label": "TIPO DE CONJUNTO", "segment": "ABC", "length": 3, "options": [{"code": "101", "name": "CONJUNTO DE ENVASE CUADRADO  CON TAPA"}]}, {"source_label": "BOCA", "target_label": "BOCA", "segment": "DEF", "length": 3, "options": [{"code": "001", "name": "B. 20mm"}, {"code": "002", "name": "B. 20mm agrafe"}, {"code": "003", "name": "B. 24mm"}, {"code": "004", "name": "B. 24mm agrafe"}, {"code": "005", "name": "B. 26mm"}, {"code": "006", "name": "B. 26mm agrafe"}, {"code": "007", "name": "B. 28mm"}, {"code": "008", "name": "B. 28mm agrafe"}, {"code": "009", "name": "B. 33mm"}, {"code": "010", "name": "B. 33mm agrafe"}, {"code": "011", "name": "B. 38mm"}, {"code": "012", "name": "B. 38mm agrafe"}, {"code": "013", "name": "B. 50mm"}, {"code": "014", "name": "B. 50mm agrafe"}, {"code": "015", "name": "B. 53mm"}, {"code": "016", "name": "B. 53mm agrafe"}, {"code": "017", "name": "B. 57mm"}, {"code": "018", "name": "B. 57mm agrafe"}, {"code": "019", "name": "B. 75mm"}, {"code": "020", "name": "B. 75mm agrafe"}, {"code": "021", "name": "B. 90mm"}, {"code": "022", "name": "B. 90mm agrafe"}, {"code": "021", "name": "B. 100mm"}, {"code": "022", "name": "B. 100mm agrafe"}, {"code": "021", "name": "B. 120mm"}, {"code": "022", "name": "B. 120mm agrafe"}]}, {"source_label": "CAPACIDAD EN gr O mL", "target_label": "CAPACIDAD EN gr O mL", "segment": "GHI", "length": 3, "options": [{"code": "001", "name": "*10"}, {"code": "002", "name": "*20"}, {"code": "003", "name": "*30"}, {"code": "004", "name": "*40"}, {"code": "005", "name": "*50"}, {"code": "006", "name": "*60"}, {"code": "007", "name": "*70"}, {"code": "008", "name": "*80"}, {"code": "009", "name": "*90"}, {"code": "010", "name": "*100"}, {"code": "011", "name": "*120"}, {"code": "012", "name": "*150"}, {"code": "013", "name": "*180"}, {"code": "014", "name": "*200"}, {"code": "015", "name": "*250"}, {"code": "016", "name": "*500"}, {"code": "017", "name": "*600"}, {"code": "018", "name": "*1000"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "JK", "length": 2, "options": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TURQUESA"}, {"code": "17", "name": "VERDE"}, {"code": "18", "name": "VERDE CLARO"}, {"code": "19", "name": "VERDE OSCURO"}]}, {"source_label": "MATERIAL", "target_label": "MATERIAL", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "ABS"}, {"code": "02", "name": "PEAD"}, {"code": "03", "name": "PET"}, {"code": "04", "name": "PP"}, {"code": "05", "name": "PS"}, {"code": "06", "name": "PVC"}]}]}, {"classification": "PTF-AL-EN", "source_sheet": "PTF-AL-EN", "numeric_length": 13, "fields": [{"source_label": "TIPO DE ENVASE", "target_label": "TIPO DE ENVASE", "segment": "ABC", "length": 3, "options": [{"code": "101", "name": "ENVASE CUADRADO"}, {"code": "102", "name": "VASO"}]}, {"source_label": "BOCA", "target_label": "BOCA", "segment": "DEF", "length": 3, "options": [{"code": "001", "name": "B. 20mm"}, {"code": "002", "name": "B. 20mm agrafe"}, {"code": "003", "name": "B. 24mm"}, {"code": "004", "name": "B. 24mm agrafe"}, {"code": "005", "name": "B. 26mm"}, {"code": "006", "name": "B. 26mm agrafe"}, {"code": "007", "name": "B. 28mm"}, {"code": "008", "name": "B. 28mm agrafe"}, {"code": "009", "name": "B. 33mm"}, {"code": "010", "name": "B. 33mm agrafe"}, {"code": "011", "name": "B. 38mm"}, {"code": "012", "name": "B. 38mm agrafe"}, {"code": "013", "name": "B. 50mm"}, {"code": "014", "name": "B. 50mm agrafe"}, {"code": "015", "name": "B. 53mm"}, {"code": "016", "name": "B. 53mm agrafe"}, {"code": "017", "name": "B. 57mm"}, {"code": "018", "name": "B. 57mm agrafe"}, {"code": "019", "name": "B. 75mm"}, {"code": "020", "name": "B. 75mm agrafe"}, {"code": "021", "name": "B. 90mm"}, {"code": "022", "name": "B. 90mm agrafe"}, {"code": "021", "name": "B. 100mm"}, {"code": "022", "name": "B. 100mm agrafe"}, {"code": "021", "name": "B. 120mm"}, {"code": "022", "name": "B. 120mm agrafe"}, {"code": "023", "name": "B. 79mm"}, {"code": "1 SUBC", "name": "ABC"}, {"code": "B. 120mm", "name": "101.0"}, {"code": "B. 79mm", "name": "102.0"}]}, {"source_label": "CAPACIDAD EN onz_gr O mL", "target_label": "CAPACIDAD EN onz_gr O mL", "segment": "GHI", "length": 3, "options": [{"code": "001", "name": "*10"}, {"code": "002", "name": "*20"}, {"code": "003", "name": "*30"}, {"code": "004", "name": "*40"}, {"code": "005", "name": "*50"}, {"code": "006", "name": "*60"}, {"code": "007", "name": "*70"}, {"code": "008", "name": "*80"}, {"code": "009", "name": "*90"}, {"code": "010", "name": "*100"}, {"code": "011", "name": "*120"}, {"code": "012", "name": "*150"}, {"code": "013", "name": "*180"}, {"code": "014", "name": "*200"}, {"code": "015", "name": "*250"}, {"code": "016", "name": "*500"}, {"code": "017", "name": "*600"}, {"code": "018", "name": "*1000"}, {"code": "019", "name": "9 onz"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "JK", "length": 2, "options": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TURQUESA"}, {"code": "17", "name": "VERDE"}, {"code": "18", "name": "VERDE CLARO"}, {"code": "19", "name": "VERDE OSCURO"}]}, {"source_label": "MATERIAL", "target_label": "MATERIAL", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "ABS"}, {"code": "02", "name": "PEAD"}, {"code": "03", "name": "PET"}, {"code": "04", "name": "PP"}, {"code": "05", "name": "PS"}, {"code": "06", "name": "PVC"}, {"code": "07", "name": "PE"}]}]}, {"classification": "PTF-AL-TP", "source_sheet": "PTF-AL-TP", "numeric_length": 13, "fields": [{"source_label": "TIPO DE TAPA", "target_label": "TIPO DE TAPA", "segment": "ABCD", "length": 4, "options": [{"code": "1001", "name": "TAPA A PRESIÓN"}, {"code": "1002", "name": "TAPA ANILLO DE SEGURIDAD"}, {"code": "1003", "name": "TAPA DE PRESIÓN Y SELLADO"}, {"code": "1004", "name": "TAPA PRESS TOP"}, {"code": "1005", "name": "TAPA ROSCADA"}, {"code": "1006", "name": "SOBRE TAPA"}, {"code": "1007", "name": "TAPÓN A PRESIÓN"}]}, {"source_label": "ACABADO", "target_label": "ACABADO", "segment": "EF", "length": 2, "options": [{"code": "01", "name": "LISA"}, {"code": "02", "name": "ESTRIADA"}, {"code": "03", "name": "CUADRADA LISA"}, {"code": "04", "name": "CIRCULAR ESTRIADA"}, {"code": "05", "name": "CIRCULAR LISA"}, {"code": "06", "name": "CUADRADA ESTRIADA"}, {"code": "07", "name": "RECTANGULAR LISA"}, {"code": "08", "name": "RECTANGULAR ESTRIADA"}, {"code": "09", "name": "RECTANGULAR LISA 3 DIVISIONES"}]}, {"source_label": "BOCA", "target_label": "BOCA", "segment": "GHI", "length": 3, "options": [{"code": "001", "name": "B. 20 mm"}, {"code": "002", "name": "B. 20 mm con linner"}, {"code": "003", "name": "B. 24 mm"}, {"code": "004", "name": "B. 24 mm con linner"}, {"code": "005", "name": "B. 26 mm"}, {"code": "006", "name": "B. 26 mm con linner"}, {"code": "007", "name": "B. 28mm"}, {"code": "008", "name": "B. 28mm con linner"}, {"code": "009", "name": "B. 33 mm"}, {"code": "010", "name": "B. 33mm con linner"}, {"code": "011", "name": "B. 34mm"}, {"code": "012", "name": "B. 34mm con linner"}, {"code": "013", "name": "B. 38mm"}, {"code": "014", "name": "B. 38mm con linner"}, {"code": "015", "name": "B. 50 mm"}, {"code": "016", "name": "B. 50mm con linner"}, {"code": "017", "name": "B. 53 mm"}, {"code": "018", "name": "B. 53mm con linner"}, {"code": "019", "name": "B. 57 mm"}, {"code": "020", "name": "B. 57mm con linner"}, {"code": "021", "name": "B. 75 mm"}, {"code": "022", "name": "B. 75mm con linner"}, {"code": "023", "name": "B. 90 mm"}, {"code": "024", "name": "B. 90mm con linner"}, {"code": "025", "name": "B. 120mm"}, {"code": "026", "name": "B. 190mm x 230mm"}, {"code": "027", "name": "B. 401-101 EM"}, {"code": "028", "name": "B. 401-103 EC"}, {"code": "029", "name": "B. 502-129 EM"}, {"code": "030", "name": "B. 307 EC"}, {"code": "031", "name": "B. 211 EC"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "JK", "length": 2, "options": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TURQUESA"}, {"code": "17", "name": "VERDE"}, {"code": "18", "name": "VERDE CLARO"}, {"code": "19", "name": "VERDE OSCURO"}, {"code": "20", "name": "DORADO"}]}, {"source_label": "MATERIAL", "target_label": "MATERIAL", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "ABS"}, {"code": "02", "name": "PEAD"}, {"code": "03", "name": "PET"}, {"code": "04", "name": "PP"}, {"code": "05", "name": "PS"}, {"code": "06", "name": "PVC"}, {"code": "07", "name": "PEBD"}]}]}, {"classification": "PTF-AL-CH", "source_sheet": "PTF-AL-CH", "numeric_length": 13, "fields": [{"source_label": "TIPO DE CUCHARA", "target_label": "TIPO DE CUCHARA", "segment": "ABCD", "length": 4, "options": [{"code": "1001", "name": "CUCHARA DOSIFICADORA"}]}, {"source_label": "ACABADO", "target_label": "ACABADO", "segment": "EF", "length": 2, "options": [{"code": "01", "name": "CIRCULAR"}, {"code": "02", "name": "CUADRADA"}]}, {"source_label": "CAPACIDAD", "target_label": "CAPACIDAD", "segment": "GHI", "length": 3, "options": [{"code": "001", "name": "0,6 cc"}, {"code": "002", "name": "1,25 cc"}, {"code": "003", "name": "2,5 cc"}, {"code": "004", "name": "5 cc"}, {"code": "005", "name": "7,5 cc"}, {"code": "006", "name": "10 cc"}, {"code": "007", "name": "15 cc"}, {"code": "008", "name": "20 cc"}, {"code": "009", "name": "29,6 cc"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "JK", "length": 2, "options": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TURQUESA"}, {"code": "17", "name": "VERDE"}, {"code": "18", "name": "VERDE CLARO"}, {"code": "19", "name": "VERDE OSCURO"}]}, {"source_label": "MATERIAL", "target_label": "MATERIAL", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "ABS"}, {"code": "02", "name": "PEAD"}, {"code": "03", "name": "PET"}, {"code": "04", "name": "PP"}, {"code": "05", "name": "PS"}, {"code": "06", "name": "PVC"}]}]}, {"classification": "PTF-FM-EN", "source_sheet": "PTF-FM-EN", "numeric_length": 13, "fields": [{"source_label": "TIPO DE ENVASE", "target_label": "TIPO DE ENVASE", "segment": "ABC", "length": 3, "options": [{"code": "101", "name": "2 BOCAS"}, {"code": "102", "name": "CILINDRICO"}, {"code": "103", "name": "CONTENEDOR"}, {"code": "104", "name": "ONDULADO"}, {"code": "105", "name": "OVALADO"}, {"code": "106", "name": "PASTILLERO"}, {"code": "107", "name": "POTE"}]}, {"source_label": "BOCA", "target_label": "BOCA", "segment": "DEF", "length": 3, "options": [{"code": "001", "name": "B. 20mm"}, {"code": "002", "name": "B. 20mm agrafe"}, {"code": "003", "name": "B. 24mm"}, {"code": "004", "name": "B. 24mm agrafe"}, {"code": "005", "name": "B. 26mm"}, {"code": "006", "name": "B. 26mm agrafe"}, {"code": "007", "name": "B. 28mm"}, {"code": "008", "name": "B. 28mm agrafe"}, {"code": "009", "name": "B. 33mm"}, {"code": "010", "name": "B. 33mm agrafe"}, {"code": "011", "name": "B. 38mm"}, {"code": "012", "name": "B. 38mm agrafe"}, {"code": "013", "name": "B. 50mm"}, {"code": "014", "name": "B. 50mm agrafe"}, {"code": "015", "name": "B. 53mm"}, {"code": "016", "name": "B. 53mm agrafe"}, {"code": "017", "name": "B. 57mm"}, {"code": "018", "name": "B. 57mm agrafe"}, {"code": "019", "name": "B. 75mm"}, {"code": "020", "name": "B. 75mm agrafe"}, {"code": "021", "name": "B. 90mm"}, {"code": "022", "name": "B. 90mm agrafe"}, {"code": "023", "name": "B. 59mm"}]}, {"source_label": "CAPACIDAD EN gr O mL", "target_label": "CAPACIDAD EN gr O mL", "segment": "GHI", "length": 3, "options": [{"code": "001", "name": "*10"}, {"code": "002", "name": "*20"}, {"code": "003", "name": "*30"}, {"code": "004", "name": "*40"}, {"code": "005", "name": "*50"}, {"code": "006", "name": "*60"}, {"code": "007", "name": "*70"}, {"code": "008", "name": "*80"}, {"code": "009", "name": "*90"}, {"code": "010", "name": "*100"}, {"code": "011", "name": "*120"}, {"code": "012", "name": "*150"}, {"code": "013", "name": "*180"}, {"code": "014", "name": "*200"}, {"code": "015", "name": "*250"}, {"code": "016", "name": "*500"}, {"code": "017", "name": "*600"}, {"code": "018", "name": "*1000"}, {"code": "019", "name": "*350"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "JK", "length": 2, "options": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TURQUESA"}, {"code": "17", "name": "VERDE"}, {"code": "18", "name": "VERDE CLARO"}, {"code": "19", "name": "VERDE OSCURO"}]}, {"source_label": "MATERIAL", "target_label": "MATERIAL", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "ABS"}, {"code": "02", "name": "PEAD"}, {"code": "03", "name": "PET"}, {"code": "04", "name": "PP"}, {"code": "05", "name": "PS"}, {"code": "06", "name": "PVC"}]}]}, {"classification": "PTF-ES-EN", "source_sheet": "PTF-ES-EN", "numeric_length": 13, "fields": [{"source_label": "TIPO DE ENVASE", "target_label": "TIPO DE ENVASE", "segment": "ABC", "length": 3, "options": [{"code": "101", "name": "CRISTO"}]}, {"source_label": "BOCA", "target_label": "BOCA", "segment": "DEF", "length": 3, "options": [{"code": "001", "name": "B. 20mm"}, {"code": "002", "name": "B. 20mm agrafe"}, {"code": "003", "name": "B. 24mm"}, {"code": "004", "name": "B. 24mm agrafe"}, {"code": "005", "name": "B. 26mm"}, {"code": "006", "name": "B. 26mm agrafe"}, {"code": "007", "name": "B. 28mm"}, {"code": "008", "name": "B. 28mm agrafe"}, {"code": "009", "name": "B. 33mm"}, {"code": "010", "name": "B. 33mm agrafe"}, {"code": "011", "name": "B. 38mm"}, {"code": "012", "name": "B. 38mm agrafe"}, {"code": "013", "name": "B. 50mm"}, {"code": "014", "name": "B. 50mm agrafe"}, {"code": "015", "name": "B. 53mm"}, {"code": "016", "name": "B. 53mm agrafe"}, {"code": "017", "name": "B. 57mm"}, {"code": "018", "name": "B. 57mm agrafe"}, {"code": "019", "name": "B. 75mm"}, {"code": "020", "name": "B. 75mm agrafe"}, {"code": "021", "name": "B. 90mm"}, {"code": "022", "name": "B. 90mm agrafe"}]}, {"source_label": "CAPACIDAD EN gr O mL", "target_label": "CAPACIDAD EN gr O mL", "segment": "GHI", "length": 3, "options": [{"code": "001", "name": "*10"}, {"code": "002", "name": "*20"}, {"code": "003", "name": "*30"}, {"code": "004", "name": "*40"}, {"code": "005", "name": "*50"}, {"code": "006", "name": "*60"}, {"code": "007", "name": "*70"}, {"code": "008", "name": "*80"}, {"code": "009", "name": "*90"}, {"code": "010", "name": "*100"}, {"code": "011", "name": "*120"}, {"code": "012", "name": "*150"}, {"code": "013", "name": "*180"}, {"code": "014", "name": "*200"}, {"code": "015", "name": "*250"}, {"code": "016", "name": "*446"}, {"code": "017", "name": "*500"}, {"code": "018", "name": "*600"}, {"code": "019", "name": "*1000"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "JK", "length": 2, "options": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TURQUESA"}, {"code": "17", "name": "VERDE"}, {"code": "18", "name": "VERDE CLARO"}, {"code": "19", "name": "VERDE OSCURO"}]}, {"source_label": "MATERIAL", "target_label": "MATERIAL", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "ABS"}, {"code": "02", "name": "PEAD"}, {"code": "03", "name": "PET"}, {"code": "04", "name": "PP"}, {"code": "05", "name": "PS"}, {"code": "06", "name": "PVC"}]}]}, {"classification": "PTF-FM-JG", "source_sheet": "PTF-FM-JG", "numeric_length": 13, "fields": [{"source_label": "TIPO DE JERINGA", "target_label": "TIPO DE JERINGA", "segment": "ABCD", "length": 4, "options": [{"code": "1001", "name": "CONO CORRIENTE"}, {"code": "1002", "name": "CONO DOSIFICADOR"}, {"code": "1003", "name": "CORRIENTE"}, {"code": "1004", "name": "DOSIFICADORA"}, {"code": "1005", "name": "EQUINA"}, {"code": "1006", "name": "INTRAMAMARIA"}]}, {"source_label": "ACABADO", "target_label": "ACABADO", "segment": "EF", "length": 2, "options": [{"code": "01", "name": "MASTITIS CANULA CORTA"}]}, {"source_label": "CAPACIDAD", "target_label": "Capacidad [mL]", "segment": "GHI", "length": 3, "options": [{"code": "001", "name": "1 mm"}, {"code": "002", "name": "2 mm"}, {"code": "003", "name": "5  mm"}, {"code": "004", "name": "10 mm"}, {"code": "005", "name": "15  mm"}, {"code": "006", "name": "20 mm"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "JK", "length": 2, "options": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TURQUESA"}, {"code": "17", "name": "VERDE"}, {"code": "18", "name": "VERDE CLARO"}, {"code": "19", "name": "VERDE OSCURO"}]}, {"source_label": "MATERIAL", "target_label": "MATERIAL", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "ABS"}, {"code": "02", "name": "PEAD"}, {"code": "03", "name": "PET"}, {"code": "04", "name": "PP"}, {"code": "05", "name": "PS"}, {"code": "06", "name": "PVC"}, {"code": "07", "name": "PE"}]}]}, {"classification": "PTF-FM-CJ", "source_sheet": "PTF-FM-CJ", "numeric_length": 13, "fields": [{"source_label": "TIPO DE TAPA", "target_label": "Tipo de componente", "segment": "ABCD", "length": 4, "options": [{"code": "1001", "name": "CILINDRO"}, {"code": "1002", "name": "ÉMBOLO"}, {"code": "1003", "name": "PISTÓN"}, {"code": "1004", "name": "TAPÓN"}]}, {"source_label": "ACABADO", "target_label": "ACABADO", "segment": "EF", "length": 2, "options": [{"code": "01", "name": "MASTITIS CANULA CORTA"}, {"code": "02", "name": "PARA PISTÓN DOSIFICADOR"}, {"code": "03", "name": "CONO REGULAR"}]}, {"source_label": "BOCA", "target_label": "Capacidad [mL]", "segment": "GHI", "length": 3, "options": [{"code": "001", "name": "1 mL"}, {"code": "002", "name": "2 mL"}, {"code": "003", "name": "5  mL"}, {"code": "004", "name": "10 mL"}, {"code": "005", "name": "15  mL"}, {"code": "006", "name": "20 mL"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "JK", "length": 2, "options": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TURQUESA"}, {"code": "17", "name": "VERDE"}, {"code": "18", "name": "VERDE CLARO"}, {"code": "19", "name": "VERDE OSCURO"}]}, {"source_label": "MATERIAL", "target_label": "MATERIAL", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "ABS"}, {"code": "02", "name": "PEAD"}, {"code": "03", "name": "PET"}, {"code": "04", "name": "PP"}, {"code": "05", "name": "PS"}, {"code": "06", "name": "PVC"}, {"code": "07", "name": "PE"}, {"code": "08", "name": "TPE"}]}]}, {"classification": "PTF-FM-TP", "source_sheet": "PTF-FM-TP", "numeric_length": 13, "fields": [{"source_label": "TIPO DE TAPA o TAPÓN", "target_label": "TIPO DE TAPA o TAPÓN", "segment": "ABCD", "length": 4, "options": [{"code": "1001", "name": "TAPA A PRESIÓN"}, {"code": "1002", "name": "TAPA ANILLO DE SEGURIDAD"}, {"code": "1003", "name": "TAPA DE PRESIÓN Y SELLADO"}, {"code": "1004", "name": "TAPA PRESS TOP"}, {"code": "1005", "name": "TAPA ROSCADA"}, {"code": "1006", "name": "TAPÓN A PRESIÓN"}, {"code": "1007", "name": "SOBRE TAPA"}]}, {"source_label": "ACABADO", "target_label": "ACABADO", "segment": "EF", "length": 2, "options": [{"code": "01", "name": "LISA"}, {"code": "02", "name": "ESTRIADA"}, {"code": "03", "name": "CIRCULAR LISA"}, {"code": "04", "name": "CIRCULAR ESTRIADA"}, {"code": "05", "name": "CUADRADA LISA"}, {"code": "06", "name": "CUADRADA ESTRIADA"}, {"code": "07", "name": "PERFORADO"}]}, {"source_label": "BOCA", "target_label": "BOCA", "segment": "GHI", "length": 3, "options": [{"code": "001", "name": "B. 20 mm"}, {"code": "002", "name": "B. 20 mm con linner"}, {"code": "003", "name": "B. 24 mm"}, {"code": "004", "name": "B. 24 mm con linner"}, {"code": "005", "name": "B. 26 mm"}, {"code": "006", "name": "B. 26 mm con linner"}, {"code": "007", "name": "B. 28mm"}, {"code": "008", "name": "B. 28mm con linner"}, {"code": "009", "name": "B. 33 mm"}, {"code": "010", "name": "B. 33mm con linner"}, {"code": "011", "name": "B. 34mm"}, {"code": "012", "name": "B. 34mm con linner"}, {"code": "013", "name": "B. 38mm"}, {"code": "014", "name": "B. 38mm con linner"}, {"code": "015", "name": "B. 50 mm"}, {"code": "016", "name": "B. 50mm con linner"}, {"code": "017", "name": "B. 53 mm"}, {"code": "018", "name": "B. 53mm con linner"}, {"code": "019", "name": "B. 57 mm"}, {"code": "020", "name": "B. 57mm con linner"}, {"code": "021", "name": "B. 75 mm"}, {"code": "022", "name": "B. 75mm con linner"}, {"code": "023", "name": "B. 90 mm"}, {"code": "024", "name": "B. 90mm con linner"}, {"code": "025", "name": "B. 22 mm"}, {"code": "026", "name": "B. 19 mm"}, {"code": "027", "name": "B. 59 mm"}, {"code": "028", "name": "B. 401-101 EM"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "JK", "length": 2, "options": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TURQUESA"}, {"code": "17", "name": "VERDE"}, {"code": "18", "name": "VERDE CLARO"}, {"code": "19", "name": "VERDE OSCURO"}]}, {"source_label": "MATERIAL", "target_label": "MATERIAL", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "ABS"}, {"code": "02", "name": "PEAD"}, {"code": "03", "name": "PET"}, {"code": "04", "name": "PP"}, {"code": "05", "name": "PS"}, {"code": "06", "name": "PVC"}, {"code": "07", "name": "PEBD"}]}]}, {"classification": "PTF-ES-TP", "source_sheet": "PTF-ES-TP", "numeric_length": 13, "fields": [{"source_label": "TIPO DE TAPA", "target_label": "TIPO DE TAPA", "segment": "ABCD", "length": 4, "options": [{"code": "1001", "name": "A PRESIÓN"}, {"code": "1002", "name": "MASTER"}, {"code": "1003", "name": "SUB MASTER"}]}, {"source_label": "ACABADO", "target_label": "ACABADO", "segment": "EF", "length": 2, "options": [{"code": "01", "name": "LISO"}, {"code": "02", "name": "ESTRIADO"}, {"code": "03", "name": "ESTRELLA"}]}, {"source_label": "BOCA", "target_label": "BOCA", "segment": "GHI", "length": 3, "options": [{"code": "001", "name": "B. 1"}, {"code": "002", "name": "B. 3/4"}, {"code": "003", "name": "B. 185 mm"}, {"code": "004", "name": "B. 30 mm"}, {"code": "005", "name": "B. 90 mm"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "JK", "length": 2, "options": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TURQUESA"}, {"code": "17", "name": "VERDE"}, {"code": "18", "name": "VERDE CLARO"}, {"code": "19", "name": "VERDE OSCURO"}]}, {"source_label": "MATERIAL", "target_label": "MATERIAL", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "ABS"}, {"code": "02", "name": "PEAD"}, {"code": "03", "name": "PET"}, {"code": "04", "name": "PP"}, {"code": "05", "name": "PS"}, {"code": "06", "name": "PVC"}]}]}, {"classification": "PTF-RT-PO", "source_sheet": "PTF-RT-PO", "numeric_length": 13, "fields": [{"source_label": "LINEA", "target_label": "LINEA", "segment": "ABC", "length": 3, "options": [{"code": "101", "name": "GRIP"}, {"code": "102", "name": "SEPARADOR"}, {"code": "103", "name": "HABLADOR"}, {"code": "104", "name": "BOMPER"}]}, {"source_label": "TIPO", "target_label": "TIPO", "segment": "DEF", "length": 3, "options": [{"code": "001", "name": "FLEX UP"}, {"code": "002", "name": "FLEX UP ADHESIVO"}, {"code": "003", "name": "RÍGIDO"}, {"code": "004", "name": "RÍGIDO ADHESIVO"}, {"code": "005", "name": "ROPETRÁFICO"}, {"code": "006", "name": "ROPETRÁFICO ADHESIVO"}, {"code": "007", "name": "ROPETRÁFICO P-37"}, {"code": "008", "name": "ROPETRÁFICO P-37 ADHESIVO"}, {"code": "009", "name": "UNIVERSAL EN C"}, {"code": "010", "name": "UNIVERSAL EN C ADHESIVO"}, {"code": "011", "name": "DIVISOR GAVETA"}, {"code": "012", "name": "PUNTO DE PAGO"}, {"code": "013", "name": "RETENEDOR FRONTAL"}, {"code": "014", "name": "PERFIL EN E"}, {"code": "015", "name": "DIVISOR GÓNDOLA"}, {"code": "016", "name": "CONJUNTO DIVISOR GÓNDOLA"}, {"code": "017", "name": "ACRILICO CON SOPORTE"}, {"code": "018", "name": "DISPLAY EN L"}, {"code": "019", "name": "DISPLAY INCLINADO"}, {"code": "020", "name": "STAND TV"}, {"code": "021", "name": "PARA NEVERA"}, {"code": "022", "name": "PERFIL INFERIOR CHECK OUT"}, {"code": "023", "name": "PERFIL SUPERIOR CHECK OUT"}]}, {"source_label": "CAPACIDAD EN gr O mL", "target_label": "CAPACIDAD EN gr O mL", "segment": "GHI", "length": 3, "options": [{"code": "001", "name": "34,5 * 4,5 cm"}, {"code": "002", "name": "3,7 * 2,5 cm"}, {"code": "003", "name": "2,5 cm"}, {"code": "004", "name": "30 * 4 cm"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "JK", "length": 2, "options": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TURQUESA"}, {"code": "17", "name": "VERDE"}, {"code": "18", "name": "VERDE CLARO"}, {"code": "19", "name": "VERDE OSCURO"}]}, {"source_label": "MATERIAL", "target_label": "MATERIAL", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "ABS"}, {"code": "02", "name": "PEAD"}, {"code": "03", "name": "PET"}, {"code": "04", "name": "PP"}, {"code": "05", "name": "PS"}, {"code": "06", "name": "PVC"}, {"code": "07", "name": "HIPS"}]}]}, {"classification": "PTF-RT-PP", "source_sheet": "PTF-RT-PP", "numeric_length": 13, "fields": [{"source_label": "TIPO", "target_label": "TIPO", "segment": "ABC", "length": 3, "options": [{"code": "101", "name": "PERFIL REGLETA DESLIZANTE"}, {"code": "102", "name": "PORTA PRECIO DESLIZANTE"}, {"code": "103", "name": "COMBO PORTA PRECIO REGLETA DESLIZANTE"}, {"code": "104", "name": "PORTA PRECIO EN ANGULO DE 90°"}, {"code": "105", "name": "PORTA PRECIO EN ANGULO DE 135°"}, {"code": "106", "name": "PORTA PRECIO EN L ABATIBLE"}, {"code": "107", "name": "PORTA PRECIO MAXI BISAGRA"}, {"code": "108", "name": "PORTA PRECIO PLANO"}, {"code": "109", "name": "PORTA PRECIO PLANO SIN SELLE"}, {"code": "110", "name": "PORTA PRECIO 3 GUÍAS"}, {"code": "111", "name": "PORTA PRECIO BLISTER"}, {"code": "112", "name": "PORTA PRECIO CENTRAL"}, {"code": "113", "name": "PORTA PRECIO CLIP"}, {"code": "114", "name": "PORTA PRECIO E26 ABATIBLE"}, {"code": "115", "name": "PORTA PRECIO E32 ABATIBLE"}, {"code": "116", "name": "PORTA PRECIO ENGANCHE INTERNO"}, {"code": "117", "name": "PORTA PRECIO EN E ABATIBLE"}, {"code": "118", "name": "PORTA PRECIO DOBLE IB"}, {"code": "119", "name": "PORTA PRECIO INVERTIDO"}, {"code": "120", "name": "PORTA PRECIO EN C"}, {"code": "121", "name": "PORTA PRECIO PARA VIDRIO"}, {"code": "122", "name": "PORTA PRECIO REDONDO"}, {"code": "123", "name": "PORTA PRECIO SOLAPA PASO 37"}]}, {"source_label": "ALTURA EN cm", "target_label": "Altura [cm]", "segment": "DEF", "length": 3, "options": [{"code": "001", "name": "2.5 cm"}, {"code": "002", "name": "3.5 cm"}, {"code": "003", "name": "3.7 cm"}, {"code": "004", "name": "4 cm"}, {"code": "005", "name": "6.5 cm"}, {"code": "006", "name": "7.5 cm"}, {"code": "007", "name": "8 cm"}, {"code": "008", "name": "9 cm"}, {"code": "009", "name": "10 cm"}, {"code": "010", "name": "21 cm"}]}, {"source_label": "ACABADO", "target_label": "ACABADO", "segment": "GHI", "length": 3, "options": [{"code": "001", "name": "ADH SENCILLO DE 1/2\""}, {"code": "002", "name": "ADH SENCILLO DE 1\""}, {"code": "003", "name": "ADH DOBLE DE 1/2\""}, {"code": "004", "name": "ADH DOBLE DE 1\""}, {"code": "005", "name": "ADH ESPUMOSO SENCILLO DE 1/2\""}, {"code": "006", "name": "ADH ESPUMOSO SENCILLO DE 1\""}, {"code": "007", "name": "ADH ESPUMOSO DOBLE DE 1/2\""}, {"code": "008", "name": "ADH ESPUMOSO DOBLE DE 1\""}, {"code": "009", "name": "IMANTADO"}, {"code": "010", "name": "S.A"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "JK", "length": 2, "options": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TRANSPARENTE"}, {"code": "17", "name": "TURQUESA"}, {"code": "18", "name": "VERDE"}, {"code": "19", "name": "VERDE CLARO"}, {"code": "20", "name": "VERDE OSCURO"}]}, {"source_label": "MATERIAL", "target_label": "MATERIAL", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "ABS"}, {"code": "02", "name": "PEAD"}, {"code": "03", "name": "PET"}, {"code": "04", "name": "PP"}, {"code": "05", "name": "PS"}, {"code": "06", "name": "PVC"}, {"code": "07", "name": "HIPS"}]}]}, {"classification": "PTF-RT-AC", "source_sheet": "PTF-RT-AC", "numeric_length": 13, "fields": [{"source_label": "TIPO", "target_label": "TIPO", "segment": "ABC", "length": 3, "options": [{"code": "101", "name": "MARCA"}, {"code": "102", "name": "BORDE REDONDO"}, {"code": "103", "name": "ADHESIVO"}, {"code": "104", "name": "ADHESIVO ESPUMOSO"}, {"code": "105", "name": "IMANTADO"}, {"code": "106", "name": "PERFORADO"}]}, {"source_label": "TIPO", "target_label": "TIPO", "segment": "DEF", "length": 3, "options": [{"code": "001", "name": "SENCILLA"}, {"code": "002", "name": "DOBLE"}, {"code": "003", "name": "SENCILLO DE 1/2\""}, {"code": "004", "name": "SENCILLO DE 1\""}, {"code": "005", "name": "DOBLE DE 1/2\""}, {"code": "006", "name": "DOBLE DE 1\""}]}, {"source_label": "CANTIDAD EN und", "target_label": "CANTIDAD EN und", "segment": "GHI", "length": 3, "options": [{"code": "001", "name": "1.0"}, {"code": "002", "name": "2.0"}, {"code": "003", "name": "3.0"}, {"code": "004", "name": "4.0"}, {"code": "005", "name": "5.0"}, {"code": "006", "name": "6.0"}, {"code": "007", "name": "7.0"}, {"code": "008", "name": "8.0"}, {"code": "009", "name": "9.0"}, {"code": "010", "name": "10.0"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "JK", "length": 2, "options": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TRANSPARENTE"}, {"code": "17", "name": "TURQUESA"}, {"code": "18", "name": "VERDE"}, {"code": "19", "name": "VERDE CLARO"}, {"code": "20", "name": "VERDE OSCURO"}]}, {"source_label": "MATERIAL", "target_label": "MATERIAL", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "ABS"}, {"code": "02", "name": "PEAD"}, {"code": "03", "name": "PET"}, {"code": "04", "name": "PP"}, {"code": "05", "name": "PS"}, {"code": "06", "name": "PVC"}, {"code": "07", "name": "HIPS"}, {"code": "08", "name": "TINTA"}, {"code": "09", "name": "N"}, {"code": "10", "name": "3M"}, {"code": "11", "name": "ESP"}, {"code": "12", "name": "IMAN FLEXIBLE"}]}]}, {"classification": "PTC-FM-EN", "source_sheet": "PTC-FM-EN-", "numeric_length": 13, "fields": [{"source_label": "TIPO DE ENVASE", "target_label": "TIPO DE ENVASE", "segment": "ABC", "length": 3, "options": [{"code": "101", "name": "2 BOCAS"}, {"code": "102", "name": "CILINDRICO"}, {"code": "103", "name": "CONTENEDOR"}, {"code": "104", "name": "ONDULADO"}, {"code": "105", "name": "OVALADO"}, {"code": "106", "name": "PASTILLERO"}, {"code": "107", "name": "POTE"}, {"code": "108", "name": "ESPECIAL ZEP"}]}, {"source_label": "BOCA", "target_label": "BOCA", "segment": "DEF", "length": 3, "options": [{"code": "001", "name": "B. 20mm"}, {"code": "002", "name": "B. 20mm agrafe"}, {"code": "003", "name": "B. 24mm"}, {"code": "004", "name": "B. 24mm agrafe"}, {"code": "005", "name": "B. 26mm"}, {"code": "006", "name": "B. 26mm agrafe"}, {"code": "007", "name": "B. 28mm"}, {"code": "008", "name": "B. 28mm agrafe"}, {"code": "009", "name": "B. 33mm"}, {"code": "010", "name": "B. 33mm agrafe"}, {"code": "011", "name": "B. 38mm"}, {"code": "012", "name": "B. 38mm agrafe"}, {"code": "013", "name": "B. 50mm"}, {"code": "014", "name": "B. 50mm agrafe"}, {"code": "015", "name": "B. 53mm"}, {"code": "016", "name": "B. 53mm agrafe"}, {"code": "017", "name": "B. 57mm"}, {"code": "018", "name": "B. 57mm agrafe"}, {"code": "019", "name": "B. 75mm"}, {"code": "020", "name": "B. 75mm agrafe"}, {"code": "021", "name": "B. 90mm"}, {"code": "022", "name": "B. 90mm agrafe"}]}, {"source_label": "CAPACIDAD EN gr O mL", "target_label": "CAPACIDAD EN gr O mL", "segment": "GHI", "length": 3, "options": [{"code": "001", "name": "*10"}, {"code": "002", "name": "*20"}, {"code": "003", "name": "*30"}, {"code": "004", "name": "*40"}, {"code": "005", "name": "*50"}, {"code": "006", "name": "*60"}, {"code": "007", "name": "*70"}, {"code": "008", "name": "*80"}, {"code": "009", "name": "*90"}, {"code": "010", "name": "*100"}, {"code": "011", "name": "*120"}, {"code": "012", "name": "*150"}, {"code": "013", "name": "*180"}, {"code": "014", "name": "*200"}, {"code": "015", "name": "*250"}, {"code": "016", "name": "*500"}, {"code": "017", "name": "*600"}, {"code": "018", "name": "*1000"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "JK", "length": 2, "options": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TURQUESA"}, {"code": "17", "name": "VERDE"}, {"code": "18", "name": "VERDE CLARO"}, {"code": "19", "name": "VERDE OSCURO"}]}, {"source_label": "MATERIAL", "target_label": "MATERIAL", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "ABS"}, {"code": "02", "name": "PEAD"}, {"code": "03", "name": "PET"}, {"code": "04", "name": "PP"}, {"code": "05", "name": "PS"}, {"code": "06", "name": "PVC"}]}]}, {"classification": "PTC-FM-TP", "source_sheet": "PTC-FM-TP-", "numeric_length": 13, "fields": [{"source_label": "TIPO DE TAPA", "target_label": "TIPO DE TAPA", "segment": "ABCD", "length": 4, "options": [{"code": "1001", "name": "A PRESIÓN"}, {"code": "1002", "name": "ANILLO DE SEGURIDAD"}, {"code": "1003", "name": "DE PRESIÓN Y SELLADO"}, {"code": "1004", "name": "PRESS TOP"}, {"code": "1005", "name": "ROSCADA"}]}, {"source_label": "ACABADO", "target_label": "ACABADO", "segment": "EF", "length": 2, "options": [{"code": "01", "name": "LISA"}, {"code": "02", "name": "ESTRIADA"}]}, {"source_label": "BOCA", "target_label": "BOCA", "segment": "GHI", "length": 3, "options": [{"code": "001", "name": "B. 20 mm"}, {"code": "002", "name": "B. 20 mm con linner"}, {"code": "003", "name": "B. 24 mm"}, {"code": "004", "name": "B. 24 mm con linner"}, {"code": "005", "name": "B. 26 mm"}, {"code": "006", "name": "B. 26 mm con linner"}, {"code": "007", "name": "B. 28mm"}, {"code": "008", "name": "B. 28mm con linner"}, {"code": "009", "name": "B. 33 mm"}, {"code": "010", "name": "B. 33mm con linner"}, {"code": "011", "name": "B. 34mm"}, {"code": "012", "name": "B. 34mm con linner"}, {"code": "013", "name": "B. 38mm"}, {"code": "014", "name": "B. 38mm con linner"}, {"code": "015", "name": "B. 50 mm"}, {"code": "016", "name": "B. 50mm con linner"}, {"code": "017", "name": "B. 53 mm"}, {"code": "018", "name": "B. 53mm con linner"}, {"code": "019", "name": "B. 57 mm"}, {"code": "020", "name": "B. 57mm con linner"}, {"code": "021", "name": "B. 75 mm"}, {"code": "022", "name": "B. 75mm con linner"}, {"code": "023", "name": "B. 90 mm"}, {"code": "024", "name": "B. 90mm con linner"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "JK", "length": 2, "options": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TURQUESA"}, {"code": "17", "name": "VERDE"}, {"code": "18", "name": "VERDE CLARO"}, {"code": "19", "name": "VERDE OSCURO"}]}, {"source_label": "MATERIAL", "target_label": "MATERIAL", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "ABS"}, {"code": "02", "name": "PEAD"}, {"code": "03", "name": "PET"}, {"code": "04", "name": "PP"}, {"code": "05", "name": "PS"}, {"code": "06", "name": "PVC"}]}]}, {"classification": "MPP-OR-PD", "source_sheet": "MPP-OR-PD-", "numeric_length": 13, "fields": [{"source_label": "REFERENCIA", "target_label": "REFERENCIA", "segment": "AB", "length": 2, "options": [{"code": "10", "name": "PEAD"}, {"code": "11", "name": "PEBD"}, {"code": "12", "name": "PELBD"}]}, {"source_label": "CÓDIGO", "target_label": "CÓDIGO", "segment": "CDEF", "length": 4, "options": [{"code": "0001", "name": "MARLEX HHM 5502BN"}, {"code": "0002", "name": "BRASKEM IF 33"}, {"code": "0003", "name": "PAXON-AS55-003"}, {"code": "0004", "name": "DOW DMDA 8907 NT7"}, {"code": "0005", "name": "DOW DNDB 7147 NT7"}]}, {"source_label": "PRESENTACIÓN", "target_label": "PRESENTACIÓN", "segment": "GH", "length": 2, "options": [{"code": "01", "name": "BULTO"}, {"code": "02", "name": "CANECA"}]}, {"source_label": "PESO EN Kg", "target_label": "PESO EN Kg", "segment": "IJK", "length": 3, "options": [{"code": "001", "name": "1.0"}, {"code": "002", "name": "2.0"}, {"code": "003", "name": "3.0"}, {"code": "004", "name": "4.0"}, {"code": "005", "name": "5.0"}, {"code": "006", "name": "6.0"}, {"code": "007", "name": "7.0"}, {"code": "008", "name": "8.0"}, {"code": "009", "name": "9.0"}, {"code": "010", "name": "10.0"}, {"code": ",,,,,,", "name": ",,,,,,"}, {"code": "015", "name": "15.0"}, {"code": "020", "name": "20.0"}, {"code": "022", "name": "22.0"}, {"code": "025", "name": "25.0"}, {"code": "050", "name": "50.0"}, {"code": "100", "name": "100.0"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TURQUESA"}, {"code": "17", "name": "VERDE"}, {"code": "18", "name": "VERDE CLARO"}, {"code": "19", "name": "VERDE OSCURO"}]}]}, {"classification": "MPP-OR-PP", "source_sheet": "MPP-OR-PP-", "numeric_length": 13, "fields": [{"source_label": "REFERENCIA", "target_label": "REFERENCIA", "segment": "AB", "length": 2, "options": [{"code": "10", "name": "POLIPROPILENO"}]}, {"source_label": "CÓDIGO", "target_label": "CÓDIGO", "segment": "CDEF", "length": 4, "options": [{"code": "0001", "name": "BAPOLENE 4072NA"}, {"code": "0002", "name": "RJ970Z"}, {"code": "0003", "name": "COPOLIMERO R. 80R90C"}, {"code": "0004", "name": "11H01A"}]}, {"source_label": "PRESENTACIÓN", "target_label": "PRESENTACIÓN", "segment": "GH", "length": 2, "options": [{"code": "01", "name": "BULTO"}, {"code": "02", "name": "CANECA"}]}, {"source_label": "PESO EN Kg", "target_label": "PESO EN Kg", "segment": "IJK", "length": 3, "options": [{"code": "001", "name": "1.0"}, {"code": "002", "name": "2.0"}, {"code": "003", "name": "3.0"}, {"code": "004", "name": "4.0"}, {"code": "005", "name": "5.0"}, {"code": "006", "name": "6.0"}, {"code": "007", "name": "7.0"}, {"code": "008", "name": "8.0"}, {"code": "009", "name": "9.0"}, {"code": "010", "name": "10.0"}, {"code": ",,,,,,", "name": ",,,,,,"}, {"code": "015", "name": "15.0"}, {"code": "020", "name": "20.0"}, {"code": "022", "name": "22.0"}, {"code": "025", "name": "25.0"}, {"code": "050", "name": "50.0"}, {"code": "100", "name": "100.0"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TURQUESA"}, {"code": "17", "name": "VERDE"}, {"code": "18", "name": "VERDE CLARO"}, {"code": "19", "name": "VERDE OSCURO"}]}]}, {"classification": "MPC-CP-MB", "source_sheet": "MPC-CP-MB", "numeric_length": 13, "fields": [{"source_label": "REFERENCIA", "target_label": "REFERENCIA", "segment": "AB", "length": 2, "options": [{"code": "10", "name": "MASTERBATCH ABS"}, {"code": "11", "name": "MASTERBATCH PE"}, {"code": "12", "name": "MASTERBATCH PET"}, {"code": "13", "name": "MASTERBATCH PP"}, {"code": "14", "name": "MASTERBATCH PS"}, {"code": "15", "name": "MASTERBATCH PVC"}]}, {"source_label": "CÓDIGO", "target_label": "CÓDIGO", "segment": "CDEF", "length": 4, "options": [{"code": "0001", "name": "PL-WH0817-70%"}, {"code": "0002", "name": "PE-33194-02"}, {"code": "0003", "name": "PL-YE0017"}]}, {"source_label": "PRESENTACIÓN", "target_label": "PRESENTACIÓN", "segment": "GH", "length": 2, "options": [{"code": "01", "name": "BOLSA"}, {"code": "02", "name": "BULTO"}, {"code": "03", "name": "CANECA"}]}, {"source_label": "PESO EN g", "target_label": "PESO EN g", "segment": "IJK", "length": 3, "options": [{"code": "001", "name": "1000g"}, {"code": "002", "name": "25000g"}, {"code": "003", "name": "50000g"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TURQUESA"}, {"code": "17", "name": "VERDE"}, {"code": "18", "name": "VERDE CLARO"}, {"code": "19", "name": "VERDE OSCURO"}]}]}, {"classification": "ALQ-MC-PF", "source_sheet": "ALQ-MC-PF-", "numeric_length": 13, "fields": [{"source_label": "MAQUINA", "target_label": "MAQUINA", "segment": "ABC", "length": 3, "options": [{"code": "101", "name": "PROBADOR DE FUGAS"}]}, {"source_label": "TIPO", "target_label": "TIPO", "segment": "DE", "length": 2, "options": [{"code": "01", "name": "HIDRÁULICA"}, {"code": "02", "name": "ELÉCTRICA"}, {"code": "03", "name": "HÍBRIDA"}, {"code": "04", "name": "NEUMÁTICA"}, {"code": "05", "name": "PS"}, {"code": "06", "name": "PVC"}]}, {"source_label": "MARCA", "target_label": "MARCA", "segment": "FGH", "length": 3, "options": [{"code": "001", "name": "MT"}]}, {"source_label": "REFERENCIA", "target_label": "REFERENCIA", "segment": "IJK", "length": 3, "options": [{"code": "001", "name": "BOQUILLA 60MM"}]}, {"source_label": "CAPACIDAD EN TON", "target_label": "CAPACIDAD EN TON", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "1.0"}]}]}, {"classification": "INS-EM-BL", "source_sheet": "INS-EM-BL", "numeric_length": 13, "fields": [{"source_label": "REFERENCIA", "target_label": "REFERENCIA", "segment": "ABC", "length": 3, "options": [{"code": "101", "name": "BOLSA PLÁSTICA"}, {"code": "102", "name": "BOLSA DE PAPEL"}]}, {"source_label": "CALIBRE", "target_label": "CALIBRE", "segment": "DEFG", "length": 4, "options": [{"code": "0001", "name": "CALIBRE 1"}, {"code": "0002", "name": "CALIBRE 2"}]}, {"source_label": "MEDIDA", "target_label": "MEDIDA", "segment": "HIJK", "length": 4, "options": [{"code": "0001", "name": "100*120 cm"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TURQUESA"}, {"code": "17", "name": "VERDE"}, {"code": "18", "name": "VERDE CLARO"}, {"code": "19", "name": "VERDE OSCURO"}]}]}, {"classification": "INS-EM-CJ", "source_sheet": "INS-EM-CJ", "numeric_length": 13, "fields": [{"source_label": "REFERENCIA", "target_label": "REFERENCIA", "segment": "ABC", "length": 3, "options": [{"code": "101", "name": "CAJA CON LOGO"}, {"code": "102", "name": "CAJA SIN LOGO"}]}, {"source_label": "TIPO", "target_label": "TIPO", "segment": "DEFG", "length": 4, "options": [{"code": "0001", "name": "ESTANDAR"}, {"code": "0002", "name": "ARCHIVO"}]}, {"source_label": "MEDIDA", "target_label": "MEDIDA", "segment": "HIJK", "length": 4, "options": [{"code": "0001", "name": "60*40*40 cm"}]}, {"source_label": "CALIBRE", "target_label": "CALIBRE", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "C 450"}, {"code": "02", "name": "C 540"}, {"code": "03", "name": "C 620"}, {"code": "04", "name": "C 720"}, {"code": "05", "name": "C 790"}]}]}, {"classification": "INS-EM-AC", "source_sheet": "INS-EM-AC", "numeric_length": 13, "fields": [{"source_label": "REFERENCIA", "target_label": "REFERENCIA", "segment": "ABC", "length": 3, "options": [{"code": "101", "name": "CARTÓN KRAF"}, {"code": "102", "name": "CINTA PEGANTE CON LOGO"}, {"code": "103", "name": "CINTA PEGANTE SIN LOGO"}, {"code": "104", "name": "GRAPA"}, {"code": "105", "name": "NIDO EN CARTÓN"}, {"code": "106", "name": "PLÁSTICO BURBUJA"}, {"code": "107", "name": "VINIPEL"}, {"code": "108", "name": "ZUNCHO CON LOGO"}, {"code": "107", "name": "ZUNCHO SIN LOGO"}]}, {"source_label": "TIPO", "target_label": "TIPO", "segment": "DEFG", "length": 4, "options": [{"code": "0001", "name": "ROLLO"}, {"code": "0002", "name": "LAMINA"}, {"code": "0003", "name": "BOLSA"}]}, {"source_label": "MEDIDA", "target_label": "MEDIDA", "segment": "HIJK", "length": 4, "options": [{"code": "0001", "name": "50 mt"}, {"code": "0002", "name": "100 mt"}, {"code": "0003", "name": "1,5 mt"}]}, {"source_label": "CALIBRE", "target_label": "CALIBRE", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "48 micras"}, {"code": "02", "name": "3,5 mm"}]}]}, {"classification": "MPC-AH-CN", "source_sheet": "MPC-AH-CN", "numeric_length": 13, "fields": [{"source_label": "REFERENCIA", "target_label": "REFERENCIA", "segment": "AB", "length": 2, "options": [{"code": "10", "name": "CINTA DOBLE FAZ"}]}, {"source_label": "CÓDIGO", "target_label": "CÓDIGO", "segment": "CDEF", "length": 4, "options": [{"code": "0001", "name": "3M"}, {"code": "0002", "name": "ESPUMOSA"}]}, {"source_label": "PRESENTACIÓN", "target_label": "PRESENTACIÓN", "segment": "GH", "length": 2, "options": [{"code": "01", "name": "ROLLO *50 Mts"}]}, {"source_label": "DIMENSIÒN EN g", "target_label": "DIMENSIÒN EN g", "segment": "IJK", "length": 3, "options": [{"code": "001", "name": "12 MM"}]}, {"source_label": "COLOR", "target_label": "COLOR", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "AMARILLO"}, {"code": "02", "name": "AZUL"}, {"code": "03", "name": "AZUL CLARO"}, {"code": "04", "name": "AZUL OSCURO"}, {"code": "05", "name": "BLANCO"}, {"code": "06", "name": "CAFÉ"}, {"code": "07", "name": "FUCSIA"}, {"code": "08", "name": "GRIS"}, {"code": "09", "name": "LILA"}, {"code": "10", "name": "MORADO"}, {"code": "11", "name": "NARANJA"}, {"code": "12", "name": "NATURAL"}, {"code": "13", "name": "NEGRO"}, {"code": "14", "name": "ROJO"}, {"code": "15", "name": "ROSADO"}, {"code": "16", "name": "TURQUESA"}, {"code": "17", "name": "VERDE"}, {"code": "18", "name": "VERDE CLARO"}, {"code": "19", "name": "VERDE OSCURO"}]}]}, {"classification": "ACPMQIY", "source_sheet": "ACP-MQ-IY", "numeric_length": 13, "fields": [{"source_label": "MAQUINA", "target_label": "MAQUINA", "segment": "ABC", "length": 3, "options": [{"code": "101", "name": "MQ INYECTORA"}]}, {"source_label": "TIPO", "target_label": "TIPO", "segment": "DE", "length": 2, "options": [{"code": "01", "name": "HIDRÁULICA"}, {"code": "02", "name": "ELÉCTRICA"}, {"code": "03", "name": "HÍBRIDA"}, {"code": "04", "name": "NEUMÁTICA"}]}, {"source_label": "MARCA", "target_label": "MARCA", "segment": "FGH", "length": 3, "options": [{"code": "001", "name": "SONLY"}]}, {"source_label": "REFERENCIA", "target_label": "REFERENCIA", "segment": "IJK", "length": 3, "options": [{"code": "001", "name": "U16"}]}, {"source_label": "CAPACIDAD EN TON", "target_label": "CAPACIDAD EN TON", "segment": "LM", "length": 2, "options": [{"code": "01", "name": "80TS"}]}]}, {"classification": "ACPMCPF", "source_sheet": "ACP-MC-PF", "numeric_length": 13, "fields": [{"source_label": "MAQUINA", "target_label": "MAQUINA", "segment": "ABC", "length": 3, "options": [{"code": "101", "name": "MC PROBADOR DE FUGAS"}]}, {"source_label": "TIPO", "target_label": "TIPO", "segment": "DE", "length": 2, "options": [{"code": "01", "name": "HIDRÁULICA"}, {"code": "02", "name": "ELÉCTRICA"}, {"code": "03", "name": "HÍBRIDA"}, {"code": "04", "name": "NEUMÁTICA"}, {"code": "05", "name": "PS"}, {"code": "06", "name": "PVC"}]}, {"source_label": "MARCA", "target_label": "MARCA", "segment": "FGH", "length": 3, "options": [{"code": "001", "name": "MT"}]}, {"source_label": "REFERENCIA", "target_label": "REFERENCIA", "segment": "IJK", "length": 3, "options": [{"code": "001", "name": "BOQUILLA 60MM"}]}, {"source_label": "CAPACIDAD EN TON", "target_label": "CAPACIDAD EN TON", "segment": "LM", "length": 2, "options": [{"code": "NOMBRE", "name": "CÓDIGO"}, {"code": "MC PROBADOR DE FUGAS NEUMÁTICA MT BOQUILLA 60MM", "name": "ACPMCPF1010400100101"}]}]}, {"classification": "ACPMDIY", "source_sheet": "ACP-MD-IY", "numeric_length": 13, "fields": [{"source_label": "MOLDE", "target_label": "MOLDE", "segment": "A", "length": 1, "options": [{"code": "1", "name": "MOLDE INY FARMA"}, {"code": "2", "name": "MOLDE INY RETAIL"}, {"code": "3", "name": "MOLDE INY MUEBLE"}, {"code": "4", "name": "MOLDE INY ESPECIALES"}, {"code": "5", "name": "MOLDE INY ALIMENTOS"}]}, {"source_label": "CATEGORÍA", "target_label": "CATEGORÍA", "segment": "BCD", "length": 3, "options": [{"code": "001", "name": "ENVASE"}, {"code": "002", "name": "TAPA"}, {"code": "003", "name": "SOBRE TAPA"}, {"code": "004", "name": "TAPÓN A PRESIÓN"}]}, {"source_label": "REFERENCIA", "target_label": "REFERENCIA", "segment": "EFG", "length": 3, "options": [{"code": "001", "name": "POTE B.50"}, {"code": "002", "name": "POTE B.57"}, {"code": "003", "name": "A PRESIÓN LS"}, {"code": "004", "name": "A PRESIÓN ET"}, {"code": "005", "name": "ANILLO DE SEGURIDAD ET"}, {"code": "006", "name": "DE PRESIÓN Y SELLADO ET"}, {"code": "007", "name": "PRESS TOP LS"}, {"code": "008", "name": "ROSCADA LS"}, {"code": "009", "name": "ROSCADA ET"}, {"code": "010", "name": "CUADRARA A PRESIÓN LS"}, {"code": "011", "name": "CUADRARA A PRESIÓN ET"}, {"code": "012", "name": "CUADRADO"}, {"code": "013", "name": "CIRCULAR LISA"}, {"code": "014", "name": "CIRCULAR"}]}, {"source_label": "CAPACIDAD EN gr ó mL - mm", "target_label": "CAPACIDAD EN gr ó mL - mm", "segment": "HIJ", "length": 3, "options": [{"code": "001", "name": "1 mL"}, {"code": "002", "name": "2 mL"}, {"code": "003", "name": "3 mL"}, {"code": "004", "name": "4 mL"}, {"code": "005", "name": "5 mL"}, {"code": "006", "name": "6 mL"}, {"code": "007", "name": "7 mL"}, {"code": "008", "name": "8 mL"}, {"code": "009", "name": "9 mL"}, {"code": "010", "name": "10 mL"}, {"code": "011", "name": "15 mL"}, {"code": "012", "name": "20 mL"}, {"code": "013", "name": "30 mL"}, {"code": "014", "name": "40 mL"}, {"code": "015", "name": "50 mL"}, {"code": "016", "name": "60 mL"}, {"code": "017", "name": "70 mL"}, {"code": "018", "name": "80 mL"}, {"code": "019", "name": "90 mL"}, {"code": "020", "name": "100 mL"}, {"code": "021", "name": "120 mL"}, {"code": "022", "name": "150 mL"}, {"code": "023", "name": "180 mL"}, {"code": "024", "name": "200 mL"}, {"code": "025", "name": "250 mL"}, {"code": "026", "name": "500 mL"}, {"code": "027", "name": "600 mL"}, {"code": "028", "name": "1000 mL"}, {"code": "029", "name": "B.20 mm"}, {"code": "030", "name": "B.24 mm"}, {"code": "031", "name": "B.26 mm"}, {"code": "032", "name": "B.28mm"}, {"code": "033", "name": "B.33 mm"}, {"code": "034", "name": "B.34mm"}, {"code": "035", "name": "B.38mm"}, {"code": "036", "name": "B.50 mm"}, {"code": "037", "name": "B.53 mm"}, {"code": "038", "name": "B.57 mm"}, {"code": "039", "name": "B.59 mm"}, {"code": "040", "name": "B.75 mm"}, {"code": "041", "name": "B.90 mm"}, {"code": "042", "name": "B.120 mm"}, {"code": "043", "name": "29,6 cc"}, {"code": "044", "name": "B. 401-101 EM"}, {"code": "045", "name": "B. 401-103 EC"}, {"code": "046", "name": "B. 502-129 EM"}, {"code": "1 SUBC", "name": "HIJ"}, {"code": "8CAV", "name": "033"}, {"code": "1CAV", "name": "041"}, {"code": "1CAV", "name": "028"}, {"code": "2CAV", "name": "039"}, {"code": "1CAV", "name": "044"}, {"code": "1CAV", "name": "045"}, {"code": "1CAV", "name": "046"}, {"code": "1CAV", "name": "037"}, {"code": "6CAV", "name": "043"}]}, {"source_label": "CAVIDADES", "target_label": "CAVIDADES", "segment": "KLM", "length": 3, "options": [{"code": "001", "name": "1CAV"}, {"code": "002", "name": "2CAV"}, {"code": "003", "name": "4CAV"}, {"code": "004", "name": "6CAV"}, {"code": "005", "name": "8CAV"}]}]}, {"classification": "ACPMDPM", "source_sheet": "ACP-MD-PM-", "numeric_length": 13, "fields": [{"source_label": "PORTA MOLDE", "target_label": "PORTA MOLDE", "segment": "AB", "length": 2, "options": [{"code": "10", "name": "PORTA MOLDE INY_F"}, {"code": "20", "name": "PORTA MOLDE INY_R"}, {"code": "30", "name": "PORTA MOLDE INY_M"}, {"code": "40", "name": "PORTA MOLDE INY_E"}, {"code": "50", "name": "PORTA MOLDE EXT"}, {"code": "60", "name": "PORTA MOLDE SP"}]}, {"source_label": "FORMA GEOMETRICA", "target_label": "FORMA GEOMETRICA", "segment": "CD", "length": 2, "options": [{"code": "01", "name": "FIG. REDONDO"}, {"code": "02", "name": "FIG. CUADRADO"}, {"code": "03", "name": "FIG. RECTANGULAR"}, {"code": "04", "name": "FIG. IRREGULAR"}, {"code": "05", "name": "FIG. CONICO"}]}, {"source_label": "MÉTODO DE EXPULSIÓN", "target_label": "MÉTODO DE EXPULSIÓN", "segment": "EF", "length": 2, "options": [{"code": "01", "name": "POR PLACA"}, {"code": "02", "name": "POR PIN"}, {"code": "03", "name": "POR DESENRROSQUE"}]}, {"source_label": "ENTRADA DE MATERIAL", "target_label": "ENTRADA DE MATERIAL", "segment": "GH", "length": 2, "options": [{"code": "01", "name": "CAPILAR"}, {"code": "02", "name": "COLADA CALIENTE"}, {"code": "03", "name": "DIRECTA"}, {"code": "04", "name": "SUBMARINA"}]}, {"source_label": "PATINES", "target_label": "PATINES", "segment": "IJ", "length": 2, "options": [{"code": "01", "name": "CON PATINES"}, {"code": "02", "name": "SIN PATINES"}]}, {"source_label": "ALTURA mm", "target_label": "ALTURA mm", "segment": "KLM", "length": 3, "options": [{"code": "001", "name": "20 mm"}]}]}, {"classification": "ACPMDMT", "source_sheet": "ACP-MD-MT-", "numeric_length": 13, "fields": [{"source_label": "MOLDE", "target_label": "MOLDE", "segment": "A", "length": 1, "options": [{"code": "1", "name": "MATRIZ INY FARMA"}, {"code": "2", "name": "MATRIZ INY RETAIL"}, {"code": "3", "name": "MATRIZ INY MUEBLE"}, {"code": "4", "name": "MATRIZ INY ESPECIALES"}]}, {"source_label": "CATEGORÍA", "target_label": "CATEGORÍA", "segment": "BCD", "length": 3, "options": [{"code": "001", "name": "ENVASE"}, {"code": "002", "name": "TAPA"}]}, {"source_label": "REFERENCIA", "target_label": "REFERENCIA", "segment": "EFG", "length": 3, "options": [{"code": "001", "name": "POTE B.50"}, {"code": "002", "name": "POTE B.57"}, {"code": "003", "name": "A PRESIÓN LS"}, {"code": "004", "name": "A PRESIÓN ET"}, {"code": "005", "name": "ANILLO DE SEGURIDAD ET"}, {"code": "006", "name": "DE PRESIÓN Y SELLADO ET"}, {"code": "007", "name": "PRESS TOP LS"}, {"code": "008", "name": "ROSCADA LS"}, {"code": "009", "name": "ROSCADA ET"}]}, {"source_label": "CAPACIDAD EN gr ó mL - mm", "target_label": "CAPACIDAD EN gr ó mL - mm", "segment": "HIJ", "length": 3, "options": [{"code": "001", "name": "1 mL"}, {"code": "002", "name": "2 mL"}, {"code": "003", "name": "3 mL"}, {"code": "004", "name": "4 mL"}, {"code": "005", "name": "5 mL"}, {"code": "006", "name": "6 mL"}, {"code": "007", "name": "7 mL"}, {"code": "008", "name": "8 mL"}, {"code": "009", "name": "9 mL"}, {"code": "010", "name": "10 mL"}, {"code": "011", "name": "15 mL"}, {"code": "012", "name": "20 mL"}, {"code": "013", "name": "30 mL"}, {"code": "014", "name": "40 mL"}, {"code": "015", "name": "50 mL"}, {"code": "016", "name": "60 mL"}, {"code": "017", "name": "70 mL"}, {"code": "018", "name": "80 mL"}, {"code": "019", "name": "90 mL"}, {"code": "020", "name": "100 mL"}, {"code": "021", "name": "120 mL"}, {"code": "022", "name": "150 mL"}, {"code": "023", "name": "180 mL"}, {"code": "024", "name": "200 mL"}, {"code": "025", "name": "250 mL"}, {"code": "026", "name": "500 mL"}, {"code": "027", "name": "600 mL"}, {"code": "028", "name": "1000 mL"}, {"code": "029", "name": "B.20 mm"}, {"code": "030", "name": "B.24 mm"}, {"code": "031", "name": "B.26 mm"}, {"code": "032", "name": "B.28mm"}, {"code": "033", "name": "B.33 mm"}, {"code": "034", "name": "B.34mm"}, {"code": "035", "name": "B.38mm"}, {"code": "036", "name": "B.50 mm"}, {"code": "037", "name": "B.53 mm"}, {"code": "038", "name": "B.57 mm"}, {"code": "039", "name": "B.75 mm"}, {"code": "040", "name": "B.90 mm"}]}, {"source_label": "CAVIDADES", "target_label": "CAVIDADES", "segment": "KLM", "length": 3, "options": [{"code": "001", "name": "1CAV"}, {"code": "002", "name": "2CAV"}, {"code": "003", "name": "4CAV"}, {"code": "004", "name": "6CAV"}, {"code": "005", "name": "8CAV"}]}]}, {"classification": "ACPMDSP", "source_sheet": "ACP-MD-SP", "numeric_length": 13, "fields": [{"source_label": "MOLDE", "target_label": "MOLDE", "segment": "A", "length": 1, "options": [{"code": "1", "name": "MOLDE SP FARMA"}, {"code": "2", "name": "MOLDE SP RETAIL"}, {"code": "3", "name": "MOLDE SP MUEBLE"}, {"code": "4", "name": "MOLDE SP ESPECIALES"}]}, {"source_label": "CATEGORÍA", "target_label": "CATEGORÍA", "segment": "BCD", "length": 3, "options": [{"code": "001", "name": "ENVASE"}]}, {"source_label": "REFERENCIA", "target_label": "REFERENCIA", "segment": "EFG", "length": 3, "options": [{"code": "001", "name": "2 BOCAS B20"}, {"code": "002", "name": "CILINDRICO B20"}, {"code": "003", "name": "CILINDRICO B28"}, {"code": "004", "name": "CILINDRICO B38"}, {"code": "005", "name": "CONTENEDOR B75"}, {"code": "006", "name": "CONTENEDOR B90"}, {"code": "007", "name": "ONDULADO B20"}, {"code": "008", "name": "OVALADO B24"}, {"code": "009", "name": "PASTILLERO B33"}, {"code": "010", "name": "ESPECIAL ZEP B.24"}, {"code": "011", "name": "PASTILLERO B59"}]}, {"source_label": "CAPACIDAD EN gr ó mL - mm", "target_label": "CAPACIDAD EN gr ó mL - mm", "segment": "HIJ", "length": 3, "options": [{"code": "001", "name": "1 mL"}, {"code": "002", "name": "2 mL"}, {"code": "003", "name": "3 mL"}, {"code": "004", "name": "4 mL"}, {"code": "005", "name": "5 mL"}, {"code": "006", "name": "6 mL"}, {"code": "007", "name": "7 mL"}, {"code": "008", "name": "8 mL"}, {"code": "009", "name": "9 mL"}, {"code": "010", "name": "10 mL"}, {"code": "011", "name": "15 mL"}, {"code": "012", "name": "20 mL"}, {"code": "013", "name": "30 mL"}, {"code": "014", "name": "40 mL"}, {"code": "015", "name": "50 mL"}, {"code": "016", "name": "60 mL"}, {"code": "017", "name": "70 mL"}, {"code": "018", "name": "80 mL"}, {"code": "019", "name": "90 mL"}, {"code": "020", "name": "100 mL"}, {"code": "021", "name": "120 mL"}, {"code": "022", "name": "150 mL"}, {"code": "023", "name": "180 mL"}, {"code": "024", "name": "200 mL"}, {"code": "025", "name": "250 mL"}, {"code": "026", "name": "350 mL"}, {"code": "027", "name": "500 mL"}, {"code": "028", "name": "600 mL"}, {"code": "029", "name": "1000 mL"}, {"code": "1 SUBC", "name": "HIJ"}, {"code": "1CAV", "name": "021"}, {"code": "1CAV", "name": "025"}, {"code": "2CAV", "name": "019"}, {"code": "2CAV", "name": "023"}, {"code": "1CAV", "name": "026"}, {"code": "2CAV", "name": "015"}]}, {"source_label": "CAVIDADES", "target_label": "CAVIDADES", "segment": "KLM", "length": 3, "options": [{"code": "001", "name": "1CAV"}, {"code": "002", "name": "2CAV"}]}]}, {"classification": "ACRPHIB", "source_sheet": "ACR-PH-IB", "numeric_length": 13, "fields": [{"source_label": "ACTIVO", "target_label": "ACTIVO", "segment": "AB", "length": 2, "options": [{"code": "10", "name": "BODEGA"}, {"code": "11", "name": "EDIFICIO"}, {"code": "12", "name": "LOTE"}, {"code": "13", "name": "LOCAL"}, {"code": "14", "name": "OFICINA"}]}, {"source_label": "PAÍS", "target_label": "PAÍS", "segment": "CD", "length": 2, "options": [{"code": "01", "name": "COLOMBIA"}]}, {"source_label": "DEPARTAMENTO", "target_label": "DEPARTAMENTO", "segment": "EFG", "length": 3, "options": [{"code": "001", "name": "BOGOTÁ"}, {"code": "002", "name": "CUNDINAMARCA"}]}, {"source_label": "CIUDAD", "target_label": "CIUDAD", "segment": "HIJ", "length": 3, "options": [{"code": "001", "name": "BOGOTÁ"}, {"code": "002", "name": "FUNZA"}]}, {"source_label": "DIRECCIÓN", "target_label": "DIRECCIÓN", "segment": "KLM", "length": 3, "options": [{"code": "001", "name": "CARRERA 27 #7-42"}]}]}], "source_inconsistencies": [{"classification": "MPC-AD-PG", "sheet": "MPC-AD-PG", "declared": "ABC | DEF | GHI | JK | LM", "actual": "ABCD | EFG | HIJ | KLM", "decision": "Usar tabla FAMILIA/ORDEN + códigos generados como fuente; corregir guía."}, {"classification": "PTF-FM-JG", "sheet": "PTF-FM", "declared": "ABC | DE | FG | HI | JK", "actual": "ABCD | EF | GHI | JK | LM", "decision": "Usar tabla FAMILIA/ORDEN + códigos generados como fuente; corregir guía."}, {"classification": "INS-PL-PG", "sheet": "INS-PL-PG", "declared": "ABC | DEFG | HIJK | LM", "actual": "ABC | DEFG | HIJ | KLM", "decision": "Usar tabla FAMILIA/ORDEN + códigos generados como fuente; corregir guía."}, {"classification": "PTF-AL-TP", "sheet": "PTF-AL-TP", "declared": "ABC | DE | FG | HI | JK", "actual": "ABCD | EF | GHI | JK | LM", "decision": "Usar tabla FAMILIA/ORDEN + códigos generados como fuente; corregir guía."}, {"classification": "PTF-AL-CH", "sheet": "PTF-AL-CH", "declared": "ABC | DE | FG | HI | JK", "actual": "ABCD | EF | GHI | JK | LM", "decision": "Usar tabla FAMILIA/ORDEN + códigos generados como fuente; corregir guía."}, {"classification": "PTF-FM-JG", "sheet": "PTF-FM-JG", "declared": "ABC | DE | FG | HI | JK", "actual": "ABCD | EF | GHI | JK | LM", "decision": "Usar tabla FAMILIA/ORDEN + códigos generados como fuente; corregir guía."}, {"classification": "PTF-FM-CJ", "sheet": "PTF-FM-CJ", "declared": "ABC | DE | FG | HI | JK", "actual": "ABCD | EF | GHI | JK | LM", "decision": "Usar tabla FAMILIA/ORDEN + códigos generados como fuente; corregir guía."}, {"classification": "PTF-FM-TP", "sheet": "PTF-FM-TP", "declared": "ABC | DE | FG | HI | JK", "actual": "ABCD | EF | GHI | JK | LM", "decision": "Usar tabla FAMILIA/ORDEN + códigos generados como fuente; corregir guía."}, {"classification": "PTF-ES-TP", "sheet": "PTF-ES-TP", "declared": "ABC | DE | FG | HI | JK", "actual": "ABCD | EF | GHI | JK | LM", "decision": "Usar tabla FAMILIA/ORDEN + códigos generados como fuente; corregir guía."}, {"classification": "PTC-FM-TP", "sheet": "PTC-FM-TP-", "declared": "ABC | DE | FG | HI | JK", "actual": "ABCD | EF | GHI | JK | LM", "decision": "Usar tabla FAMILIA/ORDEN + códigos generados como fuente; corregir guía."}, {"classification": "ALQ-MC-PF", "sheet": "ALQ-MC-PF-", "declared": "ABC | DE | FG | HI | JK", "actual": "ABC | DE | FGH | IJK | LM", "decision": "Usar tabla FAMILIA/ORDEN + códigos generados como fuente; corregir guía."}, {"classification": "ACPMQIY", "sheet": "ACP-MQ-IY", "declared": "ABC | DE | FG | HI | JK", "actual": "ABC | DE | FGH | IJK | LM", "decision": "Usar tabla FAMILIA/ORDEN + códigos generados como fuente; corregir guía."}, {"classification": "ACPMCPF", "sheet": "ACP-MC-PF", "declared": "ABC | DE | FG | HI | JK", "actual": "ABC | DE | FGH | IJK | LM", "decision": "Usar tabla FAMILIA/ORDEN + códigos generados como fuente; corregir guía."}, {"classification": "ACPMDPM", "sheet": "ACP-MD-PM-", "declared": "AB | CD | EF | GH | IJ", "actual": "AB | CD | EF | GH | IJ | KLM", "decision": "Usar tabla FAMILIA/ORDEN + códigos generados como fuente; corregir guía."}, {"classification": "ACRPHIB", "sheet": "ACR-PH-IB", "declared": "AB | CDE | FGH | IJK | LM", "actual": "AB | CD | EFG | HIJ | KLM", "decision": "Usar tabla FAMILIA/ORDEN + códigos generados como fuente; corregir guía."}], "color_conflicts": [{"code": "16", "meaning": "TURQUESA", "classifications": ["PTF-FM-JG", "PTC-RT-PO", "PTF-AL-CJ", "PTF-AL-EN", "PTF-AL-TP", "PTF-AL-CH", "PTF-FM-EN", "PTF-ES-EN", "PTF-FM-JG", "PTF-FM-CJ", "PTF-FM-TP", "PTF-ES-TP", "PTF-RT-PO", "PTC-FM-EN", "PTC-FM-TP", "MPP-OR-PD", "MPP-OR-PP", "MPC-CP-MB", "INS-EM-BL", "MPC-AH-CN"]}, {"code": "16", "meaning": "TRANSPARENTE", "classifications": ["PTF-RT-PP", "PTF-RT-AC"]}, {"code": "17", "meaning": "VERDE", "classifications": ["PTF-FM-JG", "PTC-RT-PO", "PTF-AL-CJ", "PTF-AL-EN", "PTF-AL-TP", "PTF-AL-CH", "PTF-FM-EN", "PTF-ES-EN", "PTF-FM-JG", "PTF-FM-CJ", "PTF-FM-TP", "PTF-ES-TP", "PTF-RT-PO", "PTC-FM-EN", "PTC-FM-TP", "MPP-OR-PD", "MPP-OR-PP", "MPC-CP-MB", "INS-EM-BL", "MPC-AH-CN"]}, {"code": "17", "meaning": "TURQUESA", "classifications": ["PTF-RT-PP", "PTF-RT-AC"]}, {"code": "18", "meaning": "VERDE CLARO", "classifications": ["PTF-FM-JG", "PTC-RT-PO", "PTF-AL-CJ", "PTF-AL-EN", "PTF-AL-TP", "PTF-AL-CH", "PTF-FM-EN", "PTF-ES-EN", "PTF-FM-JG", "PTF-FM-CJ", "PTF-FM-TP", "PTF-ES-TP", "PTF-RT-PO", "PTC-FM-EN", "PTC-FM-TP", "MPP-OR-PD", "MPP-OR-PP", "MPC-CP-MB", "INS-EM-BL", "MPC-AH-CN"]}, {"code": "18", "meaning": "VERDE", "classifications": ["PTF-RT-PP", "PTF-RT-AC"]}, {"code": "19", "meaning": "VERDE OSCURO", "classifications": ["PTF-FM-JG", "PTC-RT-PO", "PTF-AL-CJ", "PTF-AL-EN", "PTF-AL-TP", "PTF-AL-CH", "PTF-FM-EN", "PTF-ES-EN", "PTF-FM-JG", "PTF-FM-CJ", "PTF-FM-TP", "PTF-ES-TP", "PTF-RT-PO", "PTC-FM-EN", "PTC-FM-TP", "MPP-OR-PD", "MPP-OR-PP", "MPC-CP-MB", "INS-EM-BL", "MPC-AH-CN"]}, {"code": "19", "meaning": "VERDE CLARO", "classifications": ["PTF-RT-PP", "PTF-RT-AC"]}, {"code": "20", "meaning": "DORADO", "classifications": ["PTF-AL-TP"]}, {"code": "20", "meaning": "VERDE OSCURO", "classifications": ["PTF-RT-PP", "PTF-RT-AC"]}], "known_siigo_impacts": [{"old": "PTF-RT-PP1080040051606", "color": "TRANSPARENTE", "old_color_code": "16", "new_color_code": "20", "new": "PTF-RT-PP-1080040052006"}, {"old": "PTF-RT-PP1160040101606", "color": "TRANSPARENTE", "old_color_code": "16", "new_color_code": "20", "new": "PTF-RT-PP-1160040102006"}, {"old": "PTF-RT-PP1080050031606", "color": "TRANSPARENTE", "old_color_code": "16", "new_color_code": "20", "new": "PTF-RT-PP-1080050032006"}, {"old": "PTF-AL-TP-1006030282007", "color": "DORADO", "old_color_code": "20", "new_color_code": "21", "new": "PTF-AL-TP-1006030282107"}]};
+
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!url || !serviceKey) {
+  throw new Error(
+    "Faltan NEXT_PUBLIC_SUPABASE_URL o SUPABASE_SERVICE_ROLE_KEY en .env.local",
+  );
+}
+
+const supabase = createClient(url, serviceKey, {
+  auth: {
+    persistSession: false,
+    autoRefreshToken: false,
+  },
+});
+
+function norm(value) {
+  return String(value ?? "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toUpperCase();
+}
+
+function key(value) {
+  return norm(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+}
+
+function codeNorm(value, length = null) {
+  let result = String(value ?? "").trim();
+
+  if (/^\d+\.0$/.test(result)) {
+    result = result.slice(0, -2);
+  }
+
+  if (length && /^\d+$/.test(result)) {
+    return result.padStart(length, "0");
+  }
+
+  return result;
+}
+
+function fullClassification(category, group, subgroup) {
+  return [category, group, subgroup]
+    .map(norm)
+    .join("-");
+}
+
+function isActive(value) {
+  return norm(value) === "ACTIVO";
+}
+
+function unique(values) {
+  return [...new Set(values)];
+}
+
+async function readTable(table, select = "*") {
+  const { data, error } = await supabase
+    .from(table)
+    .select(select);
+
+  if (error) {
+    throw new Error(
+      `No se pudo leer ${table}: ${error.message}`,
+    );
+  }
+
+  return data ?? [];
+}
+
+console.log("\n============================================");
+console.log("AUDITORÍA TARGET VS CLAP · SOLO LECTURA");
+console.log("============================================\n");
+
+const [
+  categories,
+  groups,
+  subgroups,
+  templates,
+  templateFields,
+  legacyOptions,
+  sharedCatalogs,
+  sharedValues,
+  products,
+] = await Promise.all([
+  readTable("item_categories"),
+  readTable("item_groups"),
+  readTable("item_subgroups"),
+  readTable("item_classification_templates"),
+  readTable("item_classification_template_fields"),
+  readTable("item_classification_field_options"),
+  readTable("item_option_catalogs"),
+  readTable("item_option_catalog_values"),
+  readTable(
+    "products",
+    `
+      id,
+      reference,
+      final_code,
+      name,
+      category_id,
+      group_id,
+      subgroup_id,
+      classification_code,
+      dynamic_code_data,
+      siigo_product_id
+    `,
+  ),
+]);
+
+const categoryByCode = new Map(
+  categories.map((item) => [
+    norm(item.code),
+    item,
+  ]),
+);
+
+const groupIndex = new Map();
+for (const item of groups) {
+  const category = categories.find(
+    (c) => c.id === item.category_id,
+  );
+
+  if (!category) continue;
+
+  groupIndex.set(
+    `${norm(category.code)}|${norm(item.code)}`,
+    item,
+  );
+}
+
+const subgroupIndex = new Map();
+for (const item of subgroups) {
+  const group = groups.find(
+    (g) => g.id === item.group_id,
+  );
+
+  if (!group) continue;
+
+  const category = categories.find(
+    (c) => c.id === group.category_id,
+  );
+
+  if (!category) continue;
+
+  subgroupIndex.set(
+    [
+      norm(category.code),
+      norm(group.code),
+      norm(item.code),
+    ].join("|"),
+    item,
+  );
+}
+
+const activeTemplates = templates.filter(
+  (item) => isActive(item.status),
+);
+
+function templatesFor(classification) {
+  const [category, group, subgroup] =
+    classification.split("-");
+
+  return activeTemplates.filter(
+    (template) =>
+      norm(template.category_code) === category &&
+      norm(template.group_code) === group &&
+      norm(template.subgroup_code) === subgroup,
+  );
+}
+
+function activeFieldsFor(templateId) {
+  return templateFields
+    .filter(
+      (field) =>
+        field.template_id === templateId &&
+        isActive(field.status),
+    )
+    .sort(
+      (a, b) =>
+        Number(a.display_order ?? 0) -
+        Number(b.display_order ?? 0),
+    );
+}
+
+function productBelongs(product, classification) {
+  const stored = norm(product.classification_code);
+  if (stored === classification) return true;
+
+  const code = norm(
+    product.final_code ??
+      product.reference ??
+      "",
+  );
+
+  return (
+    code.startsWith(`${classification}-`) ||
+    code.startsWith(classification)
+  );
+}
+
+function effectiveOptions(field) {
+  if (field.option_catalog_id) {
+    return sharedValues
+      .filter(
+        (option) =>
+          option.catalog_id ===
+            field.option_catalog_id &&
+          isActive(option.status),
+      )
+      .map((option) => ({
+        code: String(option.code ?? "").trim(),
+        name: String(option.name ?? "").trim(),
+        source: "shared",
+      }));
+  }
+
+  return legacyOptions
+    .filter(
+      (option) =>
+        option.template_id === field.template_id &&
+        option.field_key === field.field_key &&
+        isActive(option.status),
+    )
+    .map((option) => ({
+      code: String(option.code ?? "").trim(),
+      name: String(option.name ?? "").trim(),
+      source: "legacy",
+    }));
+}
+
+const canonicalColors = TARGET.canonical_colors.map(
+  (item) => ({
+    code: codeNorm(item.code, 2),
+    name: norm(item.name),
+  }),
+);
+
+const colorCatalogIds = unique(
+  templateFields
+    .filter(
+      (field) =>
+        field.option_catalog_id &&
+        norm(field.field_label) === "COLOR",
+    )
+    .map((field) => field.option_catalog_id),
+);
+
+const colorCatalogs = colorCatalogIds.map(
+  (catalogId) => {
+    const catalog = sharedCatalogs.find(
+      (item) => item.id === catalogId,
+    );
+
+    const values = sharedValues
+      .filter(
+        (item) =>
+          item.catalog_id === catalogId &&
+          isActive(item.status),
+      )
+      .map((item) => ({
+        code: codeNorm(item.code, 2),
+        name: norm(item.name),
+      }));
+
+    const byCode = new Map(
+      values.map((item) => [
+        item.code,
+        item.name,
+      ]),
+    );
+
+    const missing = canonicalColors.filter(
+      (item) => !byCode.has(item.code),
+    );
+
+    const mismatched = canonicalColors.filter(
+      (item) =>
+        byCode.has(item.code) &&
+        byCode.get(item.code) !== item.name,
+    );
+
+    const canonicalCodes = new Set(
+      canonicalColors.map((item) => item.code),
+    );
+
+    const extras = values.filter(
+      (item) =>
+        !canonicalCodes.has(item.code),
+    );
+
+    return {
+      catalog_id: catalogId,
+      catalog_name:
+        catalog?.name ??
+        catalog?.code ??
+        catalog?.key ??
+        "(sin nombre)",
+      values,
+      missing,
+      mismatched,
+      extras,
+    };
+  },
+);
+
+const results = [];
+
+for (const targetClass of TARGET.classifications) {
+  const classification =
+    norm(targetClass.classification);
+
+  const [
+    categoryCode,
+    groupCode,
+    subgroupCode,
+  ] = classification.split("-");
+
+  const category =
+    categoryByCode.get(categoryCode);
+
+  const group =
+    groupIndex.get(
+      `${categoryCode}|${groupCode}`,
+    );
+
+  const subgroup =
+    subgroupIndex.get(
+      `${categoryCode}|${groupCode}|${subgroupCode}`,
+    );
+
+  const matchingTemplates =
+    templatesFor(classification);
+
+  const usedProducts = products.filter(
+    (product) =>
+      productBelongs(
+        product,
+        classification,
+      ),
+  );
+
+  const siigoProducts = usedProducts.filter(
+    (product) =>
+      Boolean(product.siigo_product_id),
+  );
+
+  const differences = [];
+  const fieldComparison = [];
+
+  let status = "COINCIDE";
+  let createLevel = "";
+
+  if (!category) {
+    status = "CREAR";
+    createLevel = "Categoría + Grupo + Subgrupo + Plantilla";
+    differences.push(
+      `No existe la categoría ${categoryCode}.`,
+    );
+  } else if (!group) {
+    status = "CREAR";
+    createLevel = "Grupo + Subgrupo + Plantilla";
+    differences.push(
+      `No existe ${categoryCode}-${groupCode}.`,
+    );
+  } else if (!subgroup) {
+    status = "CREAR";
+    createLevel = "Subgrupo + Plantilla";
+    differences.push(
+      `No existe ${classification}.`,
+    );
+  } else if (matchingTemplates.length === 0) {
+    status = "CREAR";
+    createLevel = "Plantilla";
+    differences.push(
+      "La clasificación existe, pero no tiene plantilla activa.",
+    );
+  } else if (matchingTemplates.length > 1) {
+    status = "ACTUALIZAR";
+    differences.push(
+      `Hay ${matchingTemplates.length} plantillas activas; debe existir solo una.`,
+    );
+  }
+
+  if (matchingTemplates.length === 1) {
+    const template =
+      matchingTemplates[0];
+
+    const currentFields =
+      activeFieldsFor(template.id);
+
+    const targetFields =
+      targetClass.fields ?? [];
+
+    const targetLength =
+      Number(
+        targetClass.numeric_length ?? 0,
+      );
+
+    const currentLength =
+      Number(
+        template.numeric_code_length ?? 0,
+      );
+
+    if (
+      targetLength &&
+      currentLength !== targetLength
+    ) {
+      status = "ACTUALIZAR";
+      differences.push(
+        `Longitud numérica CLAP=${currentLength}; objetivo=${targetLength}.`,
+      );
+    }
+
+    if (
+      currentFields.length !==
+      targetFields.length
+    ) {
+      status = "ACTUALIZAR";
+      differences.push(
+        `Campos activos CLAP=${currentFields.length}; objetivo=${targetFields.length}.`,
+      );
+    }
+
+    const max =
+      Math.max(
+        currentFields.length,
+        targetFields.length,
+      );
+
+    for (let index = 0; index < max; index += 1) {
+      const current =
+        currentFields[index] ?? null;
+
+      const target =
+        targetFields[index] ?? null;
+
+      if (!target) {
+        fieldComparison.push({
+          order: index + 1,
+          target_label: "",
+          current_label:
+            current?.field_label ?? "",
+          status: "SOBRA EN CLAP",
+          details:
+            "No existe este campo en el objetivo.",
+        });
+
+        status = "ACTUALIZAR";
+        continue;
+      }
+
+      if (!current) {
+        fieldComparison.push({
+          order: index + 1,
+          target_label:
+            target.target_label,
+          current_label: "",
+          status: "FALTA EN CLAP",
+          details:
+            `Longitud objetivo ${target.length}.`,
+        });
+
+        status = "ACTUALIZAR";
+        continue;
+      }
+
+      const fieldDiffs = [];
+
+      if (
+        Number(current.code_length ?? 0) !==
+        Number(target.length ?? 0)
+      ) {
+        fieldDiffs.push(
+          `longitud ${current.code_length}→${target.length}`,
+        );
+      }
+
+      if (
+        norm(current.field_label) !==
+        norm(target.target_label)
+      ) {
+        fieldDiffs.push(
+          `etiqueta "${current.field_label}"→"${target.target_label}"`,
+        );
+      }
+
+      if (!current.contributes_to_code) {
+        fieldDiffs.push(
+          "no aporta al código en CLAP",
+        );
+      }
+
+      const isColor =
+        norm(target.target_label) === "COLOR" ||
+        key(target.target_label) === "color";
+
+      const targetOptions = (
+        isColor
+          ? canonicalColors
+          : (target.options ?? []).map(
+              (item) => ({
+                code: codeNorm(
+                  item.code,
+                  target.length,
+                ),
+                name: norm(item.name),
+              }),
+            )
+      );
+
+      const currentOptions =
+        effectiveOptions(current).map(
+          (item) => ({
+            code: codeNorm(
+              item.code,
+              target.length,
+            ),
+            name: norm(item.name),
+          }),
+        );
+
+      const currentByCode =
+        new Map(
+          currentOptions.map(
+            (item) => [
+              item.code,
+              item.name,
+            ],
+          ),
+        );
+
+      const targetByCode =
+        new Map(
+          targetOptions.map(
+            (item) => [
+              item.code,
+              item.name,
+            ],
+          ),
+        );
+
+      const missingOptions =
+        targetOptions.filter(
+          (item) =>
+            !currentByCode.has(item.code),
+        );
+
+      const mismatchedOptions =
+        targetOptions.filter(
+          (item) =>
+            currentByCode.has(item.code) &&
+            currentByCode.get(item.code) !==
+              item.name,
+        );
+
+      const extraOptions =
+        currentOptions.filter(
+          (item) =>
+            !targetByCode.has(item.code),
+        );
+
+      if (missingOptions.length) {
+        fieldDiffs.push(
+          `${missingOptions.length} opciones objetivo faltan`,
+        );
+      }
+
+      if (mismatchedOptions.length) {
+        fieldDiffs.push(
+          `${mismatchedOptions.length} códigos tienen otro significado`,
+        );
+      }
+
+      /*
+       * No marcamos extras como error automático.
+       * Pueden ser opciones válidas creadas después del Excel.
+       * Sí quedan reportadas para revisión.
+       */
+      const fieldStatus =
+        fieldDiffs.length > 0
+          ? "ACTUALIZAR"
+          : "COINCIDE";
+
+      if (fieldStatus !== "COINCIDE") {
+        status = "ACTUALIZAR";
+      }
+
+      fieldComparison.push({
+        order: index + 1,
+        target_key:
+          key(target.target_label),
+        current_key:
+          current.field_key,
+        target_label:
+          target.target_label,
+        current_label:
+          current.field_label,
+        length_target:
+          target.length,
+        length_current:
+          current.code_length,
+        option_source:
+          current.option_catalog_id
+            ? "Catálogo transversal"
+            : "Opciones de plantilla",
+        status: fieldStatus,
+        details:
+          fieldDiffs.join("; "),
+        missing_options:
+          missingOptions,
+        mismatched_options:
+          mismatchedOptions.map(
+            (item) => ({
+              code: item.code,
+              target: item.name,
+              current:
+                currentByCode.get(
+                  item.code,
+                ),
+            }),
+          ),
+        extra_options:
+          extraOptions,
+      });
+    }
+
+    if (
+      fieldComparison.some(
+        (item) =>
+          item.status !== "COINCIDE",
+      )
+    ) {
+      status = "ACTUALIZAR";
+    }
+  }
+
+  results.push({
+    classification,
+    source_sheet:
+      targetClass.source_sheet,
+    status,
+    create_level: createLevel,
+    hierarchy: {
+      category_exists:
+        Boolean(category),
+      group_exists:
+        Boolean(group),
+      subgroup_exists:
+        Boolean(subgroup),
+    },
+    active_templates:
+      matchingTemplates.length,
+    products:
+      usedProducts.length,
+    siigo_products:
+      siigoProducts.length,
+    target_numeric_length:
+      targetClass.numeric_length,
+    differences,
+    fields:
+      fieldComparison,
+  });
+}
+
+/*
+ * Clasificaciones existentes en CLAP que tienen productos
+ * pero no aparecen en el modelo objetivo extraído del Excel.
+ */
+const targetCodes = new Set(
+  TARGET.classifications.map(
+    (item) =>
+      norm(item.classification),
+  ),
+);
+
+const clapClassifications = [];
+for (const subgroup of subgroups) {
+  const group = groups.find(
+    (item) =>
+      item.id === subgroup.group_id,
+  );
+
+  if (!group) continue;
+
+  const category = categories.find(
+    (item) =>
+      item.id === group.category_id,
+  );
+
+  if (!category) continue;
+
+  const classification =
+    fullClassification(
+      category.code,
+      group.code,
+      subgroup.code,
+    );
+
+  const usedProducts = products.filter(
+    (product) =>
+      productBelongs(
+        product,
+        classification,
+      ),
+  );
+
+  if (
+    usedProducts.length > 0 &&
+    !targetCodes.has(classification)
+  ) {
+    clapClassifications.push({
+      classification,
+      products: usedProducts.length,
+      siigo_products:
+        usedProducts.filter(
+          (item) =>
+            Boolean(item.siigo_product_id),
+        ).length,
+      templates:
+        templatesFor(
+          classification,
+        ).length,
+    });
+  }
+}
+
+const counts = {
+  target_classifications:
+    results.length,
+  coincide:
+    results.filter(
+      (item) =>
+        item.status === "COINCIDE",
+    ).length,
+  actualizar:
+    results.filter(
+      (item) =>
+        item.status === "ACTUALIZAR",
+    ).length,
+  crear:
+    results.filter(
+      (item) =>
+        item.status === "CREAR",
+    ).length,
+};
+
+const relevantResults = results.filter(
+  (item) =>
+    item.products > 0 ||
+    item.siigo_products > 0,
+);
+
+const relevantCounts = {
+  classifications:
+    relevantResults.length,
+  coincide:
+    relevantResults.filter(
+      (item) =>
+        item.status === "COINCIDE",
+    ).length,
+  actualizar:
+    relevantResults.filter(
+      (item) =>
+        item.status === "ACTUALIZAR",
+    ).length,
+  crear:
+    relevantResults.filter(
+      (item) =>
+        item.status === "CREAR",
+    ).length,
+};
+
+const output = {
+  generated_at:
+    new Date().toISOString(),
+  read_only: true,
+  source:
+    TARGET.source_file,
+  governance:
+    TARGET.governance,
+  summary: counts,
+  relevant_summary:
+    relevantCounts,
+  color_catalogs:
+    colorCatalogs,
+  results,
+  clap_used_not_in_target:
+    clapClassifications,
+  known_siigo_impacts:
+    TARGET.known_siigo_impacts,
+};
+
+const reportsDir = path.resolve(
+  "scripts/codificacion/reports",
+);
+
+fs.mkdirSync(
+  reportsDir,
+  { recursive: true },
+);
+
+const jsonPath = path.join(
+  reportsDir,
+  "comparacion-target-vs-clap.json",
+);
+
+fs.writeFileSync(
+  jsonPath,
+  JSON.stringify(
+    output,
+    null,
+    2,
+  ),
+  "utf8",
+);
+
+const lines = [];
+
+lines.push(
+  "# Comparación modelo objetivo vs CLAP",
+);
+lines.push("");
+lines.push(
+  `Generado: ${output.generated_at}`,
+);
+lines.push("");
+lines.push(
+  "**Modo:** solo lectura. No se modificó Supabase.",
+);
+lines.push("");
+
+lines.push("## Resumen general");
+lines.push("");
+lines.push(
+  `- Clasificaciones objetivo: **${counts.target_classifications}**`,
+);
+lines.push(
+  `- **COINCIDE:** ${counts.coincide}`,
+);
+lines.push(
+  `- **ACTUALIZAR:** ${counts.actualizar}`,
+);
+lines.push(
+  `- **CREAR:** ${counts.crear}`,
+);
+lines.push("");
+
+lines.push(
+  "## Resumen de clasificaciones con productos actuales",
+);
+lines.push("");
+lines.push(
+  `- Clasificaciones relevantes: **${relevantCounts.classifications}**`,
+);
+lines.push(
+  `- **COINCIDE:** ${relevantCounts.coincide}`,
+);
+lines.push(
+  `- **ACTUALIZAR:** ${relevantCounts.actualizar}`,
+);
+lines.push(
+  `- **CREAR:** ${relevantCounts.crear}`,
+);
+lines.push("");
+
+lines.push(
+  "## Resultado por clasificación",
+);
+lines.push("");
+lines.push(
+  "| Estado | Clasificación | Productos | SIIGO | Plantillas | Acción |",
+);
+lines.push(
+  "|---|---|---:|---:|---:|---|",
+);
+
+for (
+  const result
+  of [...results].sort(
+    (a, b) =>
+      a.classification.localeCompare(
+        b.classification,
+      ),
+  )
+) {
+  const action =
+    result.status === "CREAR"
+      ? result.create_level
+      : result.status === "ACTUALIZAR"
+        ? (
+            result.differences.join("; ") ||
+            "Revisar campos/opciones."
+          )
+        : "Sin cambios.";
+
+  lines.push(
+    `| ${result.status} | ${result.classification} | ${result.products} | ${result.siigo_products} | ${result.active_templates} | ${action.replaceAll("|", "/")} |`,
+  );
+}
+
+lines.push("");
+
+lines.push(
+  "## Detalle de ACTUALIZAR",
+);
+lines.push("");
+
+for (
+  const result
+  of results.filter(
+    (item) =>
+      item.status === "ACTUALIZAR",
+  )
+) {
+  lines.push(
+    `### ${result.classification}`,
+  );
+  lines.push("");
+
+  if (result.differences.length) {
+    for (
+      const difference
+      of result.differences
+    ) {
+      lines.push(
+        `- ${difference}`,
+      );
+    }
+  }
+
+  const fieldDiffs =
+    result.fields.filter(
+      (item) =>
+        item.status !== "COINCIDE" ||
+        (item.extra_options?.length ?? 0) > 0,
+    );
+
+  if (fieldDiffs.length) {
+    lines.push("");
+    lines.push(
+      "| Orden | Objetivo | CLAP | Longitud obj. | Longitud CLAP | Estado | Detalle |",
+    );
+    lines.push(
+      "|---:|---|---|---:|---:|---|---|",
+    );
+
+    for (
+      const field
+      of fieldDiffs
+    ) {
+      lines.push(
+        `| ${field.order ?? ""} | ${field.target_label ?? ""} | ${field.current_label ?? ""} | ${field.length_target ?? ""} | ${field.length_current ?? ""} | ${field.status ?? ""} | ${(field.details ?? "").replaceAll("|", "/")} |`,
+      );
+    }
+  }
+
+  lines.push("");
+}
+
+lines.push(
+  "## Catálogo transversal de colores",
+);
+lines.push("");
+
+if (!colorCatalogs.length) {
+  lines.push(
+    "⚠️ No se detectó ningún catálogo transversal enlazado a campos llamados Color.",
+  );
+} else {
+  for (
+    const catalog
+    of colorCatalogs
+  ) {
+    lines.push(
+      `### ${catalog.catalog_name} · ${catalog.catalog_id}`,
+    );
+    lines.push("");
+    lines.push(
+      `- Faltantes objetivo: **${catalog.missing.length}**`,
+    );
+    lines.push(
+      `- Códigos con significado distinto: **${catalog.mismatched.length}**`,
+    );
+    lines.push(
+      `- Opciones adicionales existentes: **${catalog.extras.length}**`,
+    );
+    lines.push("");
+
+    if (catalog.mismatched.length) {
+      lines.push(
+        "| Código | Objetivo | CLAP |",
+      );
+      lines.push(
+        "|---|---|---|",
+      );
+
+      const currentByCode =
+        new Map(
+          catalog.values.map(
+            (item) => [
+              item.code,
+              item.name,
+            ],
+          ),
+        );
+
+      for (
+        const item
+        of catalog.mismatched
+      ) {
+        lines.push(
+          `| ${item.code} | ${item.name} | ${currentByCode.get(item.code) ?? ""} |`,
+        );
+      }
+
+      lines.push("");
+    }
+  }
+}
+
+if (clapClassifications.length) {
+  lines.push(
+    "## Clasificaciones usadas en CLAP pero no definidas en el modelo objetivo",
+  );
+  lines.push("");
+  lines.push(
+    "| Clasificación | Productos | SIIGO | Plantillas |",
+  );
+  lines.push(
+    "|---|---:|---:|---:|",
+  );
+
+  for (
+    const item
+    of clapClassifications
+  ) {
+    lines.push(
+      `| ${item.classification} | ${item.products} | ${item.siigo_products} | ${item.templates} |`,
+    );
+  }
+
+  lines.push("");
+}
+
+lines.push(
+  "## Códigos históricos conocidos con impacto por normalización de color",
+);
+lines.push("");
+lines.push(
+  "| Código histórico | Código canónico propuesto |",
+);
+lines.push(
+  "|---|---|",
+);
+
+for (
+  const item
+  of TARGET.known_siigo_impacts
+) {
+  lines.push(
+    `| ${item.old} | ${item.new} |`,
+  );
+}
+
+lines.push("");
+lines.push(
+  "> Estos códigos NO fueron modificados por esta auditoría.",
+);
+lines.push("");
+
+const mdPath = path.join(
+  reportsDir,
+  "comparacion-target-vs-clap.md",
+);
+
+fs.writeFileSync(
+  mdPath,
+  lines.join("\n"),
+  "utf8",
+);
+
+console.log("===== RESUMEN GENERAL =====");
+console.table({
+  "Clasificaciones objetivo":
+    counts.target_classifications,
+  COINCIDE:
+    counts.coincide,
+  ACTUALIZAR:
+    counts.actualizar,
+  CREAR:
+    counts.crear,
+});
+
+console.log(
+  "\n===== CON PRODUCTOS ACTUALES =====",
+);
+console.table({
+  "Clasificaciones relevantes":
+    relevantCounts.classifications,
+  COINCIDE:
+    relevantCounts.coincide,
+  ACTUALIZAR:
+    relevantCounts.actualizar,
+  CREAR:
+    relevantCounts.crear,
+});
+
+console.log(
+  "\n===== CREAR =====",
+);
+
+console.table(
+  results
+    .filter(
+      (item) =>
+        item.status === "CREAR",
+    )
+    .map(
+      (item) => ({
+        clasificacion:
+          item.classification,
+        productos:
+          item.products,
+        siigo:
+          item.siigo_products,
+        crear:
+          item.create_level,
+      }),
+    ),
+);
+
+console.log(
+  "\n===== ACTUALIZAR =====",
+);
+
+console.table(
+  results
+    .filter(
+      (item) =>
+        item.status === "ACTUALIZAR",
+    )
+    .map(
+      (item) => ({
+        clasificacion:
+          item.classification,
+        productos:
+          item.products,
+        siigo:
+          item.siigo_products,
+        diferencias:
+          item.differences.length +
+          item.fields.filter(
+            (field) =>
+              field.status !==
+              "COINCIDE",
+          ).length,
+      }),
+    ),
+);
+
+console.log(
+  "\n===== COINCIDE =====",
+);
+
+console.table(
+  results
+    .filter(
+      (item) =>
+        item.status === "COINCIDE",
+    )
+    .map(
+      (item) => ({
+        clasificacion:
+          item.classification,
+        productos:
+          item.products,
+        siigo:
+          item.siigo_products,
+      }),
+    ),
+);
+
+for (
+  const catalog
+  of colorCatalogs
+) {
+  console.log(
+    `\n===== COLOR: ${catalog.catalog_name} =====`,
+  );
+
+  console.table({
+    "Faltantes objetivo":
+      catalog.missing.length,
+    "Significados diferentes":
+      catalog.mismatched.length,
+    "Opciones adicionales":
+      catalog.extras.length,
+  });
+
+  if (catalog.mismatched.length) {
+    const currentByCode =
+      new Map(
+        catalog.values.map(
+          (item) => [
+            item.code,
+            item.name,
+          ],
+        ),
+      );
+
+    console.table(
+      catalog.mismatched.map(
+        (item) => ({
+          codigo:
+            item.code,
+          objetivo:
+            item.name,
+          clap:
+            currentByCode.get(
+              item.code,
+            ),
+        }),
+      ),
+    );
+  }
+}
+
+console.log(
+  "\n✅ SOLO LECTURA. No se modificó Supabase.",
+);
+
+console.log(
+  `\nReportes:\n- ${mdPath}\n- ${jsonPath}`,
+);

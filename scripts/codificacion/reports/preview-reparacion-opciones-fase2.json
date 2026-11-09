@@ -1,0 +1,981 @@
+{
+  "generated_at": "2026-11-08T22:14:59.870Z",
+  "read_only": true,
+  "unresolved_products": 34,
+  "summary": {
+    "AGREGAR_OPCIONES_DESDE_MATRIZ": 25,
+    "OPCIONES_MATRIZ_Y_CAMBIO_CODIGO": 1,
+    "CAMBIO_CODIGO_MAS_REVISION": 0,
+    "REVISION_MANUAL_REAL": 8
+  },
+  "unique_option_proposals": [
+    {
+      "classification": "MPC-CP-MB",
+      "field_key": "codigo",
+      "field_label": "Código",
+      "code": "0003",
+      "name": "PL-YE0017",
+      "source": "MPC-CP-MB"
+    },
+    {
+      "classification": "PTF-AL-TP",
+      "field_key": "acabado",
+      "field_label": "Acabado",
+      "code": "09",
+      "name": "RECTANGULAR LISA 3 DIVISIONES",
+      "source": "PTF-AL-TP"
+    },
+    {
+      "classification": "PTF-AL-TP",
+      "field_key": "boca",
+      "field_label": "Boca",
+      "code": "026",
+      "name": "B. 190mm x 230mm",
+      "source": "PTF-AL-TP"
+    },
+    {
+      "classification": "PTF-AL-TP",
+      "field_key": "boca",
+      "field_label": "Boca",
+      "code": "027",
+      "name": "B. 401-101 EM",
+      "source": "PTF-AL-TP"
+    },
+    {
+      "classification": "PTF-AL-TP",
+      "field_key": "boca",
+      "field_label": "Boca",
+      "code": "028",
+      "name": "B. 401-103 EC",
+      "source": "PTF-AL-TP"
+    },
+    {
+      "classification": "PTF-AL-TP",
+      "field_key": "boca",
+      "field_label": "Boca",
+      "code": "029",
+      "name": "B. 502-129 EM",
+      "source": "PTF-AL-TP"
+    },
+    {
+      "classification": "PTF-AL-TP",
+      "field_key": "boca",
+      "field_label": "Boca",
+      "code": "030",
+      "name": "B. 307 EC",
+      "source": "PTF-AL-TP"
+    },
+    {
+      "classification": "PTF-AL-TP",
+      "field_key": "boca",
+      "field_label": "Boca",
+      "code": "031",
+      "name": "B. 211 EC",
+      "source": "PTF-AL-TP"
+    },
+    {
+      "classification": "PTF-AL-TP",
+      "field_key": "tipo",
+      "field_label": "Tipo",
+      "code": "1006",
+      "name": "SOBRE TAPA",
+      "source": "PTF-AL-TP"
+    },
+    {
+      "classification": "PTF-AL-TP",
+      "field_key": "tipo",
+      "field_label": "Tipo",
+      "code": "1007",
+      "name": "TAPÓN A PRESIÓN",
+      "source": "PTF-AL-TP"
+    },
+    {
+      "classification": "PTF-ES-TP",
+      "field_key": "boca",
+      "field_label": "Boca",
+      "code": "004",
+      "name": "B. 30 mm",
+      "source": "PTF-ES-TP"
+    },
+    {
+      "classification": "PTF-ES-TP",
+      "field_key": "boca",
+      "field_label": "Boca",
+      "code": "005",
+      "name": "B. 90 mm",
+      "source": "PTF-ES-TP"
+    },
+    {
+      "classification": "PTF-ES-TP",
+      "field_key": "tipo",
+      "field_label": "Tipo",
+      "code": "1003",
+      "name": "SUB MASTER",
+      "source": "PTF-ES-TP"
+    },
+    {
+      "classification": "PTF-FM-EN",
+      "field_key": "boca",
+      "field_label": "Boca",
+      "code": "023",
+      "name": "B. 59mm",
+      "source": "PTF-FM-EN"
+    },
+    {
+      "classification": "PTF-FM-EN",
+      "field_key": "capacidad",
+      "field_label": "Capacidad [g o ml]",
+      "code": "019",
+      "name": "*350",
+      "source": "PTF-FM-EN"
+    },
+    {
+      "classification": "PTF-FM-TP",
+      "field_key": "acabado",
+      "field_label": "Acabado",
+      "code": "07",
+      "name": "PERFORADO",
+      "source": "PTF-FM-TP"
+    },
+    {
+      "classification": "PTF-FM-TP",
+      "field_key": "boca",
+      "field_label": "Boca",
+      "code": "025",
+      "name": "B. 22 mm",
+      "source": "PTF-FM-TP"
+    },
+    {
+      "classification": "PTF-FM-TP",
+      "field_key": "boca",
+      "field_label": "Boca",
+      "code": "026",
+      "name": "B. 19 mm",
+      "source": "PTF-FM-TP"
+    },
+    {
+      "classification": "PTF-FM-TP",
+      "field_key": "boca",
+      "field_label": "Boca",
+      "code": "027",
+      "name": "B. 59 mm",
+      "source": "PTF-FM-TP"
+    },
+    {
+      "classification": "PTF-FM-TP",
+      "field_key": "tipo",
+      "field_label": "Tipo",
+      "code": "1006",
+      "name": "TAPÓN A PRESIÓN",
+      "source": "PTF-FM-TP"
+    },
+    {
+      "classification": "PTF-RT-PO",
+      "field_key": "dimensiones",
+      "field_label": "Dimensiones",
+      "code": "002",
+      "name": "3,7 * 2,5 cm",
+      "source": "PTF-RT-PO"
+    },
+    {
+      "classification": "PTF-RT-PO",
+      "field_key": "dimensiones",
+      "field_label": "Dimensiones",
+      "code": "003",
+      "name": "2,5 cm",
+      "source": "PTF-RT-PO"
+    },
+    {
+      "classification": "PTF-RT-PO",
+      "field_key": "dimensiones",
+      "field_label": "Dimensiones",
+      "code": "004",
+      "name": "30 * 4 cm",
+      "source": "PTF-RT-PO"
+    },
+    {
+      "classification": "PTF-RT-PO",
+      "field_key": "tipo",
+      "field_label": "Tipo",
+      "code": "003",
+      "name": "RÍGIDO",
+      "source": "PTF-RT-PO"
+    },
+    {
+      "classification": "PTF-RT-PO",
+      "field_key": "tipo",
+      "field_label": "Tipo",
+      "code": "007",
+      "name": "ROPETRÁFICO P-37",
+      "source": "PTF-RT-PO"
+    },
+    {
+      "classification": "PTF-RT-PO",
+      "field_key": "tipo",
+      "field_label": "Tipo",
+      "code": "012",
+      "name": "PUNTO DE PAGO",
+      "source": "PTF-RT-PO"
+    }
+  ],
+  "rows": [
+    {
+      "current_code": "PTF-AL-TP-1006030291007",
+      "name": "SOBRE TAPA CIRCULAR LISA B. 502-129 EM MORADO PEBD",
+      "classification": "PTF-AL-TP",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "option_name": "SOBRE TAPA",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "029",
+          "option_name": "B. 502-129 EM",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-AL-TP-1006030310107",
+      "name": "SOBRE TAPA CIRCULAR LISA B. 211 EC AMARILLO PEBD",
+      "classification": "PTF-AL-TP",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "option_name": "SOBRE TAPA",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "031",
+          "option_name": "B. 211 EC",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-AL-TP-1006030300107",
+      "name": "SOBRE TAPA CIRCULAR LISA B. 307 EC AMARILLO PEBD",
+      "classification": "PTF-AL-TP",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "option_name": "SOBRE TAPA",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "030",
+          "option_name": "B. 307 EC",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "MPC-CP-MB-1100030100101",
+      "name": "MASTERBATCH PE PL-YE0017 BOLSA 1000g AMARILLO",
+      "classification": "MPC-CP-MB",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "codigo",
+          "field_label": "Código",
+          "segment": "0003",
+          "option_name": "PL-YE0017",
+          "source": "MPC-CP-MB",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-AL-TP-1006030280107",
+      "name": "SOBRE TAPA CIRCULAR LISA B. 401-103 EC AMARILLO PEBD",
+      "classification": "PTF-AL-TP",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "option_name": "SOBRE TAPA",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "028",
+          "option_name": "B. 401-103 EC",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "INS-EM-AC-1010001000302",
+      "name": "CARTÓN KRAF ROLLO 1,5 mt 3,5 mm",
+      "classification": "INS-EM-AC",
+      "resolution": "REVISION_MANUAL_REAL",
+      "detail": "medida=0000: El código no aparece en las opciones de la matriz histórica. | calibre=302: El código no aparece en las opciones de la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [],
+      "unresolved_still": [
+        {
+          "field_key": "medida",
+          "segment": "0000",
+          "reason": "El código no aparece en las opciones de la matriz histórica."
+        },
+        {
+          "field_key": "calibre",
+          "segment": "302",
+          "reason": "El código no aparece en las opciones de la matriz histórica."
+        }
+      ]
+    },
+    {
+      "current_code": "PTF-RT-PO1020120040106",
+      "name": "SEPARADOR PUNTO DE PAGO 30 * 4 cm AMARILLO PVC",
+      "classification": "PTF-RT-PO",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "012",
+          "option_name": "PUNTO DE PAGO",
+          "source": "PTF-RT-PO",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        },
+        {
+          "field_key": "dimensiones",
+          "field_label": "Dimensiones",
+          "segment": "004",
+          "option_name": "30 * 4 cm",
+          "source": "PTF-RT-PO",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-AL-TP-1006030271507",
+      "name": "SOBRE TAPA CIRCULAR LISA B. 401-101 EM ROSADO PEBD",
+      "classification": "PTF-AL-TP",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "option_name": "SOBRE TAPA",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "027",
+          "option_name": "B. 401-101 EM",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-AL-TP-1006030270507",
+      "name": "SOBRE TAPA CIRCULAR LISA B. 401-101 EM BLANCO PEBD",
+      "classification": "PTF-AL-TP",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "option_name": "SOBRE TAPA",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "027",
+          "option_name": "B. 401-101 EM",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-AL-TP-1006030291207",
+      "name": "SOBRE TAPA CIRCULAR LISA B. 502-129 EM NATURAL PEBD",
+      "classification": "PTF-AL-TP",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "option_name": "SOBRE TAPA",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "029",
+          "option_name": "B. 502-129 EM",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-AL-TP-1006030290507",
+      "name": "SOBRE TAPA CIRCULAR LISA B. 502-129 EM BLANCO PEBD",
+      "classification": "PTF-AL-TP",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "option_name": "SOBRE TAPA",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "029",
+          "option_name": "B. 502-129 EM",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-AL-TP-1006030281207",
+      "name": "SOBRE TAPA CIRCULAR LISA B. 401-103 EC NATURAL PEBD",
+      "classification": "PTF-AL-TP",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "option_name": "SOBRE TAPA",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "028",
+          "option_name": "B. 401-103 EC",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-AL-TP-1006030282007",
+      "name": "SOBRE TAPA CIRCULAR LISA B. 401-103 EC DORADO PEBD",
+      "classification": "PTF-AL-TP",
+      "resolution": "OPCIONES_MATRIZ_Y_CAMBIO_CODIGO",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": "PTF-AL-TP-1006030282107",
+      "proposals": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "option_name": "SOBRE TAPA",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "028",
+          "option_name": "B. 401-103 EC",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-AL-TP-1007030171707",
+      "name": "TAPÓN A PRESIÓN CIRCULAR LISA B. 53 mm VERDE PEBD",
+      "classification": "PTF-AL-TP",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1007",
+          "option_name": "TAPÓN A PRESIÓN",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-AL-TP-1006030271207",
+      "name": "SOBRE TAPA CIRCULAR LISA B. 401-101 EM NATURAL PEBD",
+      "classification": "PTF-AL-TP",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "option_name": "SOBRE TAPA",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "027",
+          "option_name": "B. 401-101 EM",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-FM-EN-1060230190502",
+      "name": "ENVASE PASTILLERO B. 59mm *350mL BLANCO PEAD",
+      "classification": "PTF-FM-EN",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "023",
+          "option_name": "B. 59mm",
+          "source": "PTF-FM-EN",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        },
+        {
+          "field_key": "capacidad",
+          "field_label": "Capacidad [g o ml]",
+          "segment": "019",
+          "option_name": "*350",
+          "source": "PTF-FM-EN",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-FM-TP-1005010270504",
+      "name": "TAPA ROSCADA LISA B. 59 mm BLANCO PP",
+      "classification": "PTF-FM-TP",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "027",
+          "option_name": "B. 59 mm",
+          "source": "PTF-FM-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-ES-TP-1003030051201",
+      "name": "TAPA SUB MASTER ESTRELLA B.90 mm NATURAL ABS",
+      "classification": "PTF-ES-TP",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1003",
+          "option_name": "SUB MASTER",
+          "source": "PTF-ES-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "005",
+          "option_name": "B. 90 mm",
+          "source": "PTF-ES-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-RT-PO1010030030506",
+      "name": "GRIP RÍGIDO 2,5 cm BLANCO PVC",
+      "classification": "PTF-RT-PO",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "003",
+          "option_name": "RÍGIDO",
+          "source": "PTF-RT-PO",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        },
+        {
+          "field_key": "dimensiones",
+          "field_label": "Dimensiones",
+          "segment": "003",
+          "option_name": "2,5 cm",
+          "source": "PTF-RT-PO",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-AL-TP-1001090261404",
+      "name": "TAPA A PRESIÓN RECTANGULAR LISA 3 DIVISIONES B. 190mm x 230mm ROJO PP",
+      "classification": "PTF-AL-TP",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "09",
+          "option_name": "RECTANGULAR LISA 3 DIVISIONES",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "026",
+          "option_name": "B. 190mm x 230mm",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-AL-TP-1001090261104",
+      "name": "TAPA A PRESIÓN RECTANGULAR LISA 3 DIVISIONES B. 190mm x 230mm NARANJA PP",
+      "classification": "PTF-AL-TP",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "09",
+          "option_name": "RECTANGULAR LISA 3 DIVISIONES",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "026",
+          "option_name": "B. 190mm x 230mm",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-AL-TP-1001090261704",
+      "name": "TAPA A PRESIÓN RECTANGULAR LISA 3 DIVISIONES B. 190mm x 230mm VERDE PP",
+      "classification": "PTF-AL-TP",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "09",
+          "option_name": "RECTANGULAR LISA 3 DIVISIONES",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "026",
+          "option_name": "B. 190mm x 230mm",
+          "source": "PTF-AL-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-ES-TP-1001020040804",
+      "name": "TAPÓN A PRESIÓN ESTRIADO B. 30 mm GRIS PP",
+      "classification": "PTF-ES-TP",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "004",
+          "option_name": "B. 30 mm",
+          "source": "PTF-ES-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-RT-PO1010070021206",
+      "name": "GRIP ROPETRÁFICO P-37 3,7 * 2,5 cm NATURAL PVC",
+      "classification": "PTF-RT-PO",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "007",
+          "option_name": "ROPETRÁFICO P-37",
+          "source": "PTF-RT-PO",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        },
+        {
+          "field_key": "dimensiones",
+          "field_label": "Dimensiones",
+          "segment": "002",
+          "option_name": "3,7 * 2,5 cm",
+          "source": "PTF-RT-PO",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-FM-TP-1006070261207",
+      "name": "TAPÓN A PRESIÓN PERFORADO B. 19 mm NATURAL PEBD",
+      "classification": "PTF-FM-TP",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "1006",
+          "option_name": "TAPÓN A PRESIÓN",
+          "source": "PTF-FM-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        },
+        {
+          "field_key": "acabado",
+          "field_label": "Acabado",
+          "segment": "07",
+          "option_name": "PERFORADO",
+          "source": "PTF-FM-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        },
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "026",
+          "option_name": "B. 19 mm",
+          "source": "PTF-FM-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-FM-TP-1005020250204",
+      "name": "TAPA ROSCADA ESTRIADA B. 22mm AZUL PP",
+      "classification": "PTF-FM-TP",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "boca",
+          "field_label": "Boca",
+          "segment": "025",
+          "option_name": "B. 22 mm",
+          "source": "PTF-FM-TP",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "PTF-RT-PO1020120011407",
+      "name": "SEPARADOR PUNTO DE PAGO 34,5 * 4,5 cm ROJO HIPS",
+      "classification": "PTF-RT-PO",
+      "resolution": "AGREGAR_OPCIONES_DESDE_MATRIZ",
+      "detail": "Todos los segmentos faltantes están documentados en la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [
+        {
+          "field_key": "tipo",
+          "field_label": "Tipo",
+          "segment": "012",
+          "option_name": "PUNTO DE PAGO",
+          "source": "PTF-RT-PO",
+          "action": "ADD_OPTION_FROM_HISTORICAL_MATRIX"
+        }
+      ],
+      "unresolved_still": []
+    },
+    {
+      "current_code": "INS-EM-AC-1030001000201",
+      "name": "CINTA PEGANTE SIN LOGO ROLLO 100 m 48 MICRAS",
+      "classification": "INS-EM-AC",
+      "resolution": "REVISION_MANUAL_REAL",
+      "detail": "medida=0000: El código no aparece en las opciones de la matriz histórica. | calibre=201: El código no aparece en las opciones de la matriz histórica.",
+      "proposed_code": null,
+      "proposals": [],
+      "unresolved_still": [
+        {
+          "field_key": "medida",
+          "segment": "0000",
+          "reason": "El código no aparece en las opciones de la matriz histórica."
+        },
+        {
+          "field_key": "calibre",
+          "segment": "201",
+          "reason": "El código no aparece en las opciones de la matriz histórica."
+        }
+      ]
+    },
+    {
+      "current_code": "305-0002-0200-03",
+      "name": "PVC 110ZR BLANCO",
+      "classification": null,
+      "resolution": "REVISION_MANUAL_REAL",
+      "detail": "El código no pertenece a ninguna clasificación activa CLAP.",
+      "proposed_code": null,
+      "proposals": []
+    },
+    {
+      "current_code": "305-0002-0200-02",
+      "name": "PVC 110ZR CRISTAL",
+      "classification": null,
+      "resolution": "REVISION_MANUAL_REAL",
+      "detail": "El código no pertenece a ninguna clasificación activa CLAP.",
+      "proposed_code": null,
+      "proposals": []
+    },
+    {
+      "current_code": "110111",
+      "name": "ARRIENDO PROBADOR DE FUGAS",
+      "classification": null,
+      "resolution": "REVISION_MANUAL_REAL",
+      "detail": "El código no pertenece a ninguna clasificación activa CLAP.",
+      "proposed_code": null,
+      "proposals": []
+    },
+    {
+      "current_code": "106-0001-0102-05",
+      "name": "CADENA PLÁSTICA PLUS 25 MM X 28 MM PP AZUL",
+      "classification": null,
+      "resolution": "REVISION_MANUAL_REAL",
+      "detail": "El código no pertenece a ninguna clasificación activa CLAP.",
+      "proposed_code": null,
+      "proposals": []
+    },
+    {
+      "current_code": "109-0300-1002-03",
+      "name": "TAPÓN BOCA 38 mm TRANSPARENTE PEBD",
+      "classification": null,
+      "resolution": "REVISION_MANUAL_REAL",
+      "detail": "El código no pertenece a ninguna clasificación activa CLAP.",
+      "proposed_code": null,
+      "proposals": []
+    },
+    {
+      "current_code": "PRODUCTOGENERICONUBE",
+      "name": "Producto genérico del sistema Siigo Nube (POS - WhatsApp)",
+      "classification": null,
+      "resolution": "REVISION_MANUAL_REAL",
+      "detail": "El código no pertenece a ninguna clasificación activa CLAP.",
+      "proposed_code": null,
+      "proposals": []
+    }
+  ]
+}

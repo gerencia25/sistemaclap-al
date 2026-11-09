@@ -1,0 +1,3195 @@
+{
+  "generated_at": "2026-11-08T21:36:21.625Z",
+  "read_only": true,
+  "source": "MATRIZ DE CODIFICACIÓN EN SIIGO_A&L.xlsx",
+  "governance": {
+    "master_system": "CLAP",
+    "canonical_code_format": "CAT-GRU-SUB-BLOQUE",
+    "historical_aliases": true,
+    "single_global_color_catalog": true,
+    "manual_generated_from_templates": true
+  },
+  "summary": {
+    "target_classifications": 36,
+    "coincide": 1,
+    "actualizar": 13,
+    "crear": 22
+  },
+  "relevant_summary": {
+    "classifications": 28,
+    "coincide": 1,
+    "actualizar": 13,
+    "crear": 14
+  },
+  "color_catalogs": [
+    {
+      "catalog_id": "8dbee6ef-d93a-4708-866f-db3e2c0d5fed",
+      "catalog_name": "Colores",
+      "values": [
+        {
+          "code": "01",
+          "name": "AMARILLO"
+        },
+        {
+          "code": "02",
+          "name": "AZUL"
+        },
+        {
+          "code": "03",
+          "name": "AZUL CLARO"
+        },
+        {
+          "code": "04",
+          "name": "AZUL OSCURO"
+        },
+        {
+          "code": "05",
+          "name": "BLANCO"
+        },
+        {
+          "code": "06",
+          "name": "CAFE"
+        },
+        {
+          "code": "07",
+          "name": "FUCSIA"
+        },
+        {
+          "code": "08",
+          "name": "GRIS"
+        },
+        {
+          "code": "09",
+          "name": "LILA"
+        },
+        {
+          "code": "10",
+          "name": "MORADO"
+        },
+        {
+          "code": "11",
+          "name": "NARANJA"
+        },
+        {
+          "code": "12",
+          "name": "NATURAL"
+        },
+        {
+          "code": "13",
+          "name": "NEGRO"
+        },
+        {
+          "code": "14",
+          "name": "ROJO"
+        },
+        {
+          "code": "15",
+          "name": "ROSADO"
+        },
+        {
+          "code": "16",
+          "name": "TURQUESA"
+        },
+        {
+          "code": "17",
+          "name": "VERDE"
+        },
+        {
+          "code": "18",
+          "name": "VERDE CLARO"
+        },
+        {
+          "code": "19",
+          "name": "VERDE OSCURO"
+        }
+      ],
+      "missing": [
+        {
+          "code": "20",
+          "name": "TRANSPARENTE"
+        },
+        {
+          "code": "21",
+          "name": "DORADO"
+        }
+      ],
+      "mismatched": [],
+      "extras": []
+    }
+  ],
+  "results": [
+    {
+      "classification": "MPC-AD-PG",
+      "source_sheet": "MPC-AD-PG",
+      "status": "CREAR",
+      "create_level": "Subgrupo + Plantilla",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": false
+      },
+      "active_templates": 0,
+      "products": 1,
+      "siigo_products": 1,
+      "target_numeric_length": 13,
+      "differences": [
+        "No existe MPC-AD-PG."
+      ],
+      "fields": []
+    },
+    {
+      "classification": "PTF-FM-JG",
+      "source_sheet": "PTF-FM",
+      "status": "CREAR",
+      "create_level": "Plantilla",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": true
+      },
+      "active_templates": 0,
+      "products": 1,
+      "siigo_products": 1,
+      "target_numeric_length": 13,
+      "differences": [
+        "La clasificación existe, pero no tiene plantilla activa."
+      ],
+      "fields": []
+    },
+    {
+      "classification": "PTC-TT-CC",
+      "source_sheet": "PTC-TT-CC",
+      "status": "CREAR",
+      "create_level": "Grupo + Subgrupo + Plantilla",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": false,
+        "subgroup_exists": false
+      },
+      "active_templates": 0,
+      "products": 1,
+      "siigo_products": 1,
+      "target_numeric_length": 13,
+      "differences": [
+        "No existe PTC-TT."
+      ],
+      "fields": []
+    },
+    {
+      "classification": "INS-PL-PG",
+      "source_sheet": "INS-PL-PG",
+      "status": "CREAR",
+      "create_level": "Subgrupo + Plantilla",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": false
+      },
+      "active_templates": 0,
+      "products": 1,
+      "siigo_products": 1,
+      "target_numeric_length": 14,
+      "differences": [
+        "No existe INS-PL-PG."
+      ],
+      "fields": []
+    },
+    {
+      "classification": "SER-PP-TR",
+      "source_sheet": "SER-PR-PR",
+      "status": "CREAR",
+      "create_level": "Grupo + Subgrupo + Plantilla",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": false,
+        "subgroup_exists": false
+      },
+      "active_templates": 0,
+      "products": 2,
+      "siigo_products": 2,
+      "target_numeric_length": 13,
+      "differences": [
+        "No existe SER-PP."
+      ],
+      "fields": []
+    },
+    {
+      "classification": "PTC-RT-PO",
+      "source_sheet": "PTC-RT-PO",
+      "status": "CREAR",
+      "create_level": "Plantilla",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": true
+      },
+      "active_templates": 0,
+      "products": 2,
+      "siigo_products": 2,
+      "target_numeric_length": 13,
+      "differences": [
+        "La clasificación existe, pero no tiene plantilla activa."
+      ],
+      "fields": []
+    },
+    {
+      "classification": "PTF-AL-CJ",
+      "source_sheet": "PTF-AL-CJ",
+      "status": "CREAR",
+      "create_level": "Subgrupo + Plantilla",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": false
+      },
+      "active_templates": 0,
+      "products": 1,
+      "siigo_products": 1,
+      "target_numeric_length": 13,
+      "differences": [
+        "No existe PTF-AL-CJ."
+      ],
+      "fields": []
+    },
+    {
+      "classification": "PTF-AL-EN",
+      "source_sheet": "PTF-AL-EN",
+      "status": "ACTUALIZAR",
+      "create_level": "",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": true
+      },
+      "active_templates": 1,
+      "products": 1,
+      "siigo_products": 1,
+      "target_numeric_length": 13,
+      "differences": [],
+      "fields": [
+        {
+          "order": 1,
+          "target_key": "tipo_de_envase",
+          "current_key": "tipo",
+          "target_label": "TIPO DE ENVASE",
+          "current_label": "Tipo",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "etiqueta \"Tipo\"→\"TIPO DE ENVASE\"; 1 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "102",
+              "name": "VASO"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 2,
+          "target_key": "boca",
+          "current_key": "boca",
+          "target_label": "BOCA",
+          "current_label": "Boca",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "3 opciones objetivo faltan; 5 códigos tienen otro significado",
+          "missing_options": [
+            {
+              "code": "1 SUBC",
+              "name": "ABC"
+            },
+            {
+              "code": "B. 120mm",
+              "name": "101.0"
+            },
+            {
+              "code": "B. 79mm",
+              "name": "102.0"
+            }
+          ],
+          "mismatched_options": [
+            {
+              "code": "021",
+              "target": "B. 100MM",
+              "current": "B. 90MM"
+            },
+            {
+              "code": "022",
+              "target": "B. 100MM AGRAFE",
+              "current": "B. 90MM AGRAFE"
+            },
+            {
+              "code": "021",
+              "target": "B. 120MM",
+              "current": "B. 90MM"
+            },
+            {
+              "code": "022",
+              "target": "B. 120MM AGRAFE",
+              "current": "B. 90MM AGRAFE"
+            },
+            {
+              "code": "023",
+              "target": "B. 79MM",
+              "current": "B. 100MM"
+            }
+          ],
+          "extra_options": [
+            {
+              "code": "024",
+              "name": "B. 100MM AGRAFE"
+            },
+            {
+              "code": "025",
+              "name": "B. 120MM"
+            },
+            {
+              "code": "026",
+              "name": "B. 120MM AGRAFE"
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "target_key": "capacidad_en_onz_gr_o_ml",
+          "current_key": "capacidad",
+          "target_label": "CAPACIDAD EN onz_gr O mL",
+          "current_label": "Capacidad [g o ml]",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "etiqueta \"Capacidad [g o ml]\"→\"CAPACIDAD EN onz_gr O mL\"; 1 opciones objetivo faltan; 18 códigos tienen otro significado",
+          "missing_options": [
+            {
+              "code": "019",
+              "name": "9 ONZ"
+            }
+          ],
+          "mismatched_options": [
+            {
+              "code": "001",
+              "target": "*10",
+              "current": "10"
+            },
+            {
+              "code": "002",
+              "target": "*20",
+              "current": "20"
+            },
+            {
+              "code": "003",
+              "target": "*30",
+              "current": "30"
+            },
+            {
+              "code": "004",
+              "target": "*40",
+              "current": "40"
+            },
+            {
+              "code": "005",
+              "target": "*50",
+              "current": "50"
+            },
+            {
+              "code": "006",
+              "target": "*60",
+              "current": "60"
+            },
+            {
+              "code": "007",
+              "target": "*70",
+              "current": "70"
+            },
+            {
+              "code": "008",
+              "target": "*80",
+              "current": "80"
+            },
+            {
+              "code": "009",
+              "target": "*90",
+              "current": "90"
+            },
+            {
+              "code": "010",
+              "target": "*100",
+              "current": "100"
+            },
+            {
+              "code": "011",
+              "target": "*120",
+              "current": "120"
+            },
+            {
+              "code": "012",
+              "target": "*150",
+              "current": "150"
+            },
+            {
+              "code": "013",
+              "target": "*180",
+              "current": "180"
+            },
+            {
+              "code": "014",
+              "target": "*200",
+              "current": "200"
+            },
+            {
+              "code": "015",
+              "target": "*250",
+              "current": "250"
+            },
+            {
+              "code": "016",
+              "target": "*500",
+              "current": "500"
+            },
+            {
+              "code": "017",
+              "target": "*600",
+              "current": "600"
+            },
+            {
+              "code": "018",
+              "target": "*1000",
+              "current": "1000"
+            }
+          ],
+          "extra_options": []
+        },
+        {
+          "order": 4,
+          "target_key": "color",
+          "current_key": "color",
+          "target_label": "COLOR",
+          "current_label": "Color",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Catálogo transversal",
+          "status": "ACTUALIZAR",
+          "details": "2 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "20",
+              "name": "TRANSPARENTE"
+            },
+            {
+              "code": "21",
+              "name": "DORADO"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 5,
+          "target_key": "material",
+          "current_key": "material",
+          "target_label": "MATERIAL",
+          "current_label": "Material",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "1 códigos tienen otro significado",
+          "missing_options": [],
+          "mismatched_options": [
+            {
+              "code": "07",
+              "target": "PE",
+              "current": "HIPS"
+            }
+          ],
+          "extra_options": []
+        }
+      ]
+    },
+    {
+      "classification": "PTF-AL-TP",
+      "source_sheet": "PTF-AL-TP",
+      "status": "ACTUALIZAR",
+      "create_level": "",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": true
+      },
+      "active_templates": 1,
+      "products": 16,
+      "siigo_products": 16,
+      "target_numeric_length": 13,
+      "differences": [],
+      "fields": [
+        {
+          "order": 1,
+          "target_key": "tipo_de_tapa",
+          "current_key": "tipo",
+          "target_label": "TIPO DE TAPA",
+          "current_label": "Tipo",
+          "length_target": 4,
+          "length_current": 4,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "etiqueta \"Tipo\"→\"TIPO DE TAPA\"; 2 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "1006",
+              "name": "SOBRE TAPA"
+            },
+            {
+              "code": "1007",
+              "name": "TAPON A PRESION"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 2,
+          "target_key": "acabado",
+          "current_key": "acabado",
+          "target_label": "ACABADO",
+          "current_label": "Acabado",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "3 opciones objetivo faltan; 2 códigos tienen otro significado",
+          "missing_options": [
+            {
+              "code": "07",
+              "name": "RECTANGULAR LISA"
+            },
+            {
+              "code": "08",
+              "name": "RECTANGULAR ESTRIADA"
+            },
+            {
+              "code": "09",
+              "name": "RECTANGULAR LISA 3 DIVISIONES"
+            }
+          ],
+          "mismatched_options": [
+            {
+              "code": "03",
+              "target": "CUADRADA LISA",
+              "current": "CIRCULAR LISA"
+            },
+            {
+              "code": "05",
+              "target": "CIRCULAR LISA",
+              "current": "CUADRADA LISA"
+            }
+          ],
+          "extra_options": []
+        },
+        {
+          "order": 3,
+          "target_key": "boca",
+          "current_key": "boca",
+          "target_label": "BOCA",
+          "current_label": "Boca",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "6 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "026",
+              "name": "B. 190MM X 230MM"
+            },
+            {
+              "code": "027",
+              "name": "B. 401-101 EM"
+            },
+            {
+              "code": "028",
+              "name": "B. 401-103 EC"
+            },
+            {
+              "code": "029",
+              "name": "B. 502-129 EM"
+            },
+            {
+              "code": "030",
+              "name": "B. 307 EC"
+            },
+            {
+              "code": "031",
+              "name": "B. 211 EC"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 4,
+          "target_key": "color",
+          "current_key": "color",
+          "target_label": "COLOR",
+          "current_label": "Color",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Catálogo transversal",
+          "status": "ACTUALIZAR",
+          "details": "2 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "20",
+              "name": "TRANSPARENTE"
+            },
+            {
+              "code": "21",
+              "name": "DORADO"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 5,
+          "target_key": "material",
+          "current_key": "material",
+          "target_label": "MATERIAL",
+          "current_label": "Material",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "1 códigos tienen otro significado",
+          "missing_options": [],
+          "mismatched_options": [
+            {
+              "code": "07",
+              "target": "PEBD",
+              "current": "HIPS"
+            }
+          ],
+          "extra_options": []
+        }
+      ]
+    },
+    {
+      "classification": "PTF-AL-CH",
+      "source_sheet": "PTF-AL-CH",
+      "status": "CREAR",
+      "create_level": "Subgrupo + Plantilla",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": false
+      },
+      "active_templates": 0,
+      "products": 2,
+      "siigo_products": 2,
+      "target_numeric_length": 13,
+      "differences": [
+        "No existe PTF-AL-CH."
+      ],
+      "fields": []
+    },
+    {
+      "classification": "PTF-FM-EN",
+      "source_sheet": "PTF-FM-EN",
+      "status": "ACTUALIZAR",
+      "create_level": "",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": true
+      },
+      "active_templates": 1,
+      "products": 7,
+      "siigo_products": 6,
+      "target_numeric_length": 13,
+      "differences": [],
+      "fields": [
+        {
+          "order": 1,
+          "target_key": "tipo_de_envase",
+          "current_key": "tipo",
+          "target_label": "TIPO DE ENVASE",
+          "current_label": "Tipo",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "etiqueta \"Tipo\"→\"TIPO DE ENVASE\"; 7 códigos tienen otro significado",
+          "missing_options": [],
+          "mismatched_options": [
+            {
+              "code": "101",
+              "target": "2 BOCAS",
+              "current": "ENVASE 2 BOCAS"
+            },
+            {
+              "code": "102",
+              "target": "CILINDRICO",
+              "current": "ENVASE CILINDRICO"
+            },
+            {
+              "code": "103",
+              "target": "CONTENEDOR",
+              "current": "ENVASE CONTENEDOR"
+            },
+            {
+              "code": "104",
+              "target": "ONDULADO",
+              "current": "ENVASE ONDULADO"
+            },
+            {
+              "code": "105",
+              "target": "OVALADO",
+              "current": "ENVASE OVALADO"
+            },
+            {
+              "code": "106",
+              "target": "PASTILLERO",
+              "current": "ENVASE PASTILLERO"
+            },
+            {
+              "code": "107",
+              "target": "POTE",
+              "current": "ENVASE POTE"
+            }
+          ],
+          "extra_options": [
+            {
+              "code": "108",
+              "name": "ENVASE ESPECIAL ZEP"
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "target_key": "boca",
+          "current_key": "boca",
+          "target_label": "BOCA",
+          "current_label": "Boca",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "1 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "023",
+              "name": "B. 59MM"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 3,
+          "target_key": "capacidad_en_gr_o_ml",
+          "current_key": "capacidad",
+          "target_label": "CAPACIDAD EN gr O mL",
+          "current_label": "Capacidad [g o ml]",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "etiqueta \"Capacidad [g o ml]\"→\"CAPACIDAD EN gr O mL\"; 1 opciones objetivo faltan; 18 códigos tienen otro significado",
+          "missing_options": [
+            {
+              "code": "019",
+              "name": "*350"
+            }
+          ],
+          "mismatched_options": [
+            {
+              "code": "001",
+              "target": "*10",
+              "current": "10"
+            },
+            {
+              "code": "002",
+              "target": "*20",
+              "current": "20"
+            },
+            {
+              "code": "003",
+              "target": "*30",
+              "current": "30"
+            },
+            {
+              "code": "004",
+              "target": "*40",
+              "current": "40"
+            },
+            {
+              "code": "005",
+              "target": "*50",
+              "current": "50"
+            },
+            {
+              "code": "006",
+              "target": "*60",
+              "current": "60"
+            },
+            {
+              "code": "007",
+              "target": "*70",
+              "current": "70"
+            },
+            {
+              "code": "008",
+              "target": "*80",
+              "current": "80"
+            },
+            {
+              "code": "009",
+              "target": "*90",
+              "current": "90"
+            },
+            {
+              "code": "010",
+              "target": "*100",
+              "current": "100"
+            },
+            {
+              "code": "011",
+              "target": "*120",
+              "current": "120"
+            },
+            {
+              "code": "012",
+              "target": "*150",
+              "current": "150"
+            },
+            {
+              "code": "013",
+              "target": "*180",
+              "current": "180"
+            },
+            {
+              "code": "014",
+              "target": "*200",
+              "current": "200"
+            },
+            {
+              "code": "015",
+              "target": "*250",
+              "current": "250"
+            },
+            {
+              "code": "016",
+              "target": "*500",
+              "current": "500"
+            },
+            {
+              "code": "017",
+              "target": "*600",
+              "current": "600"
+            },
+            {
+              "code": "018",
+              "target": "*1000",
+              "current": "1000"
+            }
+          ],
+          "extra_options": []
+        },
+        {
+          "order": 4,
+          "target_key": "color",
+          "current_key": "color",
+          "target_label": "COLOR",
+          "current_label": "Color",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Catálogo transversal",
+          "status": "ACTUALIZAR",
+          "details": "2 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "20",
+              "name": "TRANSPARENTE"
+            },
+            {
+              "code": "21",
+              "name": "DORADO"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 5,
+          "target_key": "material",
+          "current_key": "material",
+          "target_label": "MATERIAL",
+          "current_label": "Material",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Opciones de plantilla",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": [
+            {
+              "code": "07",
+              "name": "HIPS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "classification": "PTF-ES-EN",
+      "source_sheet": "PTF-ES-EN",
+      "status": "CREAR",
+      "create_level": "Subgrupo + Plantilla",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": false
+      },
+      "active_templates": 0,
+      "products": 1,
+      "siigo_products": 1,
+      "target_numeric_length": 13,
+      "differences": [
+        "No existe PTF-ES-EN."
+      ],
+      "fields": []
+    },
+    {
+      "classification": "PTF-FM-JG",
+      "source_sheet": "PTF-FM-JG",
+      "status": "CREAR",
+      "create_level": "Plantilla",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": true
+      },
+      "active_templates": 0,
+      "products": 1,
+      "siigo_products": 1,
+      "target_numeric_length": 13,
+      "differences": [
+        "La clasificación existe, pero no tiene plantilla activa."
+      ],
+      "fields": []
+    },
+    {
+      "classification": "PTF-FM-CJ",
+      "source_sheet": "PTF-FM-CJ",
+      "status": "CREAR",
+      "create_level": "Plantilla",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": true
+      },
+      "active_templates": 0,
+      "products": 4,
+      "siigo_products": 4,
+      "target_numeric_length": 13,
+      "differences": [
+        "La clasificación existe, pero no tiene plantilla activa."
+      ],
+      "fields": []
+    },
+    {
+      "classification": "PTF-FM-TP",
+      "source_sheet": "PTF-FM-TP",
+      "status": "ACTUALIZAR",
+      "create_level": "",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": true
+      },
+      "active_templates": 1,
+      "products": 5,
+      "siigo_products": 5,
+      "target_numeric_length": 13,
+      "differences": [],
+      "fields": [
+        {
+          "order": 1,
+          "target_key": "tipo_de_tapa_o_tapon",
+          "current_key": "tipo",
+          "target_label": "TIPO DE TAPA o TAPÓN",
+          "current_label": "Tipo",
+          "length_target": 4,
+          "length_current": 4,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "etiqueta \"Tipo\"→\"TIPO DE TAPA o TAPÓN\"; 2 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "1006",
+              "name": "TAPON A PRESION"
+            },
+            {
+              "code": "1007",
+              "name": "SOBRE TAPA"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 2,
+          "target_key": "acabado",
+          "current_key": "acabado",
+          "target_label": "ACABADO",
+          "current_label": "Acabado",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "1 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "07",
+              "name": "PERFORADO"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 3,
+          "target_key": "boca",
+          "current_key": "boca",
+          "target_label": "BOCA",
+          "current_label": "Boca",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "4 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "025",
+              "name": "B. 22 MM"
+            },
+            {
+              "code": "026",
+              "name": "B. 19 MM"
+            },
+            {
+              "code": "027",
+              "name": "B. 59 MM"
+            },
+            {
+              "code": "028",
+              "name": "B. 401-101 EM"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 4,
+          "target_key": "color",
+          "current_key": "color",
+          "target_label": "COLOR",
+          "current_label": "Color",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Catálogo transversal",
+          "status": "ACTUALIZAR",
+          "details": "2 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "20",
+              "name": "TRANSPARENTE"
+            },
+            {
+              "code": "21",
+              "name": "DORADO"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 5,
+          "target_key": "material",
+          "current_key": "material",
+          "target_label": "MATERIAL",
+          "current_label": "Material",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "1 códigos tienen otro significado",
+          "missing_options": [],
+          "mismatched_options": [
+            {
+              "code": "07",
+              "target": "PEBD",
+              "current": "HIPS"
+            }
+          ],
+          "extra_options": []
+        }
+      ]
+    },
+    {
+      "classification": "PTF-ES-TP",
+      "source_sheet": "PTF-ES-TP",
+      "status": "ACTUALIZAR",
+      "create_level": "",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": true
+      },
+      "active_templates": 1,
+      "products": 6,
+      "siigo_products": 6,
+      "target_numeric_length": 13,
+      "differences": [],
+      "fields": [
+        {
+          "order": 1,
+          "target_key": "tipo_de_tapa",
+          "current_key": "tipo",
+          "target_label": "TIPO DE TAPA",
+          "current_label": "Tipo",
+          "length_target": 4,
+          "length_current": 4,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "etiqueta \"Tipo\"→\"TIPO DE TAPA\"; 1 opciones objetivo faltan; 2 códigos tienen otro significado",
+          "missing_options": [
+            {
+              "code": "1003",
+              "name": "SUB MASTER"
+            }
+          ],
+          "mismatched_options": [
+            {
+              "code": "1001",
+              "target": "A PRESION",
+              "current": "TAPON A PRESION"
+            },
+            {
+              "code": "1002",
+              "target": "MASTER",
+              "current": "TAPA MASTER"
+            }
+          ],
+          "extra_options": []
+        },
+        {
+          "order": 2,
+          "target_key": "acabado",
+          "current_key": "acabado",
+          "target_label": "ACABADO",
+          "current_label": "Acabado",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Opciones de plantilla",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 3,
+          "target_key": "boca",
+          "current_key": "boca",
+          "target_label": "BOCA",
+          "current_label": "Boca",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "2 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "004",
+              "name": "B. 30 MM"
+            },
+            {
+              "code": "005",
+              "name": "B. 90 MM"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 4,
+          "target_key": "color",
+          "current_key": "color",
+          "target_label": "COLOR",
+          "current_label": "Color",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Catálogo transversal",
+          "status": "ACTUALIZAR",
+          "details": "2 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "20",
+              "name": "TRANSPARENTE"
+            },
+            {
+              "code": "21",
+              "name": "DORADO"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 5,
+          "target_key": "material",
+          "current_key": "material",
+          "target_label": "MATERIAL",
+          "current_label": "Material",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Opciones de plantilla",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": [
+            {
+              "code": "07",
+              "name": "HIPS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "classification": "PTF-RT-PO",
+      "source_sheet": "PTF-RT-PO",
+      "status": "ACTUALIZAR",
+      "create_level": "",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": true
+      },
+      "active_templates": 1,
+      "products": 4,
+      "siigo_products": 4,
+      "target_numeric_length": 13,
+      "differences": [],
+      "fields": [
+        {
+          "order": 1,
+          "target_key": "linea",
+          "current_key": "linea",
+          "target_label": "LINEA",
+          "current_label": "Línea",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "2 opciones objetivo faltan; 1 códigos tienen otro significado",
+          "missing_options": [
+            {
+              "code": "103",
+              "name": "HABLADOR"
+            },
+            {
+              "code": "104",
+              "name": "BOMPER"
+            }
+          ],
+          "mismatched_options": [
+            {
+              "code": "101",
+              "target": "GRIP",
+              "current": "HABLADOR"
+            }
+          ],
+          "extra_options": []
+        },
+        {
+          "order": 2,
+          "target_key": "tipo",
+          "current_key": "tipo",
+          "target_label": "TIPO",
+          "current_label": "Tipo",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "22 opciones objetivo faltan; 1 códigos tienen otro significado",
+          "missing_options": [
+            {
+              "code": "002",
+              "name": "FLEX UP ADHESIVO"
+            },
+            {
+              "code": "003",
+              "name": "RIGIDO"
+            },
+            {
+              "code": "004",
+              "name": "RIGIDO ADHESIVO"
+            },
+            {
+              "code": "005",
+              "name": "ROPETRAFICO"
+            },
+            {
+              "code": "006",
+              "name": "ROPETRAFICO ADHESIVO"
+            },
+            {
+              "code": "007",
+              "name": "ROPETRAFICO P-37"
+            },
+            {
+              "code": "008",
+              "name": "ROPETRAFICO P-37 ADHESIVO"
+            },
+            {
+              "code": "009",
+              "name": "UNIVERSAL EN C"
+            },
+            {
+              "code": "010",
+              "name": "UNIVERSAL EN C ADHESIVO"
+            },
+            {
+              "code": "011",
+              "name": "DIVISOR GAVETA"
+            },
+            {
+              "code": "012",
+              "name": "PUNTO DE PAGO"
+            },
+            {
+              "code": "013",
+              "name": "RETENEDOR FRONTAL"
+            },
+            {
+              "code": "014",
+              "name": "PERFIL EN E"
+            },
+            {
+              "code": "015",
+              "name": "DIVISOR GONDOLA"
+            },
+            {
+              "code": "016",
+              "name": "CONJUNTO DIVISOR GONDOLA"
+            },
+            {
+              "code": "017",
+              "name": "ACRILICO CON SOPORTE"
+            },
+            {
+              "code": "018",
+              "name": "DISPLAY EN L"
+            },
+            {
+              "code": "019",
+              "name": "DISPLAY INCLINADO"
+            },
+            {
+              "code": "020",
+              "name": "STAND TV"
+            },
+            {
+              "code": "021",
+              "name": "PARA NEVERA"
+            },
+            {
+              "code": "022",
+              "name": "PERFIL INFERIOR CHECK OUT"
+            },
+            {
+              "code": "023",
+              "name": "PERFIL SUPERIOR CHECK OUT"
+            }
+          ],
+          "mismatched_options": [
+            {
+              "code": "001",
+              "target": "FLEX UP",
+              "current": "PUESTO DE PAGO"
+            }
+          ],
+          "extra_options": []
+        },
+        {
+          "order": 3,
+          "target_key": "capacidad_en_gr_o_ml",
+          "current_key": "dimensiones",
+          "target_label": "CAPACIDAD EN gr O mL",
+          "current_label": "Dimensiones",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "etiqueta \"Dimensiones\"→\"CAPACIDAD EN gr O mL\"; 3 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "002",
+              "name": "3,7 * 2,5 CM"
+            },
+            {
+              "code": "003",
+              "name": "2,5 CM"
+            },
+            {
+              "code": "004",
+              "name": "30 * 4 CM"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 4,
+          "target_key": "color",
+          "current_key": "color",
+          "target_label": "COLOR",
+          "current_label": "Color",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Catálogo transversal",
+          "status": "ACTUALIZAR",
+          "details": "2 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "20",
+              "name": "TRANSPARENTE"
+            },
+            {
+              "code": "21",
+              "name": "DORADO"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 5,
+          "target_key": "material",
+          "current_key": "material",
+          "target_label": "MATERIAL",
+          "current_label": "Material",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Opciones de plantilla",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": []
+        }
+      ]
+    },
+    {
+      "classification": "PTF-RT-PP",
+      "source_sheet": "PTF-RT-PP",
+      "status": "CREAR",
+      "create_level": "Plantilla",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": true
+      },
+      "active_templates": 0,
+      "products": 3,
+      "siigo_products": 3,
+      "target_numeric_length": 13,
+      "differences": [
+        "La clasificación existe, pero no tiene plantilla activa."
+      ],
+      "fields": []
+    },
+    {
+      "classification": "PTF-RT-AC",
+      "source_sheet": "PTF-RT-AC",
+      "status": "CREAR",
+      "create_level": "Subgrupo + Plantilla",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": false
+      },
+      "active_templates": 0,
+      "products": 0,
+      "siigo_products": 0,
+      "target_numeric_length": 13,
+      "differences": [
+        "No existe PTF-RT-AC."
+      ],
+      "fields": []
+    },
+    {
+      "classification": "PTC-FM-EN",
+      "source_sheet": "PTC-FM-EN-",
+      "status": "ACTUALIZAR",
+      "create_level": "",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": true
+      },
+      "active_templates": 1,
+      "products": 2,
+      "siigo_products": 2,
+      "target_numeric_length": 13,
+      "differences": [],
+      "fields": [
+        {
+          "order": 1,
+          "target_key": "tipo_de_envase",
+          "current_key": "tipo",
+          "target_label": "TIPO DE ENVASE",
+          "current_label": "Tipo",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "etiqueta \"Tipo\"→\"TIPO DE ENVASE\"; 8 códigos tienen otro significado",
+          "missing_options": [],
+          "mismatched_options": [
+            {
+              "code": "101",
+              "target": "2 BOCAS",
+              "current": "ENVASE 2 BOCAS"
+            },
+            {
+              "code": "102",
+              "target": "CILINDRICO",
+              "current": "ENVASE CILINDRICO"
+            },
+            {
+              "code": "103",
+              "target": "CONTENEDOR",
+              "current": "ENVASE CONTENEDOR"
+            },
+            {
+              "code": "104",
+              "target": "ONDULADO",
+              "current": "ENVASE ONDULADO"
+            },
+            {
+              "code": "105",
+              "target": "OVALADO",
+              "current": "ENVASE OVALADO"
+            },
+            {
+              "code": "106",
+              "target": "PASTILLERO",
+              "current": "ENVASE PASTILLERO"
+            },
+            {
+              "code": "107",
+              "target": "POTE",
+              "current": "ENVASE POTE"
+            },
+            {
+              "code": "108",
+              "target": "ESPECIAL ZEP",
+              "current": "ENVASE ESPECIAL ZEP"
+            }
+          ],
+          "extra_options": []
+        },
+        {
+          "order": 2,
+          "target_key": "boca",
+          "current_key": "boca",
+          "target_label": "BOCA",
+          "current_label": "Boca",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 3,
+          "target_key": "capacidad_en_gr_o_ml",
+          "current_key": "capacidad",
+          "target_label": "CAPACIDAD EN gr O mL",
+          "current_label": "Capacidad [g o ml]",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "etiqueta \"Capacidad [g o ml]\"→\"CAPACIDAD EN gr O mL\"; 18 códigos tienen otro significado",
+          "missing_options": [],
+          "mismatched_options": [
+            {
+              "code": "001",
+              "target": "*10",
+              "current": "10"
+            },
+            {
+              "code": "002",
+              "target": "*20",
+              "current": "20"
+            },
+            {
+              "code": "003",
+              "target": "*30",
+              "current": "30"
+            },
+            {
+              "code": "004",
+              "target": "*40",
+              "current": "40"
+            },
+            {
+              "code": "005",
+              "target": "*50",
+              "current": "50"
+            },
+            {
+              "code": "006",
+              "target": "*60",
+              "current": "60"
+            },
+            {
+              "code": "007",
+              "target": "*70",
+              "current": "70"
+            },
+            {
+              "code": "008",
+              "target": "*80",
+              "current": "80"
+            },
+            {
+              "code": "009",
+              "target": "*90",
+              "current": "90"
+            },
+            {
+              "code": "010",
+              "target": "*100",
+              "current": "100"
+            },
+            {
+              "code": "011",
+              "target": "*120",
+              "current": "120"
+            },
+            {
+              "code": "012",
+              "target": "*150",
+              "current": "150"
+            },
+            {
+              "code": "013",
+              "target": "*180",
+              "current": "180"
+            },
+            {
+              "code": "014",
+              "target": "*200",
+              "current": "200"
+            },
+            {
+              "code": "015",
+              "target": "*250",
+              "current": "250"
+            },
+            {
+              "code": "016",
+              "target": "*500",
+              "current": "500"
+            },
+            {
+              "code": "017",
+              "target": "*600",
+              "current": "600"
+            },
+            {
+              "code": "018",
+              "target": "*1000",
+              "current": "1000"
+            }
+          ],
+          "extra_options": []
+        },
+        {
+          "order": 4,
+          "target_key": "color",
+          "current_key": "color",
+          "target_label": "COLOR",
+          "current_label": "Color",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Catálogo transversal",
+          "status": "ACTUALIZAR",
+          "details": "2 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "20",
+              "name": "TRANSPARENTE"
+            },
+            {
+              "code": "21",
+              "name": "DORADO"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 5,
+          "target_key": "material",
+          "current_key": "material",
+          "target_label": "MATERIAL",
+          "current_label": "Material",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Opciones de plantilla",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": [
+            {
+              "code": "07",
+              "name": "HIPS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "classification": "PTC-FM-TP",
+      "source_sheet": "PTC-FM-TP-",
+      "status": "ACTUALIZAR",
+      "create_level": "",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": true
+      },
+      "active_templates": 1,
+      "products": 1,
+      "siigo_products": 1,
+      "target_numeric_length": 13,
+      "differences": [],
+      "fields": [
+        {
+          "order": 1,
+          "target_key": "tipo_de_tapa",
+          "current_key": "tipo",
+          "target_label": "TIPO DE TAPA",
+          "current_label": "Tipo",
+          "length_target": 4,
+          "length_current": 4,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "etiqueta \"Tipo\"→\"TIPO DE TAPA\"; 5 códigos tienen otro significado",
+          "missing_options": [],
+          "mismatched_options": [
+            {
+              "code": "1001",
+              "target": "A PRESION",
+              "current": "TAPA A PRESION"
+            },
+            {
+              "code": "1002",
+              "target": "ANILLO DE SEGURIDAD",
+              "current": "TAPA ANILLO DE SEGURIDAD"
+            },
+            {
+              "code": "1003",
+              "target": "DE PRESION Y SELLADO",
+              "current": "TAPA DE PRESION Y SELLADO"
+            },
+            {
+              "code": "1004",
+              "target": "PRESS TOP",
+              "current": "TAPA PRESS TOP"
+            },
+            {
+              "code": "1005",
+              "target": "ROSCADA",
+              "current": "TAPA ROSCADA"
+            }
+          ],
+          "extra_options": []
+        },
+        {
+          "order": 2,
+          "target_key": "acabado",
+          "current_key": "acabado",
+          "target_label": "ACABADO",
+          "current_label": "Acabado",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Opciones de plantilla",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 3,
+          "target_key": "boca",
+          "current_key": "boca",
+          "target_label": "BOCA",
+          "current_label": "Boca",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 4,
+          "target_key": "color",
+          "current_key": "color",
+          "target_label": "COLOR",
+          "current_label": "Color",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Catálogo transversal",
+          "status": "ACTUALIZAR",
+          "details": "2 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "20",
+              "name": "TRANSPARENTE"
+            },
+            {
+              "code": "21",
+              "name": "DORADO"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 5,
+          "target_key": "material",
+          "current_key": "material",
+          "target_label": "MATERIAL",
+          "current_label": "Material",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Opciones de plantilla",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": [
+            {
+              "code": "07",
+              "name": "HIPS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "classification": "MPP-OR-PD",
+      "source_sheet": "MPP-OR-PD-",
+      "status": "CREAR",
+      "create_level": "Subgrupo + Plantilla",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": false
+      },
+      "active_templates": 0,
+      "products": 4,
+      "siigo_products": 4,
+      "target_numeric_length": 13,
+      "differences": [
+        "No existe MPP-OR-PD."
+      ],
+      "fields": []
+    },
+    {
+      "classification": "MPP-OR-PP",
+      "source_sheet": "MPP-OR-PP-",
+      "status": "ACTUALIZAR",
+      "create_level": "",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": true
+      },
+      "active_templates": 1,
+      "products": 4,
+      "siigo_products": 4,
+      "target_numeric_length": 13,
+      "differences": [],
+      "fields": [
+        {
+          "order": 1,
+          "target_key": "referencia",
+          "current_key": "referencia",
+          "target_label": "REFERENCIA",
+          "current_label": "Referencia",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Opciones de plantilla",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 2,
+          "target_key": "codigo",
+          "current_key": "codigo",
+          "target_label": "CÓDIGO",
+          "current_label": "Código",
+          "length_target": 4,
+          "length_current": 4,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "1 códigos tienen otro significado",
+          "missing_options": [],
+          "mismatched_options": [
+            {
+              "code": "0004",
+              "target": "11H01A",
+              "current": "PRUEBA"
+            }
+          ],
+          "extra_options": []
+        },
+        {
+          "order": 3,
+          "target_key": "presentacion",
+          "current_key": "presentacion",
+          "target_label": "PRESENTACIÓN",
+          "current_label": "Presentación",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Catálogo transversal",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 4,
+          "target_key": "peso_en_kg",
+          "current_key": "peso",
+          "target_label": "PESO EN Kg",
+          "current_label": "Peso [kg]",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Catálogo transversal",
+          "status": "ACTUALIZAR",
+          "details": "etiqueta \"Peso [kg]\"→\"PESO EN Kg\"; 1 opciones objetivo faltan; 16 códigos tienen otro significado",
+          "missing_options": [
+            {
+              "code": ",,,,,,",
+              "name": ",,,,,,"
+            }
+          ],
+          "mismatched_options": [
+            {
+              "code": "001",
+              "target": "1.0",
+              "current": "1"
+            },
+            {
+              "code": "002",
+              "target": "2.0",
+              "current": "2"
+            },
+            {
+              "code": "003",
+              "target": "3.0",
+              "current": "3"
+            },
+            {
+              "code": "004",
+              "target": "4.0",
+              "current": "4"
+            },
+            {
+              "code": "005",
+              "target": "5.0",
+              "current": "5"
+            },
+            {
+              "code": "006",
+              "target": "6.0",
+              "current": "6"
+            },
+            {
+              "code": "007",
+              "target": "7.0",
+              "current": "7"
+            },
+            {
+              "code": "008",
+              "target": "8.0",
+              "current": "8"
+            },
+            {
+              "code": "009",
+              "target": "9.0",
+              "current": "9"
+            },
+            {
+              "code": "010",
+              "target": "10.0",
+              "current": "10"
+            },
+            {
+              "code": "015",
+              "target": "15.0",
+              "current": "15"
+            },
+            {
+              "code": "020",
+              "target": "20.0",
+              "current": "20"
+            },
+            {
+              "code": "022",
+              "target": "22.0",
+              "current": "22"
+            },
+            {
+              "code": "025",
+              "target": "25.0",
+              "current": "25"
+            },
+            {
+              "code": "050",
+              "target": "50.0",
+              "current": "50"
+            },
+            {
+              "code": "100",
+              "target": "100.0",
+              "current": "100"
+            }
+          ],
+          "extra_options": [
+            {
+              "code": "011",
+              "name": "11"
+            },
+            {
+              "code": "012",
+              "name": "12"
+            },
+            {
+              "code": "013",
+              "name": "13"
+            },
+            {
+              "code": "014",
+              "name": "14"
+            },
+            {
+              "code": "016",
+              "name": "16"
+            },
+            {
+              "code": "017",
+              "name": "17"
+            },
+            {
+              "code": "018",
+              "name": "18"
+            },
+            {
+              "code": "019",
+              "name": "19"
+            },
+            {
+              "code": "021",
+              "name": "21"
+            },
+            {
+              "code": "023",
+              "name": "23"
+            },
+            {
+              "code": "024",
+              "name": "24"
+            },
+            {
+              "code": "026",
+              "name": "26"
+            },
+            {
+              "code": "027",
+              "name": "27"
+            },
+            {
+              "code": "028",
+              "name": "28"
+            },
+            {
+              "code": "029",
+              "name": "29"
+            },
+            {
+              "code": "030",
+              "name": "30"
+            },
+            {
+              "code": "031",
+              "name": "31"
+            },
+            {
+              "code": "032",
+              "name": "32"
+            },
+            {
+              "code": "033",
+              "name": "33"
+            },
+            {
+              "code": "034",
+              "name": "34"
+            },
+            {
+              "code": "035",
+              "name": "35"
+            },
+            {
+              "code": "036",
+              "name": "36"
+            },
+            {
+              "code": "037",
+              "name": "37"
+            },
+            {
+              "code": "038",
+              "name": "38"
+            },
+            {
+              "code": "039",
+              "name": "39"
+            },
+            {
+              "code": "040",
+              "name": "40"
+            },
+            {
+              "code": "041",
+              "name": "41"
+            },
+            {
+              "code": "042",
+              "name": "42"
+            },
+            {
+              "code": "043",
+              "name": "43"
+            },
+            {
+              "code": "044",
+              "name": "44"
+            },
+            {
+              "code": "045",
+              "name": "45"
+            },
+            {
+              "code": "046",
+              "name": "46"
+            },
+            {
+              "code": "047",
+              "name": "47"
+            },
+            {
+              "code": "048",
+              "name": "48"
+            },
+            {
+              "code": "049",
+              "name": "49"
+            },
+            {
+              "code": "051",
+              "name": "51"
+            },
+            {
+              "code": "052",
+              "name": "52"
+            },
+            {
+              "code": "053",
+              "name": "53"
+            },
+            {
+              "code": "054",
+              "name": "54"
+            },
+            {
+              "code": "055",
+              "name": "55"
+            },
+            {
+              "code": "056",
+              "name": "56"
+            },
+            {
+              "code": "057",
+              "name": "57"
+            },
+            {
+              "code": "058",
+              "name": "58"
+            },
+            {
+              "code": "059",
+              "name": "59"
+            },
+            {
+              "code": "060",
+              "name": "60"
+            },
+            {
+              "code": "061",
+              "name": "61"
+            },
+            {
+              "code": "062",
+              "name": "62"
+            },
+            {
+              "code": "063",
+              "name": "63"
+            },
+            {
+              "code": "064",
+              "name": "64"
+            },
+            {
+              "code": "065",
+              "name": "65"
+            },
+            {
+              "code": "066",
+              "name": "66"
+            },
+            {
+              "code": "067",
+              "name": "67"
+            },
+            {
+              "code": "068",
+              "name": "68"
+            },
+            {
+              "code": "069",
+              "name": "69"
+            },
+            {
+              "code": "070",
+              "name": "70"
+            },
+            {
+              "code": "071",
+              "name": "71"
+            },
+            {
+              "code": "072",
+              "name": "72"
+            },
+            {
+              "code": "073",
+              "name": "73"
+            },
+            {
+              "code": "074",
+              "name": "74"
+            },
+            {
+              "code": "075",
+              "name": "75"
+            },
+            {
+              "code": "076",
+              "name": "76"
+            },
+            {
+              "code": "077",
+              "name": "77"
+            },
+            {
+              "code": "078",
+              "name": "78"
+            },
+            {
+              "code": "079",
+              "name": "79"
+            },
+            {
+              "code": "080",
+              "name": "80"
+            },
+            {
+              "code": "081",
+              "name": "81"
+            },
+            {
+              "code": "082",
+              "name": "82"
+            },
+            {
+              "code": "083",
+              "name": "83"
+            },
+            {
+              "code": "084",
+              "name": "84"
+            },
+            {
+              "code": "085",
+              "name": "85"
+            },
+            {
+              "code": "086",
+              "name": "86"
+            },
+            {
+              "code": "087",
+              "name": "87"
+            },
+            {
+              "code": "088",
+              "name": "88"
+            },
+            {
+              "code": "089",
+              "name": "89"
+            },
+            {
+              "code": "090",
+              "name": "90"
+            },
+            {
+              "code": "091",
+              "name": "91"
+            },
+            {
+              "code": "092",
+              "name": "92"
+            },
+            {
+              "code": "093",
+              "name": "93"
+            },
+            {
+              "code": "094",
+              "name": "94"
+            },
+            {
+              "code": "095",
+              "name": "95"
+            },
+            {
+              "code": "096",
+              "name": "96"
+            },
+            {
+              "code": "097",
+              "name": "97"
+            },
+            {
+              "code": "098",
+              "name": "98"
+            },
+            {
+              "code": "099",
+              "name": "99"
+            }
+          ]
+        },
+        {
+          "order": 5,
+          "target_key": "color",
+          "current_key": "color",
+          "target_label": "COLOR",
+          "current_label": "Color",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Catálogo transversal",
+          "status": "ACTUALIZAR",
+          "details": "2 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "20",
+              "name": "TRANSPARENTE"
+            },
+            {
+              "code": "21",
+              "name": "DORADO"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": []
+        }
+      ]
+    },
+    {
+      "classification": "MPC-CP-MB",
+      "source_sheet": "MPC-CP-MB",
+      "status": "ACTUALIZAR",
+      "create_level": "",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": true
+      },
+      "active_templates": 1,
+      "products": 3,
+      "siigo_products": 3,
+      "target_numeric_length": 13,
+      "differences": [],
+      "fields": [
+        {
+          "order": 1,
+          "target_key": "referencia",
+          "current_key": "referencia",
+          "target_label": "REFERENCIA",
+          "current_label": "Referencia",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "4 códigos tienen otro significado",
+          "missing_options": [],
+          "mismatched_options": [
+            {
+              "code": "10",
+              "target": "MASTERBATCH ABS",
+              "current": "MASTERBATCH AB"
+            },
+            {
+              "code": "11",
+              "target": "MASTERBATCH PE",
+              "current": "MASTERBATCH PL"
+            },
+            {
+              "code": "12",
+              "target": "MASTERBATCH PET",
+              "current": "MASTERBATCH PT"
+            },
+            {
+              "code": "15",
+              "target": "MASTERBATCH PVC",
+              "current": "MASTERBATCH PV"
+            }
+          ],
+          "extra_options": []
+        },
+        {
+          "order": 2,
+          "target_key": "codigo",
+          "current_key": "codigo",
+          "target_label": "CÓDIGO",
+          "current_label": "Código",
+          "length_target": 4,
+          "length_current": 4,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "1 opciones objetivo faltan; 1 códigos tienen otro significado",
+          "missing_options": [
+            {
+              "code": "0003",
+              "name": "PL-YE0017"
+            }
+          ],
+          "mismatched_options": [
+            {
+              "code": "0001",
+              "target": "PL-WH0817-70%",
+              "current": "PE-43789"
+            }
+          ],
+          "extra_options": []
+        },
+        {
+          "order": 3,
+          "target_key": "presentacion",
+          "current_key": "presentacion",
+          "target_label": "PRESENTACIÓN",
+          "current_label": "Presentación",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Opciones de plantilla",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 4,
+          "target_key": "peso_en_g",
+          "current_key": "peso",
+          "target_label": "PESO EN g",
+          "current_label": "Peso [g]",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "etiqueta \"Peso [g]\"→\"PESO EN g\"; 3 códigos tienen otro significado",
+          "missing_options": [],
+          "mismatched_options": [
+            {
+              "code": "001",
+              "target": "1000G",
+              "current": "100G"
+            },
+            {
+              "code": "002",
+              "target": "25000G",
+              "current": "250G"
+            },
+            {
+              "code": "003",
+              "target": "50000G",
+              "current": "500G"
+            }
+          ],
+          "extra_options": [
+            {
+              "code": "004",
+              "name": "1000G"
+            }
+          ]
+        },
+        {
+          "order": 5,
+          "target_key": "color",
+          "current_key": "color",
+          "target_label": "COLOR",
+          "current_label": "Color",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Catálogo transversal",
+          "status": "ACTUALIZAR",
+          "details": "2 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "20",
+              "name": "TRANSPARENTE"
+            },
+            {
+              "code": "21",
+              "name": "DORADO"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": []
+        }
+      ]
+    },
+    {
+      "classification": "ALQ-MC-PF",
+      "source_sheet": "ALQ-MC-PF-",
+      "status": "ACTUALIZAR",
+      "create_level": "",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": true
+      },
+      "active_templates": 1,
+      "products": 1,
+      "siigo_products": 1,
+      "target_numeric_length": 13,
+      "differences": [],
+      "fields": [
+        {
+          "order": 1,
+          "target_key": "maquina",
+          "current_key": "maquina",
+          "target_label": "MAQUINA",
+          "current_label": "Máquina",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 2,
+          "target_key": "tipo",
+          "current_key": "tipo",
+          "target_label": "TIPO",
+          "current_label": "Tipo",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "2 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "05",
+              "name": "PS"
+            },
+            {
+              "code": "06",
+              "name": "PVC"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 3,
+          "target_key": "marca",
+          "current_key": "marca",
+          "target_label": "MARCA",
+          "current_label": "Marca",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 4,
+          "target_key": "referencia",
+          "current_key": "referencia",
+          "target_label": "REFERENCIA",
+          "current_label": "Referencia",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 5,
+          "target_key": "capacidad_en_ton",
+          "current_key": "capacidad",
+          "target_label": "CAPACIDAD EN TON",
+          "current_label": "Capacidad [t]",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "etiqueta \"Capacidad [t]\"→\"CAPACIDAD EN TON\"; 1 códigos tienen otro significado",
+          "missing_options": [],
+          "mismatched_options": [
+            {
+              "code": "01",
+              "target": "1.0",
+              "current": "1"
+            }
+          ],
+          "extra_options": []
+        }
+      ]
+    },
+    {
+      "classification": "INS-EM-BL",
+      "source_sheet": "INS-EM-BL",
+      "status": "ACTUALIZAR",
+      "create_level": "",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": true
+      },
+      "active_templates": 1,
+      "products": 1,
+      "siigo_products": 1,
+      "target_numeric_length": 13,
+      "differences": [],
+      "fields": [
+        {
+          "order": 1,
+          "target_key": "referencia",
+          "current_key": "referencia",
+          "target_label": "REFERENCIA",
+          "current_label": "Referencia",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 2,
+          "target_key": "calibre",
+          "current_key": "calibre",
+          "target_label": "CALIBRE",
+          "current_label": "Calibre",
+          "length_target": 4,
+          "length_current": 4,
+          "option_source": "Opciones de plantilla",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 3,
+          "target_key": "medida",
+          "current_key": "medida",
+          "target_label": "MEDIDA",
+          "current_label": "Medida",
+          "length_target": 4,
+          "length_current": 4,
+          "option_source": "Opciones de plantilla",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 4,
+          "target_key": "color",
+          "current_key": "color",
+          "target_label": "COLOR",
+          "current_label": "Color",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Catálogo transversal",
+          "status": "ACTUALIZAR",
+          "details": "2 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "20",
+              "name": "TRANSPARENTE"
+            },
+            {
+              "code": "21",
+              "name": "DORADO"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": []
+        }
+      ]
+    },
+    {
+      "classification": "INS-EM-CJ",
+      "source_sheet": "INS-EM-CJ",
+      "status": "COINCIDE",
+      "create_level": "",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": true
+      },
+      "active_templates": 1,
+      "products": 1,
+      "siigo_products": 1,
+      "target_numeric_length": 13,
+      "differences": [],
+      "fields": [
+        {
+          "order": 1,
+          "target_key": "referencia",
+          "current_key": "referencia",
+          "target_label": "REFERENCIA",
+          "current_label": "Referencia",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 2,
+          "target_key": "tipo",
+          "current_key": "tipo",
+          "target_label": "TIPO",
+          "current_label": "Tipo",
+          "length_target": 4,
+          "length_current": 4,
+          "option_source": "Opciones de plantilla",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 3,
+          "target_key": "medida",
+          "current_key": "medida",
+          "target_label": "MEDIDA",
+          "current_label": "Medida",
+          "length_target": 4,
+          "length_current": 4,
+          "option_source": "Opciones de plantilla",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 4,
+          "target_key": "calibre",
+          "current_key": "calibre",
+          "target_label": "CALIBRE",
+          "current_label": "Calibre",
+          "length_target": 2,
+          "length_current": 2,
+          "option_source": "Opciones de plantilla",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": []
+        }
+      ]
+    },
+    {
+      "classification": "INS-EM-AC",
+      "source_sheet": "INS-EM-AC",
+      "status": "ACTUALIZAR",
+      "create_level": "",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": true,
+        "subgroup_exists": true
+      },
+      "active_templates": 1,
+      "products": 2,
+      "siigo_products": 2,
+      "target_numeric_length": 13,
+      "differences": [],
+      "fields": [
+        {
+          "order": 1,
+          "target_key": "referencia",
+          "current_key": "referencia",
+          "target_label": "REFERENCIA",
+          "current_label": "Referencia",
+          "length_target": 3,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "1 códigos tienen otro significado",
+          "missing_options": [],
+          "mismatched_options": [
+            {
+              "code": "107",
+              "target": "ZUNCHO SIN LOGO",
+              "current": "VINIPEL"
+            }
+          ],
+          "extra_options": [
+            {
+              "code": "109",
+              "name": "ZUNCHO SIN LOGO"
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "target_key": "tipo",
+          "current_key": "tipo",
+          "target_label": "TIPO",
+          "current_label": "Tipo",
+          "length_target": 4,
+          "length_current": 4,
+          "option_source": "Opciones de plantilla",
+          "status": "COINCIDE",
+          "details": "",
+          "missing_options": [],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 3,
+          "target_key": "medida",
+          "current_key": "medida",
+          "target_label": "MEDIDA",
+          "current_label": "Medida",
+          "length_target": 4,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "longitud 3→4; 1 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "0003",
+              "name": "1,5 MT"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": []
+        },
+        {
+          "order": 4,
+          "target_key": "calibre",
+          "current_key": "calibre",
+          "target_label": "CALIBRE",
+          "current_label": "Calibre",
+          "length_target": 2,
+          "length_current": 3,
+          "option_source": "Opciones de plantilla",
+          "status": "ACTUALIZAR",
+          "details": "longitud 3→2; 2 opciones objetivo faltan",
+          "missing_options": [
+            {
+              "code": "01",
+              "name": "48 MICRAS"
+            },
+            {
+              "code": "02",
+              "name": "3,5 MM"
+            }
+          ],
+          "mismatched_options": [],
+          "extra_options": [
+            {
+              "code": "001",
+              "name": "48 MICRAS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "classification": "MPC-AH-CN",
+      "source_sheet": "MPC-AH-CN",
+      "status": "CREAR",
+      "create_level": "Grupo + Subgrupo + Plantilla",
+      "hierarchy": {
+        "category_exists": true,
+        "group_exists": false,
+        "subgroup_exists": false
+      },
+      "active_templates": 0,
+      "products": 2,
+      "siigo_products": 2,
+      "target_numeric_length": 13,
+      "differences": [
+        "No existe MPC-AH."
+      ],
+      "fields": []
+    },
+    {
+      "classification": "ACPMQIY",
+      "source_sheet": "ACP-MQ-IY",
+      "status": "CREAR",
+      "create_level": "Categoría + Grupo + Subgrupo + Plantilla",
+      "hierarchy": {
+        "category_exists": false,
+        "group_exists": false,
+        "subgroup_exists": false
+      },
+      "active_templates": 0,
+      "products": 0,
+      "siigo_products": 0,
+      "target_numeric_length": 13,
+      "differences": [
+        "No existe la categoría ACPMQIY."
+      ],
+      "fields": []
+    },
+    {
+      "classification": "ACPMCPF",
+      "source_sheet": "ACP-MC-PF",
+      "status": "CREAR",
+      "create_level": "Categoría + Grupo + Subgrupo + Plantilla",
+      "hierarchy": {
+        "category_exists": false,
+        "group_exists": false,
+        "subgroup_exists": false
+      },
+      "active_templates": 0,
+      "products": 0,
+      "siigo_products": 0,
+      "target_numeric_length": 13,
+      "differences": [
+        "No existe la categoría ACPMCPF."
+      ],
+      "fields": []
+    },
+    {
+      "classification": "ACPMDIY",
+      "source_sheet": "ACP-MD-IY",
+      "status": "CREAR",
+      "create_level": "Categoría + Grupo + Subgrupo + Plantilla",
+      "hierarchy": {
+        "category_exists": false,
+        "group_exists": false,
+        "subgroup_exists": false
+      },
+      "active_templates": 0,
+      "products": 0,
+      "siigo_products": 0,
+      "target_numeric_length": 13,
+      "differences": [
+        "No existe la categoría ACPMDIY."
+      ],
+      "fields": []
+    },
+    {
+      "classification": "ACPMDPM",
+      "source_sheet": "ACP-MD-PM-",
+      "status": "CREAR",
+      "create_level": "Categoría + Grupo + Subgrupo + Plantilla",
+      "hierarchy": {
+        "category_exists": false,
+        "group_exists": false,
+        "subgroup_exists": false
+      },
+      "active_templates": 0,
+      "products": 0,
+      "siigo_products": 0,
+      "target_numeric_length": 13,
+      "differences": [
+        "No existe la categoría ACPMDPM."
+      ],
+      "fields": []
+    },
+    {
+      "classification": "ACPMDMT",
+      "source_sheet": "ACP-MD-MT-",
+      "status": "CREAR",
+      "create_level": "Categoría + Grupo + Subgrupo + Plantilla",
+      "hierarchy": {
+        "category_exists": false,
+        "group_exists": false,
+        "subgroup_exists": false
+      },
+      "active_templates": 0,
+      "products": 0,
+      "siigo_products": 0,
+      "target_numeric_length": 13,
+      "differences": [
+        "No existe la categoría ACPMDMT."
+      ],
+      "fields": []
+    },
+    {
+      "classification": "ACPMDSP",
+      "source_sheet": "ACP-MD-SP",
+      "status": "CREAR",
+      "create_level": "Categoría + Grupo + Subgrupo + Plantilla",
+      "hierarchy": {
+        "category_exists": false,
+        "group_exists": false,
+        "subgroup_exists": false
+      },
+      "active_templates": 0,
+      "products": 0,
+      "siigo_products": 0,
+      "target_numeric_length": 13,
+      "differences": [
+        "No existe la categoría ACPMDSP."
+      ],
+      "fields": []
+    },
+    {
+      "classification": "ACRPHIB",
+      "source_sheet": "ACR-PH-IB",
+      "status": "CREAR",
+      "create_level": "Categoría + Grupo + Subgrupo + Plantilla",
+      "hierarchy": {
+        "category_exists": false,
+        "group_exists": false,
+        "subgroup_exists": false
+      },
+      "active_templates": 0,
+      "products": 0,
+      "siigo_products": 0,
+      "target_numeric_length": 13,
+      "differences": [
+        "No existe la categoría ACRPHIB."
+      ],
+      "fields": []
+    }
+  ],
+  "clap_used_not_in_target": [
+    {
+      "classification": "MPP-OR-PV",
+      "products": 1,
+      "siigo_products": 1,
+      "templates": 1
+    },
+    {
+      "classification": "MPP-OR-PE",
+      "products": 1,
+      "siigo_products": 1,
+      "templates": 1
+    }
+  ],
+  "known_siigo_impacts": [
+    {
+      "old": "PTF-RT-PP1080040051606",
+      "color": "TRANSPARENTE",
+      "old_color_code": "16",
+      "new_color_code": "20",
+      "new": "PTF-RT-PP-1080040052006"
+    },
+    {
+      "old": "PTF-RT-PP1160040101606",
+      "color": "TRANSPARENTE",
+      "old_color_code": "16",
+      "new_color_code": "20",
+      "new": "PTF-RT-PP-1160040102006"
+    },
+    {
+      "old": "PTF-RT-PP1080050031606",
+      "color": "TRANSPARENTE",
+      "old_color_code": "16",
+      "new_color_code": "20",
+      "new": "PTF-RT-PP-1080050032006"
+    },
+    {
+      "old": "PTF-AL-TP-1006030282007",
+      "color": "DORADO",
+      "old_color_code": "20",
+      "new_color_code": "21",
+      "new": "PTF-AL-TP-1006030282107"
+    }
+  ]
+}
