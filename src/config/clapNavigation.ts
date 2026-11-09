@@ -105,6 +105,21 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
   },
 
   {
+    id: "sc-mapa-maestro-codificacion",
+    code: "MC",
+    label: "Mapa maestro de codificación",
+    href: "/sistema-gestion-calidad/mapa-maestro-codificacion",
+    parentId: "sc",
+    departmentCode: "SC",
+    type: "page",
+    status: "active",
+    permission: "CODIFICACION_VIEW",
+    description:
+      "Consulta oficial de categorías, grupos, subgrupos, clasificaciones y estructuras de código vigentes en CLAP.",
+  },
+
+
+  {
     id: "sc-codificacion-maestro-productos",
     code: "MP",
     label: "Maestro de productos",
