@@ -156,7 +156,7 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
     departmentCode: "DF",
     type: "department",
     status: "active",
-    permission: "DF_VIEW",
+    permission: "FINANCIERA_VIEW",
     description:
       "Gestión financiera, aprobaciones y procesos administrativos.",
   },
@@ -170,7 +170,7 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
     departmentCode: "DF",
     type: "page",
     status: "active",
-    permission: "DF_VIEW",
+    permission: "FINANCIERA_VIEW",
     description:
       "Solicitud de necesidades de personal dirigida a Talento Humano.",
   },
@@ -197,7 +197,7 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
   departmentCode: "DF",
   type: "page",
   status: "active",
-  permission: "DF_VIEW",
+  permission: "FINANCIERA_VIEW",
   description:
     "Documentos oficiales de caracterización y procedimiento de la Dirección Financiera.",
 },

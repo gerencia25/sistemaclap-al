@@ -102,7 +102,7 @@ const protectedRoutes = [
 },
 {
   path: "/direccion-financiera",
-  permission: "DF_VIEW",
+  permission: "FINANCIERA_VIEW",
 },
   {
     path: "/diseno-desarrollo",

@@ -35,7 +35,7 @@ export async function GET(request: Request) {
   try {
     await requireSystemPermission(
       request,
-      "CODIFICACION_CREATE_PRODUCT",
+      "CODIFICACION_VIEW",
     );
 
     const [
