@@ -621,7 +621,8 @@ export async function POST(request: Request) {
         id,
         code,
         name,
-        symbol
+        symbol,
+        siigo_unit_code
       `)
       .ilike("code", requestedUnit)
       .eq("status", "Activo")
@@ -647,6 +648,24 @@ export async function POST(request: Request) {
       );
     }
 
+    if (
+      !officialMeasurementUnit
+        .siigo_unit_code
+        ?.trim()
+    ) {
+      await removeUploadedFiles(
+        uploadedPaths,
+      );
+
+      return NextResponse.json(
+        {
+          error:
+            `La unidad ${officialMeasurementUnit.code} · ${officialMeasurementUnit.name} no tiene equivalencia configurada en SIIGO.`,
+        },
+        { status: 409 },
+      );
+    }
+
     /*
      * =====================================================
      * PRODUCTO OFICIAL
@@ -658,6 +677,30 @@ export async function POST(request: Request) {
      * Las URLs de archivos también salen únicamente de
      * archivos subidos por esta API.
      */
+    const categoryPrefix =
+      generated.classificationCode
+        .split("-")[0]
+        ?.trim()
+        .toUpperCase() ?? "";
+
+    const rawSuggestedSalePrice =
+      Number(
+        savedMasterData.suggested_sale_price ??
+          product.suggested_price ??
+          0,
+      );
+
+    const suggestedSalePrice =
+      ["PTF", "PTC"].includes(
+        categoryPrefix,
+      ) &&
+      Number.isFinite(
+        rawSuggestedSalePrice,
+      ) &&
+      rawSuggestedSalePrice > 0
+        ? rawSuggestedSalePrice
+        : 0;
+
     const officialProduct = {
       ...product,
 
@@ -692,6 +735,13 @@ export async function POST(request: Request) {
        */
       unit:
         officialMeasurementUnit.code,
+
+      /*
+       * Unidad oficial que se enviará a SIIGO.
+       * Proviene del mismo catálogo central de unidades.
+       */
+      dian_unit:
+        officialMeasurementUnit.siigo_unit_code,
 
       /*
        * Comportamiento operativo impuesto por servidor.
@@ -738,11 +788,17 @@ export async function POST(request: Request) {
         null,
 
       suggested_price:
-        Number(
-          savedMasterData.suggested_sale_price ??
-            product.suggested_price ??
-            0,
-        ),
+        suggestedSalePrice,
+
+      /*
+       * Se conserva también en las columnas compatibles
+       * con listas de precios del maestro CLAP.
+       */
+      price_list_1_name:
+        "Precio de venta 1",
+
+      price_list_1_value:
+        suggestedSalePrice,
 
       /*
        * Compatibilidad con columnas actuales.

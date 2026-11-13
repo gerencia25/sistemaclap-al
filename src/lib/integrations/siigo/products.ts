@@ -33,6 +33,7 @@ type ProductRow = {
   status: string | null;
   siigo_type: string | null;
   tax_charge: string | null;
+  suggested_price: number | null;
   include_iva_in_price: boolean | null;
   tracks_inventory: boolean | null;
   siigo_inventory_product: boolean | null;
@@ -294,6 +295,7 @@ export async function syncProductToSiigo(
         status,
         siigo_type,
         tax_charge,
+        suggested_price,
         include_iva_in_price,
         tracks_inventory,
         siigo_inventory_product,
@@ -482,6 +484,36 @@ export async function syncProductToSiigo(
           )
         : false;
 
+    /*
+     * Precio de venta.
+     *
+     * Para PTF y PTC el precio sugerido registrado
+     * durante la codificación se envía a la lista
+     * "Precio de venta 1" de SIIGO.
+     *
+     * Para las demás categorías no se envía prices.
+     */
+    const categoryPrefix =
+      normalize(
+        product.classification_code,
+      )
+        .split("-")[0];
+
+    const suggestedPrice =
+      Number(
+        product.suggested_price ??
+          0,
+      );
+
+    const shouldSendSuggestedPrice =
+      ["PTF", "PTC"].includes(
+        categoryPrefix,
+      ) &&
+      Number.isFinite(
+        suggestedPrice,
+      ) &&
+      suggestedPrice > 0;
+
     const createPayload = {
       code,
       name,
@@ -509,6 +541,30 @@ export async function syncProductToSiigo(
 
       taxes:
         tax.taxes,
+
+      ...(shouldSendSuggestedPrice
+        ? {
+            prices: [
+              {
+                currency_code:
+                  "COP",
+
+                price_list: [
+                  {
+                    position:
+                      1,
+
+                    name:
+                      "Precio de venta 1",
+
+                    value:
+                      suggestedPrice,
+                  },
+                ],
+              },
+            ],
+          }
+        : {}),
 
       unit:
         dianUnit,

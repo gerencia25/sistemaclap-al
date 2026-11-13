@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import {
+  fetchAllActiveClassificationOptions,
+  fetchAllActiveOptionCatalogValues,
+} from "@/lib/server/codificationOptionPagination";
+import {
   ApiAuthorizationError,
   requireSystemPermission,
 } from "@/lib/server/requireSystemPermission";
@@ -45,6 +49,8 @@ export async function GET(request: Request) {
       templatesResult,
       templateFieldsResult,
       optionsResult,
+      optionCatalogsResult,
+      optionCatalogValuesResult,
       masterFieldsResult,
       measurementUnitsResult,
     ] = await Promise.all([
@@ -107,24 +113,26 @@ export async function GET(request: Request) {
           display_order,
           code_length,
           contributes_to_code,
-          contributes_to_name
+          contributes_to_name,
+          allow_new_options,
+          option_catalog_id
         `)
         .eq("status", "Activo")
         .order("display_order"),
 
+            fetchAllActiveClassificationOptions(),
+
       supabaseAdmin
-        .from(
-          "item_classification_field_options",
-        )
+        .from("item_option_catalogs")
         .select(`
           id,
-          template_id,
-          field_key,
           code,
           name
         `)
         .eq("status", "Activo")
-        .order("code"),
+        .order("name"),
+
+            fetchAllActiveOptionCatalogValues(),
 
       supabaseAdmin
         .from("item_master_fields")
@@ -147,7 +155,8 @@ export async function GET(request: Request) {
           id,
           code,
           name,
-          symbol
+          symbol,
+          siigo_unit_code
         `)
         .eq("status", "Activo")
         .order("display_order", { ascending: true })
@@ -161,6 +170,8 @@ export async function GET(request: Request) {
       templatesResult,
       templateFieldsResult,
       optionsResult,
+      optionCatalogsResult,
+      optionCatalogValuesResult,
       masterFieldsResult,
       measurementUnitsResult,
     ];
@@ -204,6 +215,10 @@ export async function GET(request: Request) {
         templateFieldsResult.data ?? [],
       options:
         optionsResult.data ?? [],
+      option_catalogs:
+        optionCatalogsResult.data ?? [],
+      option_catalog_values:
+        optionCatalogValuesResult.data ?? [],
       master_fields:
         masterFieldsResult.data ?? [],
       measurement_units:

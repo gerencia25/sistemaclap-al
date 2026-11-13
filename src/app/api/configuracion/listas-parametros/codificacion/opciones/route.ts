@@ -44,6 +44,63 @@ function normalizeFieldKey(value: unknown) {
     .toLowerCase();
 }
 
+async function fetchAllClassificationOptionsForAdmin() {
+  const rows: Array<{
+    id: string;
+    template_id: string;
+    field_key: string;
+    code: string;
+    name: string;
+    status: string;
+    created_at: string;
+  }> = [];
+
+  const pageSize = 1000;
+
+  for (
+    let from = 0;
+    ;
+    from += pageSize
+  ) {
+    const { data, error } =
+      await supabaseAdmin
+        .from(
+          "item_classification_field_options",
+        )
+        .select(`
+          id,
+          template_id,
+          field_key,
+          code,
+          name,
+          status,
+          created_at
+        `)
+        .order("code")
+        .order("id")
+        .range(
+          from,
+          from + pageSize - 1,
+        );
+
+    if (error) {
+      throw new Error(
+        `Error consultando opciones: ${error.message}`,
+      );
+    }
+
+    const page = data ?? [];
+
+    rows.push(...page);
+
+    if (page.length < pageSize) {
+      break;
+    }
+  }
+
+  return rows;
+}
+
 // =========================================================
 // GET
 // =========================================================
@@ -58,7 +115,6 @@ export async function GET(request: Request) {
     const [
       templatesResult,
       fieldsResult,
-      optionsResult,
     ] = await Promise.all([
       supabaseAdmin
         .from("item_classification_templates")
@@ -91,25 +147,6 @@ export async function GET(request: Request) {
           option_catalog_id
         `)
         .order("display_order"),
-
-      /*
-       * Esta tabla ahora funciona como espejo compatible.
-       * Los catálogos transversales se sincronizan aquí
-       * automáticamente mediante triggers.
-       */
-      supabaseAdmin
-        .from(
-          "item_classification_field_options",
-        )
-        .select(`
-          id,
-          template_id,
-          field_key,
-          code,
-          name,
-          status,
-          created_at
-        `),
     ]);
 
     if (templatesResult.error) {
@@ -124,20 +161,19 @@ export async function GET(request: Request) {
       );
     }
 
-    if (optionsResult.error) {
-      throw new Error(
-        `Error consultando opciones: ${optionsResult.error.message}`,
-      );
-    }
-
     const templates =
       templatesResult.data ?? [];
 
     const fields =
       fieldsResult.data ?? [];
 
+    /*
+     * Hay más de 1.000 opciones activas/inactivas.
+     * Se consultan paginadas para no truncar la
+     * administración de catálogos.
+     */
     const options =
-      optionsResult.data ?? [];
+      await fetchAllClassificationOptionsForAdmin();
 
     const data =
       templates.map((template) => {
@@ -533,10 +569,25 @@ export async function PATCH(request: Request) {
         body.id,
       );
 
+    const hasName =
+      body.name !== undefined;
+
+    const hasStatus =
+      body.status !== undefined;
+
+    const name =
+      hasName
+        ? normalizeText(
+            body.name,
+          ).toUpperCase()
+        : "";
+
     const status =
-      normalizeText(
-        body.status,
-      );
+      hasStatus
+        ? normalizeText(
+            body.status,
+          )
+        : "";
 
     if (!id) {
       return NextResponse.json(
@@ -548,7 +599,28 @@ export async function PATCH(request: Request) {
       );
     }
 
+    if (!hasName && !hasStatus) {
+      return NextResponse.json(
+        {
+          error:
+            "Debes indicar el nombre o el estado a actualizar.",
+        },
+        { status: 400 },
+      );
+    }
+
+    if (hasName && !name) {
+      return NextResponse.json(
+        {
+          error:
+            "El nombre no puede quedar vacío.",
+        },
+        { status: 400 },
+      );
+    }
+
     if (
+      hasStatus &&
       status !== "Activo" &&
       status !== "Inactivo"
     ) {
@@ -623,13 +695,75 @@ export async function PATCH(request: Request) {
       );
     }
 
-    // -----------------------------------------------------
-    // CATÁLOGO TRANSVERSAL
-    // -----------------------------------------------------
+    /*
+     * =====================================================
+     * CATÁLOGO TRANSVERSAL
+     * =====================================================
+     */
 
     if (
       field?.option_catalog_id
     ) {
+      if (
+        hasName &&
+        name !== existing.name
+      ) {
+        const {
+          data: duplicate,
+          error: duplicateError,
+        } = await supabaseAdmin
+          .from(
+            "item_option_catalog_values",
+          )
+          .select("id")
+          .eq(
+            "catalog_id",
+            field.option_catalog_id,
+          )
+          .ilike(
+            "name",
+            name,
+          )
+          .neq(
+            "code",
+            existing.code,
+          )
+          .limit(1)
+          .maybeSingle();
+
+        if (duplicateError) {
+          throw new Error(
+            `No se pudo validar el nombre transversal: ${duplicateError.message}`,
+          );
+        }
+
+        if (duplicate) {
+          return NextResponse.json(
+            {
+              error:
+                `Ya existe una opción transversal llamada "${name}".`,
+            },
+            { status: 409 },
+          );
+        }
+      }
+
+      const updates: Record<
+        string,
+        unknown
+      > = {
+        updated_at:
+          new Date().toISOString(),
+      };
+
+      if (hasName) {
+        updates.name = name;
+      }
+
+      if (hasStatus) {
+        updates.status = status;
+      }
+
       const {
         data: shared,
         error: sharedError,
@@ -637,12 +771,7 @@ export async function PATCH(request: Request) {
         .from(
           "item_option_catalog_values",
         )
-        .update({
-          status,
-          updated_at:
-            new Date()
-              .toISOString(),
-        })
+        .update(updates)
         .eq(
           "catalog_id",
           field.option_catalog_id,
@@ -667,7 +796,8 @@ export async function PATCH(request: Request) {
       }
 
       /*
-       * El trigger actualizó todas las filas espejo.
+       * El trigger sincroniza todos los espejos
+       * vinculados al catálogo transversal.
        */
       const {
         data: mirrored,
@@ -689,12 +819,12 @@ export async function PATCH(request: Request) {
 
       if (mirrorError) {
         throw new Error(
-          `La opción se actualizó, pero no se pudo consultar su espejo: ${mirrorError.message}`,
+          `La opción transversal se actualizó, pero no se pudo consultar su espejo: ${mirrorError.message}`,
         );
       }
 
       console.info(
-        `Opción transversal ${status} por ${systemUser.email}: ${field.field_label} · ${shared.code} · ${shared.name}`,
+        `Opción transversal actualizada por ${systemUser.email}: ${field.field_label} · ${shared.code} · ${shared.name} · ${shared.status}`,
       );
 
       return NextResponse.json({
@@ -704,9 +834,72 @@ export async function PATCH(request: Request) {
       });
     }
 
-    // -----------------------------------------------------
-    // OPCIÓN ESPECÍFICA
-    // -----------------------------------------------------
+    /*
+     * =====================================================
+     * OPCIÓN LOCAL DE PLANTILLA
+     * =====================================================
+     */
+
+    if (
+      hasName &&
+      name !== existing.name
+    ) {
+      const {
+        data: duplicate,
+        error: duplicateError,
+      } = await supabaseAdmin
+        .from(
+          "item_classification_field_options",
+        )
+        .select("id")
+        .eq(
+          "template_id",
+          existing.template_id,
+        )
+        .eq(
+          "field_key",
+          existing.field_key,
+        )
+        .ilike(
+          "name",
+          name,
+        )
+        .neq(
+          "id",
+          id,
+        )
+        .limit(1)
+        .maybeSingle();
+
+      if (duplicateError) {
+        throw new Error(
+          `No se pudo validar el nombre: ${duplicateError.message}`,
+        );
+      }
+
+      if (duplicate) {
+        return NextResponse.json(
+          {
+            error:
+              `Ya existe una opción llamada "${name}" en este campo.`,
+          },
+          { status: 409 },
+        );
+      }
+    }
+
+    const updates: Record<
+      string,
+      unknown
+    > = {};
+
+    if (hasName) {
+      updates.name = name;
+    }
+
+    if (hasStatus) {
+      updates.status = status;
+    }
 
     const {
       data,
@@ -715,9 +908,7 @@ export async function PATCH(request: Request) {
       .from(
         "item_classification_field_options",
       )
-      .update({
-        status,
-      })
+      .update(updates)
       .eq("id", id)
       .select(`
         id,
@@ -734,6 +925,10 @@ export async function PATCH(request: Request) {
         `No se pudo actualizar la opción: ${error.message}`,
       );
     }
+
+    console.info(
+      `Opción local actualizada por ${systemUser.email}: ${field?.field_label ?? existing.field_key} · ${data.code} · ${data.name} · ${data.status}`,
+    );
 
     return NextResponse.json({
       data,

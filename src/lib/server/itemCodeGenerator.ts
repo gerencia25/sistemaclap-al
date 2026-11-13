@@ -18,12 +18,20 @@ type TemplateField = {
   code_length: number;
   contributes_to_code: boolean;
   contributes_to_name: boolean;
+  option_catalog_id: string | null;
 };
 
 type ClassificationOption = {
   id: string;
   template_id: string;
   field_key: string;
+  code: string;
+  name: string;
+};
+
+type SharedCatalogOption = {
+  id: string;
+  catalog_id: string;
   code: string;
   name: string;
 };
@@ -199,7 +207,8 @@ export async function generateOfficialItemCode(
       display_order,
       code_length,
       contributes_to_code,
-      contributes_to_name
+      contributes_to_name,
+      option_catalog_id
     `)
     .eq("template_id", template.id)
     .eq("status", "Activo")
@@ -242,6 +251,45 @@ export async function generateOfficialItemCode(
       (optionsData ?? []) as ClassificationOption[];
   }
 
+  let sharedCatalogOptions: SharedCatalogOption[] = [];
+
+  const sharedCatalogIds = [
+    ...new Set(
+      fields
+        .map((field) => field.option_catalog_id)
+        .filter(
+          (value): value is string =>
+            Boolean(value),
+        ),
+    ),
+  ];
+
+  if (sharedCatalogIds.length > 0) {
+    const {
+      data: sharedOptionsData,
+      error: sharedOptionsError,
+    } = await supabaseAdmin
+      .from("item_option_catalog_values")
+      .select(`
+        id,
+        catalog_id,
+        code,
+        name
+      `)
+      .in("catalog_id", sharedCatalogIds)
+      .eq("status", "Activo")
+      .order("code");
+
+    if (sharedOptionsError) {
+      throw new Error(
+        `Error consultando catálogos compartidos: ${sharedOptionsError.message}`,
+      );
+    }
+
+    sharedCatalogOptions =
+      (sharedOptionsData ?? []) as SharedCatalogOption[];
+  }
+
   const numericParts: string[] = [];
   const nameParts: string[] = [];
   const normalizedDynamicData:
@@ -263,12 +311,41 @@ export async function generateOfficialItemCode(
       continue;
     }
 
-    const selectedOption = options.find(
-      (option) =>
-        option.field_key === field.field_key &&
-        normalizeText(option.name) ===
+    const legacyOptions =
+      options.filter(
+        (option) =>
+          option.field_key ===
+          field.field_key,
+      );
+
+    const sharedOptions =
+      field.option_catalog_id
+        ? sharedCatalogOptions.filter(
+            (option) =>
+              option.catalog_id ===
+              field.option_catalog_id,
+          )
+        : [];
+
+    /*
+     * Fuente preferida:
+     * catálogo transversal.
+     *
+     * Compatibilidad:
+     * si el catálogo está vacío, se usan las
+     * opciones históricas de la plantilla.
+     */
+    const availableOptions =
+      sharedOptions.length > 0
+        ? sharedOptions
+        : legacyOptions;
+
+    const selectedOption =
+      availableOptions.find(
+        (option) =>
+          normalizeText(option.name) ===
           normalizeText(rawValue),
-    );
+      );
 
     if (selectedOption) {
       normalizedDynamicData[field.field_key] =

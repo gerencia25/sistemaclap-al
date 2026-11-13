@@ -243,6 +243,21 @@ export const CLAP_NAVIGATION: ClapNavigationItem[] = [
       "Solicitud de creación o revisión de terceros requerida por el proceso comercial.",
   },
 
+
+  {
+    id: "dc-solicitud-codigo",
+    code: "SC",
+    label: "Solicitud de código",
+    href: "/comercial/solicitud-codigo",
+    parentId: "dc",
+    departmentCode: "DC",
+    type: "page",
+    status: "active",
+    permission: "CODIFICACION_REQUEST",
+    description:
+      "Solicita códigos para productos nuevos requeridos durante el proceso comercial.",
+  },
+
   {
   id: "dc-solicitud-personal",
   code: "SP",

@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import {
+  fetchAllActiveClassificationOptions,
+  fetchAllActiveOptionCatalogValues,
+} from "@/lib/server/codificationOptionPagination";
+import {
   ApiAuthorizationError,
   requireSystemPermission,
 } from "@/lib/server/requireSystemPermission";
@@ -20,13 +24,13 @@ function handleError(error: unknown) {
     );
   }
 
-  const message =
-    error instanceof Error
-      ? error.message
-      : "Ocurrió un error inesperado.";
-
   return NextResponse.json(
-    { error: message },
+    {
+      error:
+        error instanceof Error
+          ? error.message
+          : "Ocurrió un error inesperado.",
+    },
     { status: 500 },
   );
 }
@@ -38,53 +42,146 @@ export async function GET(request: Request) {
       "CODIFICACION_REQUEST",
     );
 
-    const {
-      data: categories,
-      error: categoriesError,
-    } = await supabaseAdmin
-      .from("item_categories")
-      .select(`
-        id,
-        code,
-        name
-      `)
-      .eq("status", "Activo")
-      .order("code");
+    const [
+      categoriesResult,
+      groupsResult,
+      subgroupsResult,
+      templatesResult,
+      fieldsResult,
+      optionsResult,
+      catalogsResult,
+      catalogValuesResult,
+    ] = await Promise.all([
+      supabaseAdmin
+        .from("item_categories")
+        .select("id, code, name")
+        .eq("status", "Activo")
+        .order("code"),
 
-    if (categoriesError) {
+      supabaseAdmin
+        .from("item_groups")
+        .select(
+          "id, category_id, code, name",
+        )
+        .eq("status", "Activo")
+        .order("code"),
+
+      supabaseAdmin
+        .from("item_subgroups")
+        .select(
+          "id, group_id, code, name",
+        )
+        .eq("status", "Activo")
+        .order("code"),
+
+      supabaseAdmin
+        .from(
+          "item_classification_templates",
+        )
+        .select(`
+          id,
+          category_code,
+          group_code,
+          subgroup_code,
+          full_code,
+          name,
+          code_pattern,
+          name_pattern,
+          numeric_code_length
+        `)
+        .eq("status", "Activo")
+        .order("full_code"),
+
+      supabaseAdmin
+        .from(
+          "item_classification_template_fields",
+        )
+        .select(`
+          id,
+          template_id,
+          field_key,
+          field_label,
+          field_type,
+          required,
+          display_order,
+          code_length,
+          contributes_to_code,
+          contributes_to_name,
+          allow_new_options,
+          option_catalog_id
+        `)
+        .eq("status", "Activo")
+        .order("display_order"),
+
+            fetchAllActiveClassificationOptions(),
+
+      supabaseAdmin
+        .from("item_option_catalogs")
+        .select(`
+          id,
+          code,
+          name
+        `)
+        .eq("status", "Activo")
+        .order("name"),
+
+            fetchAllActiveOptionCatalogValues(),
+    ]);
+
+    const results = [
+      categoriesResult,
+      groupsResult,
+      subgroupsResult,
+      templatesResult,
+      fieldsResult,
+      optionsResult,
+      catalogsResult,
+      catalogValuesResult,
+    ];
+
+    const failed =
+      results.find(
+        (result) => result.error,
+      );
+
+    if (failed?.error) {
       throw new Error(
-        `No se pudieron consultar las clasificaciones: ${categoriesError.message}`,
+        failed.error.message,
       );
     }
 
-    const {
-      data: templates,
-      error: templatesError,
-    } = await supabaseAdmin
-      .from("item_classification_templates")
-      .select("category_code")
-      .eq("status", "Activo");
-
-    if (templatesError) {
-      throw new Error(
-        `No se pudieron validar las plantillas de codificación: ${templatesError.message}`,
+    const enabledCategoryCodes =
+      new Set(
+        (templatesResult.data ?? []).map(
+          (template) =>
+            template.category_code,
+        ),
       );
-    }
 
-    const enabledCodes = new Set(
-      (templates ?? []).map(
-        (template) => template.category_code,
-      ),
-    );
-
-    const availableCategories =
-      (categories ?? []).filter(
+    const categories =
+      (categoriesResult.data ?? []).filter(
         (category) =>
-          enabledCodes.has(category.code),
+          enabledCategoryCodes.has(
+            category.code,
+          ),
       );
 
     return NextResponse.json({
-      categories: availableCategories,
+      categories,
+      groups:
+        groupsResult.data ?? [],
+      subgroups:
+        subgroupsResult.data ?? [],
+      templates:
+        templatesResult.data ?? [],
+      template_fields:
+        fieldsResult.data ?? [],
+      options:
+        optionsResult.data ?? [],
+      option_catalogs:
+        catalogsResult.data ?? [],
+      option_catalog_values:
+        catalogValuesResult.data ?? [],
     });
   } catch (error) {
     return handleError(error);

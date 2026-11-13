@@ -65,12 +65,27 @@ type TemplateField = {
   code_length: number;
   contributes_to_code: boolean;
   contributes_to_name: boolean;
+  allow_new_options: boolean;
+  option_catalog_id: string | null;
 };
 
 type ClassificationOption = {
   id: string;
   template_id: string;
   field_key: string;
+  code: string;
+  name: string;
+};
+
+type OptionCatalog = {
+  id: string;
+  code: string;
+  name: string;
+};
+
+type OptionCatalogValue = {
+  id: string;
+  catalog_id: string;
   code: string;
   name: string;
 };
@@ -91,6 +106,7 @@ type MeasurementUnit = {
   code: string;
   name: string;
   symbol: string;
+  siigo_unit_code: string | null;
 };
 
 type ConfigurationPayload = {
@@ -100,6 +116,8 @@ type ConfigurationPayload = {
   templates: Template[];
   template_fields: TemplateField[];
   options: ClassificationOption[];
+  option_catalogs: OptionCatalog[];
+  option_catalog_values: OptionCatalogValue[];
   master_fields: MasterField[];
   measurement_units: MeasurementUnit[];
 };
@@ -109,6 +127,29 @@ const inputClassName =
 
 function padCode(value: string, length: number) {
   return String(value).padStart(length, "0");
+}
+
+function getNewOptionButtonLabel(
+  field: TemplateField,
+) {
+  const label =
+    field.field_label.trim();
+
+  const lower =
+    label.toLowerCase();
+
+  const feminine =
+    lower.startsWith("referencia") ||
+    lower.startsWith("presentación")
+      ? "Nueva"
+      : "Nuevo";
+
+  const scope =
+    field.option_catalog_id
+      ? " (transversal)"
+      : "";
+
+  return `+ ${feminine} ${lower}${scope}`;
 }
 
 function getMasterFieldOptions(field: MasterField) {
@@ -165,6 +206,13 @@ export default function CrearCodigoPage() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+
+  const [
+    creatingOptionFieldKey,
+    setCreatingOptionFieldKey,
+  ] = useState("");
+
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
@@ -450,12 +498,8 @@ export default function CrearCodigoPage() {
       if (!rawValue) continue;
 
       const selectedOption =
-        configuration.options.find(
+        getOptionsForField(field).find(
           (option) =>
-            option.template_id ===
-              selectedTemplate.id &&
-            option.field_key ===
-              field.field_key &&
             option.name === rawValue,
         );
 
@@ -531,6 +575,12 @@ export default function CrearCodigoPage() {
     dynamicData,
   ]);
 
+  const selectedMeasurementUnit =
+    configuration?.measurement_units.find(
+      (unit) =>
+        unit.code === inventoryUnit,
+    ) ?? null;
+
   function getOptionsForField(
     field: TemplateField,
   ) {
@@ -541,13 +591,176 @@ export default function CrearCodigoPage() {
       return [];
     }
 
-    return configuration.options.filter(
-      (option) =>
-        option.template_id ===
-          selectedTemplate.id &&
-        option.field_key ===
-          field.field_key,
+    const legacyOptions =
+      configuration.options.filter(
+        (option) =>
+          option.template_id ===
+            selectedTemplate.id &&
+          option.field_key ===
+            field.field_key,
+      );
+
+    if (!field.option_catalog_id) {
+      return legacyOptions;
+    }
+
+    const sharedOptions =
+      configuration.option_catalog_values
+        .filter(
+          (option) =>
+            option.catalog_id ===
+            field.option_catalog_id,
+        )
+        .map(
+          (option): ClassificationOption => ({
+            id: option.id,
+            template_id: selectedTemplate.id,
+            field_key: field.field_key,
+            code: option.code,
+            name: option.name,
+          }),
+        );
+
+    return sharedOptions.length > 0
+      ? sharedOptions
+      : legacyOptions;
+  }
+
+  async function handleCreateOption(
+    field: TemplateField,
+  ) {
+    if (
+      !session?.access_token ||
+      !selectedTemplate ||
+      !configuration
+    ) {
+      return;
+    }
+
+    if (!field.allow_new_options) {
+      alert(
+        `${field.field_label} no permite crear nuevas opciones.`,
+      );
+      return;
+    }
+
+    if (field.option_catalog_id) {
+      const confirmed =
+        window.confirm(
+          `${field.field_label} es un catálogo transversal.\n\n` +
+          "El nuevo valor quedará disponible en todas las clasificaciones vinculadas a este catálogo.\n\n" +
+          "¿Deseas continuar?",
+        );
+
+      if (!confirmed) {
+        return;
+      }
+    }
+
+    const value = window.prompt(
+      field.option_catalog_id
+        ? `Nuevo valor TRANSVERSAL para ${field.field_label}:`
+        : `Nuevo valor para ${field.field_label}:`,
     );
+
+    const name = value?.trim();
+
+    if (!name) {
+      return;
+    }
+
+    setCreatingOptionFieldKey(
+      field.field_key,
+    );
+
+    try {
+      const response = await fetch(
+        "/api/sistema-gestion-calidad/codificacion/opciones",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+            Authorization:
+              `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            template_id:
+              selectedTemplate.id,
+            field_key:
+              field.field_key,
+            name,
+          }),
+        },
+      );
+
+      const result =
+        await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          result.error ||
+            "No se pudo crear la nueva opción.",
+        );
+      }
+
+      /*
+       * Recargamos la configuración completa.
+       * Así funciona tanto para opciones propias
+       * de la plantilla como para catálogos
+       * transversales.
+       */
+      const configurationResponse =
+        await fetch(
+          "/api/sistema-gestion-calidad/codificacion/configuracion",
+          {
+            headers: {
+              Authorization:
+                `Bearer ${session.access_token}`,
+            },
+            cache: "no-store",
+          },
+        );
+
+      const configurationPayload =
+        await configurationResponse.json();
+
+      if (!configurationResponse.ok) {
+        throw new Error(
+          configurationPayload.error ||
+            "La opción fue creada, pero no se pudo refrescar la configuración.",
+        );
+      }
+
+      setConfiguration(
+        configurationPayload as ConfigurationPayload,
+      );
+
+      const createdName =
+        String(
+          result.data?.name ?? name,
+        );
+
+      setDynamicData(
+        (current) => ({
+          ...current,
+          [field.field_key]:
+            createdName,
+        }),
+      );
+
+      alert(
+        `${field.field_label}: "${createdName}" creado correctamente.`,
+      );
+    } catch (error) {
+      alert(
+        error instanceof Error
+          ? error.message
+          : "No se pudo crear la nueva opción.",
+      );
+    } finally {
+      setCreatingOptionFieldKey("");
+    }
   }
 
   function handleGroupChange(
@@ -565,7 +778,9 @@ export default function CrearCodigoPage() {
     setDynamicData({});
   }
 
-  async function handleSave() {
+  async function handleSave(
+    confirmed = false,
+  ) {
     if (
       !session?.access_token ||
       !codeRequest ||
@@ -602,6 +817,16 @@ export default function CrearCodigoPage() {
     if (!inventoryUnit) {
       alert(
         "Debes seleccionar la unidad de medida de inventario.",
+      );
+      return;
+    }
+
+    if (
+      !selectedMeasurementUnit
+        ?.siigo_unit_code
+    ) {
+      alert(
+        "La unidad seleccionada todavía no tiene equivalencia configurada en SIIGO.",
       );
       return;
     }
@@ -665,6 +890,12 @@ export default function CrearCodigoPage() {
       }
     }
 
+    if (!confirmed) {
+      setIsConfirmOpen(true);
+      return;
+    }
+
+    setIsConfirmOpen(false);
     setIsSaving(true);
 
     try {
@@ -1030,43 +1261,68 @@ export default function CrearCodigoPage() {
                   >
                     {field.field_type ===
                     "select" ? (
-                      <select
-                        value={value}
-                        onChange={(event) =>
-                          setDynamicData(
-                            (current) => ({
-                              ...current,
-                              [field.field_key]:
-                                event
-                                  .target
-                                  .value,
-                            }),
-                          )
-                        }
-                        className={
-                          inputClassName
-                        }
-                      >
-                        <option value="">
-                          Seleccionar
-                        </option>
+                      <div className="space-y-2">
+                        <select
+                          value={value}
+                          onChange={(event) =>
+                            setDynamicData(
+                              (current) => ({
+                                ...current,
+                                [field.field_key]:
+                                  event
+                                    .target
+                                    .value,
+                              }),
+                            )
+                          }
+                          className={
+                            inputClassName
+                          }
+                        >
+                          <option value="">
+                            Seleccionar
+                          </option>
 
-                        {options.map(
-                          (option) => (
-                            <option
-                              key={
-                                option.id
-                              }
-                              value={
-                                option.name
-                              }
-                            >
-                              {option.code} ·{" "}
-                              {option.name}
-                            </option>
-                          ),
+                          {options.map(
+                            (option) => (
+                              <option
+                                key={
+                                  option.id
+                                }
+                                value={
+                                  option.name
+                                }
+                              >
+                                {option.code} ·{" "}
+                                {option.name}
+                              </option>
+                            ),
+                          )}
+                        </select>
+
+                        {field.allow_new_options && (
+                          <button
+                            type="button"
+                            disabled={
+                              creatingOptionFieldKey ===
+                              field.field_key
+                            }
+                            onClick={() =>
+                              handleCreateOption(
+                                field,
+                              )
+                            }
+                            className="inline-flex items-center rounded-lg border border-[#07076b]/15 bg-[#07076b]/5 px-3 py-2 text-xs font-semibold text-[#07076b] transition hover:bg-[#07076b]/10 disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            {creatingOptionFieldKey ===
+                            field.field_key
+                              ? "Creando..."
+                              : getNewOptionButtonLabel(
+                                  field,
+                                )}
+                          </button>
                         )}
-                      </select>
+                      </div>
                     ) : (
                       <input
                         type={
@@ -1158,12 +1414,40 @@ export default function CrearCodigoPage() {
                   <option
                     key={unit.id}
                     value={unit.code}
+                    disabled={
+                      !unit.siigo_unit_code
+                    }
                   >
                     {unit.code} · {unit.name} ({unit.symbol})
+                    {unit.siigo_unit_code
+                      ? ` → SIIGO ${unit.siigo_unit_code}`
+                      : " · Sin equivalencia SIIGO"}
                   </option>
                 ),
               )}
             </select>
+
+            {selectedMeasurementUnit && (
+              <div className="mt-3 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3">
+                <p className="text-xs font-semibold text-[#07076b]">
+                  Equivalencia para SIIGO
+                </p>
+
+                <p className="mt-1 text-sm text-gray-700">
+                  CLAP:{" "}
+                  <strong>
+                    {selectedMeasurementUnit.code} ·{" "}
+                    {selectedMeasurementUnit.name}
+                  </strong>
+                  {" → "}
+                  SIIGO:{" "}
+                  <strong>
+                    {selectedMeasurementUnit.siigo_unit_code ??
+                      "Sin equivalencia configurada"}
+                  </strong>
+                </p>
+              </div>
+            )}
 
             <p className="mt-2 text-xs leading-5 text-gray-500">
               Unidad oficial utilizada por inventarios, entradas,
@@ -1395,7 +1679,7 @@ export default function CrearCodigoPage() {
         </button>
 
         <button
-          onClick={handleSave}
+          onClick={() => handleSave(false)}
           disabled={
             isSaving ||
             !selectedTemplate ||
@@ -1409,6 +1693,160 @@ export default function CrearCodigoPage() {
             : "Crear código"}
         </button>
       </section>
+      {isConfirmOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="confirm-product-title"
+        >
+          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl border border-gray-200 bg-white shadow-2xl">
+            <div className="border-b border-gray-100 px-6 py-5">
+              <p className="text-sm font-semibold uppercase tracking-[0.15em] text-gray-400">
+                Confirmación final
+              </p>
+
+              <h2
+                id="confirm-product-title"
+                className="mt-2 text-2xl font-bold text-[#07076b]"
+              >
+                Confirmar creación oficial
+              </h2>
+
+              <p className="mt-2 text-sm leading-6 text-gray-600">
+                Revisa cuidadosamente la información. Al confirmar,
+                este producto será creado oficialmente en CLAP y se
+                iniciará su sincronización con SIIGO.
+              </p>
+            </div>
+
+            <div className="space-y-5 px-6 py-6">
+              <div className="rounded-2xl border border-[#07076b]/10 bg-[#07076b]/5 p-5">
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                  Código oficial
+                </p>
+
+                <p className="mt-2 break-all text-lg font-bold text-[#07076b]">
+                  {generatedPreview.reference}
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-gray-200 p-5">
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                  Nombre oficial
+                </p>
+
+                <p className="mt-2 text-base font-semibold leading-6 text-gray-900">
+                  {generatedPreview.name || "—"}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="rounded-2xl border border-gray-200 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                    Categoría
+                  </p>
+
+                  <p className="mt-2 text-sm font-semibold text-gray-800">
+                    {selectedCategory.code} · {selectedCategory.name}
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-gray-200 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                    Grupo
+                  </p>
+
+                  <p className="mt-2 text-sm font-semibold text-gray-800">
+                    {selectedGroup
+                      ? `${selectedGroup.code} · ${selectedGroup.name}`
+                      : "—"}
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-gray-200 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                    Subgrupo
+                  </p>
+
+                  <p className="mt-2 text-sm font-semibold text-gray-800">
+                    {selectedSubgroup
+                      ? `${selectedSubgroup.code} · ${selectedSubgroup.name}`
+                      : "—"}
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-gray-200 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                    Unidad CLAP
+                  </p>
+
+                  <p className="mt-2 text-sm font-semibold text-gray-800">
+                    {selectedMeasurementUnit
+                      ? `${selectedMeasurementUnit.code} · ${selectedMeasurementUnit.name} (${selectedMeasurementUnit.symbol})`
+                      : inventoryUnit}
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-gray-200 p-4 sm:col-span-2">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                    Unidad SIIGO
+                  </p>
+
+                  <p className="mt-2 text-sm font-semibold text-gray-800">
+                    {selectedMeasurementUnit?.siigo_unit_code || "—"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4">
+                <p className="text-sm font-semibold text-amber-900">
+                  Verifica antes de continuar
+                </p>
+
+                <p className="mt-1 text-sm leading-6 text-amber-800">
+                  Si encuentras un error en el código, nombre,
+                  clasificación o unidad, selecciona
+                  <strong> Volver a revisar</strong>. Todavía no se
+                  creará ningún producto.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4">
+                <p className="text-sm leading-6 text-gray-700">
+                  Al confirmar, CLAP volverá a calcular y validar el
+                  código en el servidor antes de guardarlo. La vista
+                  previa mostrada aquí no sustituye las validaciones
+                  del backend.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col-reverse gap-3 border-t border-gray-100 bg-gray-50 px-6 py-5 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={() => setIsConfirmOpen(false)}
+                disabled={isSaving}
+                className="rounded-xl border border-gray-300 bg-white px-6 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Volver a revisar
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleSave(true)}
+                disabled={isSaving}
+                className="rounded-xl bg-[#07076b] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#07076b]/90 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isSaving
+                  ? "Creando código..."
+                  : "Confirmar y crear código"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
