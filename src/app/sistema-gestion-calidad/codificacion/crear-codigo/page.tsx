@@ -1,5 +1,12 @@
 "use client";
 
+import {
+  formatProductName,
+  matchesCodificationOption,
+  shouldSeparateCapacity,
+  type ProductNameSegment,
+} from "@/lib/codificacion/formatProductName";
+
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -485,7 +492,7 @@ export default function CrearCodigoPage() {
     }
 
     const numericParts: string[] = [];
-    const nameParts: string[] = [];
+    const nameParts: ProductNameSegment[] = [];
 
     for (
       const field of
@@ -500,7 +507,11 @@ export default function CrearCodigoPage() {
       const selectedOption =
         getOptionsForField(field).find(
           (option) =>
-            option.name === rawValue,
+            matchesCodificationOption(
+              field.field_key,
+              option.name,
+              rawValue,
+            ),
         );
 
       if (field.contributes_to_code) {
@@ -536,10 +547,12 @@ export default function CrearCodigoPage() {
       }
 
       if (field.contributes_to_name) {
-        nameParts.push(
-          selectedOption?.name ??
+        nameParts.push({
+          fieldKey: field.field_key,
+          value:
+            selectedOption?.name ??
             rawValue.trim().toUpperCase(),
-        );
+        });
       }
     }
 
@@ -556,10 +569,15 @@ export default function CrearCodigoPage() {
         numericBlock.length > 0
           ? `${classificationCode}-${numericBlock}`
           : "",
-      name: nameParts
-        .join(" ")
-        .replace(/\s+/g, " ")
-        .trim(),
+      name: formatProductName(
+        nameParts,
+        {
+          separatorBeforeCapacity:
+            shouldSeparateCapacity(
+              classificationCode,
+            ),
+        },
+      ),
       numericBlock,
       isValidLength:
         numericBlock.length ===
@@ -1012,18 +1030,32 @@ export default function CrearCodigoPage() {
         );
       }
 
+      const synchronized =
+        payload?.siigo_sync?.status ===
+        "synchronized";
+
+      const messages: string[] = [];
+
+      if (synchronized) {
+        messages.push(
+          "Producto creado en CLAP y sincronizado correctamente con SIIGO.",
+        );
+      } else {
+        messages.push(
+          "Producto creado correctamente en CLAP, pero su sincronización con SIIGO está pendiente. NO vuelvas a crear el producto. Debe revisarse su sincronización.",
+        );
+      }
+
       if (
         codeRequest.requester_email &&
         payload.email_sent === false
       ) {
-        alert(
-          "Código creado correctamente, pero no se pudo enviar el correo de notificación.",
-        );
-      } else {
-        alert(
-          "Código creado correctamente.",
+        messages.push(
+          "No se pudo enviar el correo de notificación.",
         );
       }
+
+      alert(messages.join("\n\n"));
 
       router.push(
         "/sistema-gestion-calidad/codificacion",
@@ -1263,7 +1295,15 @@ export default function CrearCodigoPage() {
                     "select" ? (
                       <div className="space-y-2">
                         <select
-                          value={value}
+                          value={
+                            options.find((option) =>
+                              matchesCodificationOption(
+                                field.field_key,
+                                option.name,
+                                value,
+                              ),
+                            )?.name ?? value
+                          }
                           onChange={(event) =>
                             setDynamicData(
                               (current) => ({

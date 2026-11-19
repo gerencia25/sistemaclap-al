@@ -899,11 +899,22 @@ export async function POST(request: Request) {
           "",
       ).trim();
 
+    let siigoSyncStatus:
+      | "synchronized"
+      | "pending" = "pending";
+
+    let siigoSyncAction: string | null = null;
+
     if (createdProductId) {
       const siigoSync =
         await syncProductToSiigo(
           createdProductId,
         );
+
+      if (siigoSync.ok) {
+        siigoSyncStatus = "synchronized";
+        siigoSyncAction = siigoSync.action;
+      }
 
       if (!siigoSync.ok) {
         console.error(
@@ -1031,6 +1042,10 @@ export async function POST(request: Request) {
       success: true,
       result,
       email_sent: emailSent,
+      siigo_sync: {
+        status: siigoSyncStatus,
+        action: siigoSyncAction,
+      },
     });
   } catch (error) {
     /*

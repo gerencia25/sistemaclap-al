@@ -720,6 +720,7 @@ export async function POST(
           "Sistema CLAP <notificaciones@mail.almultiformas.com>",
         to: [
           "administrador@almultiformas.com",
+          "legal@almultiformas.com",
         ],
         subject:
           `Nueva solicitud de código ${createdRequest.request_number}`,

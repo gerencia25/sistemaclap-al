@@ -27,7 +27,10 @@ export async function POST(request: Request) {
 
     await resend.emails.send({
       from: "Sistema CLAP <notificaciones@mail.almultiformas.com>",
-      to: ["legal@almultiformas.com"],
+      to: [
+        "administrador@almultiformas.com",
+        "legal@almultiformas.com",
+      ],
       subject: `Nueva solicitud de código ${requestNumber}`,
       html: `
         <div style="font-family: Arial, sans-serif;">

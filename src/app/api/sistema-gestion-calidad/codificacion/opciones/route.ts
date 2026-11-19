@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
+import {
+  resolveCodificationClassification,
+} from "@/lib/server/resolveCodificationClassification";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import {
+  normalizeCodificationOptionName,
+} from "@/lib/codificacion/formatProductName";
 import {
   ApiAuthorizationError,
   requireSystemPermission,
@@ -49,7 +55,7 @@ export async function POST(request: Request) {
         .trim()
         .toLowerCase();
 
-    const name =
+    let name =
       String(body.name ?? "").trim();
 
     if (!templateId) {
@@ -149,6 +155,28 @@ export async function POST(request: Request) {
         { status: 403 },
       );
     }
+
+    const classificationCode =
+      await resolveCodificationClassification(templateId);
+
+    const normalizedName =
+      normalizeCodificationOptionName(
+        fieldKey,
+        name,
+        classificationCode,
+      );
+
+    if (normalizedName === null) {
+      return NextResponse.json(
+        {
+          error:
+            "Debes indicar la unidad de capacidad: mL, gr u oz.",
+        },
+        { status: 400 },
+      );
+    }
+
+    name = normalizedName;
 
     // =====================================================
     // CATÁLOGO TRANSVERSAL

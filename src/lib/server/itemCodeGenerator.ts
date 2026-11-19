@@ -1,4 +1,11 @@
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import {
+  formatProductName,
+  matchesCodificationOption,
+  shouldSeparateCapacity,
+  type ProductNameSegment,
+} from "@/lib/codificacion/formatProductName";
+
 
 type GenerateItemCodeInput = {
   categoryId: string;
@@ -291,7 +298,7 @@ export async function generateOfficialItemCode(
   }
 
   const numericParts: string[] = [];
-  const nameParts: string[] = [];
+  const nameParts: ProductNameSegment[] = [];
   const normalizedDynamicData:
     Record<string, string> = {};
 
@@ -343,8 +350,11 @@ export async function generateOfficialItemCode(
     const selectedOption =
       availableOptions.find(
         (option) =>
-          normalizeText(option.name) ===
-          normalizeText(rawValue),
+          matchesCodificationOption(
+            field.field_key,
+            option.name,
+            rawValue,
+          ),
       );
 
     if (selectedOption) {
@@ -387,13 +397,12 @@ export async function generateOfficialItemCode(
     }
 
     if (field.contributes_to_name) {
-      nameParts.push(
-        selectedOption?.name ??
-          formatValueForName(
-            field,
-            rawValue,
-          ),
-      );
+      nameParts.push({
+        fieldKey: field.field_key,
+        value:
+          selectedOption?.name ??
+          formatValueForName(field, rawValue),
+      });
     }
   }
 
@@ -414,11 +423,15 @@ export async function generateOfficialItemCode(
   const finalCode =
     `${classificationCode}-${numericBlock}`;
 
-  const productName =
-    nameParts
-      .join(" ")
-      .replace(/\s+/g, " ")
-      .trim();
+  const productName = formatProductName(
+    nameParts,
+    {
+      separatorBeforeCapacity:
+        shouldSeparateCapacity(
+          classificationCode,
+        ),
+    },
+  );
 
   if (!productName) {
     throw new Error(

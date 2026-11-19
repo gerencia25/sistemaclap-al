@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
+import {
+  resolveCodificationClassification,
+} from "@/lib/server/resolveCodificationClassification";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { normalizeCodificationOptionName } from "@/lib/codificacion/formatProductName";
 import {
   ApiAuthorizationError,
   requireSystemPermission,
@@ -287,7 +291,7 @@ export async function POST(request: Request) {
         body.field_key,
       );
 
-    const name =
+    let name =
       normalizeText(
         body.name,
       );
@@ -389,6 +393,25 @@ export async function POST(request: Request) {
         { status: 409 },
       );
     }
+
+    const classificationCode =
+      await resolveCodificationClassification(templateId);
+
+    const normalizedName =
+      normalizeCodificationOptionName(
+        fieldKey,
+        name,
+        classificationCode,
+      );
+
+    if (normalizedName === null) {
+      return NextResponse.json(
+        { error: "Debes indicar la unidad de capacidad: mL, gr u oz." },
+        { status: 400 },
+      );
+    }
+
+    name = normalizedName;
 
     // -----------------------------------------------------
     // CATÁLOGO TRANSVERSAL
@@ -575,7 +598,7 @@ export async function PATCH(request: Request) {
     const hasStatus =
       body.status !== undefined;
 
-    const name =
+    let name =
       hasName
         ? normalizeText(
             body.name,
@@ -693,6 +716,34 @@ export async function PATCH(request: Request) {
       throw new Error(
         `No se pudo consultar el campo: ${fieldError.message}`,
       );
+    }
+
+    if (hasName) {
+      const classificationCode =
+        await resolveCodificationClassification(
+          existing.template_id,
+        );
+
+      const normalizedName =
+        normalizeCodificationOptionName(
+          existing.field_key,
+          normalizeText(body.name),
+          classificationCode,
+        );
+
+      if (normalizedName === null) {
+        return NextResponse.json(
+          { error: "Debes indicar la unidad de capacidad: mL, gr u oz." },
+          { status: 400 },
+        );
+      }
+
+      // Otros campos conservan el tratamiento anterior.
+      name =
+        existing.field_key === "boca" ||
+        existing.field_key === "capacidad"
+          ? normalizedName
+          : normalizedName.toUpperCase();
     }
 
     /*
