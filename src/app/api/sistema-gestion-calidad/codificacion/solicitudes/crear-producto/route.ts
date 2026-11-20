@@ -904,6 +904,8 @@ export async function POST(request: Request) {
       | "pending" = "pending";
 
     let siigoSyncAction: string | null = null;
+    let siigoSyncError: string | null = null;
+    let siigoSyncNeedsReview = false;
 
     if (createdProductId) {
       const siigoSync =
@@ -917,6 +919,10 @@ export async function POST(request: Request) {
       }
 
       if (!siigoSync.ok) {
+        siigoSyncError = siigoSync.error;
+        siigoSyncNeedsReview =
+          siigoSync.action === "review_required";
+
         console.error(
           "Producto creado en CLAP, pero la sincronización automática con SIIGO no terminó correctamente:",
           siigoSync.error,
@@ -1045,6 +1051,8 @@ export async function POST(request: Request) {
       siigo_sync: {
         status: siigoSyncStatus,
         action: siigoSyncAction,
+        error: siigoSyncError,
+        review_required: siigoSyncNeedsReview,
       },
     });
   } catch (error) {

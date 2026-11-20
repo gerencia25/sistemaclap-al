@@ -1042,8 +1042,16 @@ export default function CrearCodigoPage() {
         );
       } else {
         messages.push(
-          "Producto creado correctamente en CLAP, pero su sincronización con SIIGO está pendiente. NO vuelvas a crear el producto. Debe revisarse su sincronización.",
+          payload?.siigo_sync?.review_required
+            ? "Producto creado en CLAP, pero SIIGO requiere conciliación. NO vuelvas a crear el producto ni ejecutes otro intento hasta verificarlo."
+            : "Producto creado en CLAP, pero no se pudo completar su sincronización con SIIGO. NO vuelvas a crear el producto.",
         );
+
+        if (payload?.siigo_sync?.error) {
+          messages.push(
+            `Motivo registrado: ${payload.siigo_sync.error}`,
+          );
+        }
       }
 
       if (

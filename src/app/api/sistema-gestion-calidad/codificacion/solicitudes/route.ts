@@ -312,8 +312,82 @@ export async function GET(
       );
     }
 
+    // Complementar las solicitudes con el estado
+    // real de sincronización de sus productos.
+    const requests = data ?? [];
+
+    const productIds = [
+      ...new Set(
+        requests
+          .map((item) => item.created_product_id)
+          .filter(
+            (id): id is string =>
+              typeof id === "string" &&
+              id.length > 0,
+          ),
+      ),
+    ];
+
+    const productsById = new Map<
+      string,
+      {
+        siigo_product_id: string | null;
+        siigo_sync_enabled: boolean | null;
+        siigo_sync_status: string | null;
+        siigo_sync_error: string | null;
+        siigo_last_sync_at: string | null;
+      }
+    >();
+
+    // No consultar productos si todavía no hay
+    // solicitudes con códigos creados.
+    if (productIds.length > 0) {
+      const { data: products, error: productsError } =
+        await supabaseAdmin
+          .from("products")
+          .select(`
+            id,
+            siigo_product_id,
+            siigo_sync_enabled,
+            siigo_sync_status,
+            siigo_sync_error,
+            siigo_last_sync_at
+          `)
+          .in("id", productIds);
+
+      if (productsError) {
+        throw new Error(
+          `Error consultando sincronización SIIGO: ${productsError.message}`,
+        );
+      }
+
+      for (const product of products ?? []) {
+        productsById.set(product.id, product);
+      }
+    }
+
+    const enrichedRequests = requests.map((item) => {
+      const product = item.created_product_id
+        ? productsById.get(item.created_product_id)
+        : null;
+
+      return {
+        ...item,
+        siigo_product_id:
+          product?.siigo_product_id ?? null,
+        siigo_sync_enabled:
+          product?.siigo_sync_enabled ?? null,
+        siigo_sync_status:
+          product?.siigo_sync_status ?? null,
+        siigo_sync_error:
+          product?.siigo_sync_error ?? null,
+        siigo_last_sync_at:
+          product?.siigo_last_sync_at ?? null,
+      };
+    });
+
     return NextResponse.json({
-      requests: data ?? [],
+      requests: enrichedRequests,
     });
   } catch (error) {
     return handleError(error);

@@ -61,7 +61,8 @@ export type ProductSiigoSyncResult =
       ok: false;
       action:
         | "disabled"
-        | "error";
+        | "error"
+        | "review_required";
       error: string;
     };
 
@@ -219,6 +220,12 @@ async function markProductError(
     .update({
       siigo_sync_status:
         "Error",
+
+      siigo_sync_error:
+        message,
+
+      siigo_last_sync_at:
+        new Date().toISOString(),
     })
     .eq(
       "id",
@@ -229,6 +236,42 @@ async function markProductError(
     console.error(
       "No se pudo marcar el producto con error SIIGO:",
       updateError,
+    );
+  }
+
+  return message;
+}
+
+async function markProductReviewRequired(
+  productId: string,
+  error: unknown,
+) {
+  const detail =
+    error instanceof Error
+      ? error.message
+      : "No se recibió una respuesta concluyente de SIIGO.";
+
+  const message =
+    "La creación pudo haberse realizado en SIIGO. " +
+    "Se requiere consultar el código directamente " +
+    "en SIIGO antes de permitir otro intento. " +
+    "Detalle: " + detail;
+
+  const { error: updateError } =
+    await supabaseAdmin
+      .from("products")
+      .update({
+        siigo_sync_status: "Revisión requerida",
+        siigo_sync_error: message,
+        siigo_last_sync_at:
+          new Date().toISOString(),
+      })
+      .eq("id", productId);
+
+  if (updateError) {
+    console.error(
+      "No se pudo guardar la revisión requerida:",
+      updateError.message,
     );
   }
 
@@ -253,6 +296,12 @@ async function linkProduct(
 
       dian_unit:
         dianUnit,
+
+      siigo_sync_error:
+        null,
+
+      siigo_last_sync_at:
+        new Date().toISOString(),
     })
     .eq(
       "id",
@@ -266,9 +315,11 @@ async function linkProduct(
   }
 }
 
-export async function syncProductToSiigo(
+async function syncProductToSiigoInternal(
   productId: string,
 ): Promise<ProductSiigoSyncResult> {
+  let createOutcomeUncertain = false;
+
   if (!isLiveMode()) {
     return {
       ok: false,
@@ -570,6 +621,11 @@ export async function syncProductToSiigo(
         dianUnit,
     };
 
+    // Desde este momento una interrupción
+    // puede dejar un producto creado en SIIGO
+    // sin vínculo confirmado en CLAP.
+    createOutcomeUncertain = true;
+
     const createResponse =
       await siigoRequest(
         SIIGO_PRODUCTS_URL,
@@ -595,6 +651,10 @@ export async function syncProductToSiigo(
       );
 
     if (!createResponse.ok) {
+      if ([400, 422].includes(createResponse.status)) {
+        createOutcomeUncertain = false;
+      }
+
       const detail =
         JSON.stringify(
           created,
@@ -630,6 +690,20 @@ export async function syncProductToSiigo(
       siigoProductId,
     };
   } catch (error) {
+    if (createOutcomeUncertain) {
+      const message =
+        await markProductReviewRequired(
+          productId,
+          error,
+        );
+
+      return {
+        ok: false,
+        action: "review_required",
+        error: message,
+      };
+    }
+
     const message =
       await markProductError(
         productId,
@@ -638,10 +712,144 @@ export async function syncProductToSiigo(
 
     return {
       ok: false,
-      action:
-        "error",
-      error:
-        message,
+      action: "error",
+      error: message,
     };
   }
+}
+
+
+/**
+ * Sincroniza un producto y registra el resultado
+ * en el historial de CLAP.
+ *
+ * Un error del historial no debe provocar que
+ * se vuelva a crear un producto en SIIGO.
+ */
+export async function syncProductToSiigo(
+  productId: string,
+): Promise<ProductSiigoSyncResult> {
+  const attemptedAt =
+    new Date().toISOString();
+
+  // Reserva compartida por la creación inicial
+  // y los reintentos de sincronización.
+  const { data: claimed, error: claimError } =
+    await supabaseAdmin
+      .from("products")
+      .update({
+        siigo_sync_status: "En proceso",
+        siigo_sync_error: null,
+      })
+      .eq("id", productId)
+      .eq("siigo_sync_enabled", true)
+      .is("siigo_product_id", null)
+      .in("siigo_sync_status", [
+        "Pendiente",
+        "Error",
+      ])
+      .select("id")
+      .maybeSingle();
+
+  if (claimError) {
+    return {
+      ok: false,
+      action: "error",
+      error:
+        `No se pudo reservar la sincronización: ${claimError.message}`,
+    };
+  }
+
+  if (!claimed) {
+    return {
+      ok: false,
+      action: "error",
+      error:
+        "No se inició la sincronización: el producto ya está vinculado, está deshabilitado o tiene otra operación en proceso.",
+    };
+  }
+
+  let syncResult: ProductSiigoSyncResult;
+
+  try {
+    syncResult =
+      await syncProductToSiigoInternal(productId);
+
+    if (!syncResult.ok &&
+        syncResult.action === "disabled") {
+      await markProductError(
+        productId,
+        syncResult.error,
+      );
+    }
+  } catch (error) {
+    const message =
+      await markProductError(productId, error);
+
+    syncResult = {
+      ok: false,
+      action: "error",
+      error: message,
+    };
+  }
+
+  const operation = syncResult.action;
+
+  const result = syncResult.ok
+    ? "Sincronizada"
+    : syncResult.action === "disabled"
+      ? "Deshabilitada"
+      : syncResult.action === "review_required"
+        ? "Revisión requerida"
+        : "Error";
+
+  const siigoProductId = syncResult.ok
+    ? syncResult.siigoProductId
+    : null;
+
+  const errorMessage = syncResult.ok
+    ? null
+    : syncResult.error;
+
+  // Registrar la fecha del intento.
+  // No modificar aquí el resultado de la
+  // sincronización ni su identificador SIIGO.
+  const { error: dateError } =
+    await supabaseAdmin
+      .from("products")
+      .update({
+        siigo_last_sync_at: attemptedAt,
+      })
+      .eq("id", productId);
+
+  if (dateError) {
+    console.error(
+      "No se pudo guardar la fecha de sincronización SIIGO:",
+      dateError.message,
+    );
+  }
+
+  // Registrar el historial, incluso si el
+  // producto ya existía o la sincronización
+  // estaba deshabilitada.
+  const { error: logError } =
+    await supabaseAdmin
+      .from("product_siigo_sync_logs")
+      .insert({
+        product_id: productId,
+        attempted_at: attemptedAt,
+        operation,
+        result,
+        siigo_product_id: siigoProductId,
+        error_message: errorMessage,
+      });
+
+  if (logError) {
+    console.error(
+      "No se pudo registrar el historial de sincronización SIIGO:",
+      logError.message,
+    );
+  }
+
+  return syncResult;
 }

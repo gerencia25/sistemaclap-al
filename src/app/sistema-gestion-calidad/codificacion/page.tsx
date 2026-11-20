@@ -26,6 +26,11 @@ type ItemCodeRequest = {
   created_product_id: string | null;
   created_product_code: string | null;
   created_product_name: string | null;
+  siigo_product_id: string | null;
+  siigo_sync_enabled: boolean | null;
+  siigo_sync_status: string | null;
+  siigo_sync_error: string | null;
+  siigo_last_sync_at: string | null;
   requested_at: string | null;
   reviewed_at: string | null;
   completed_at: string | null;
@@ -44,6 +49,10 @@ export default function CodificacionPage() {
     "CODIFICACION_CREATE_PRODUCT",
   );
 
+  const canRetrySiigo = hasPermission(
+    "CODIFICACION_RETRY_SIIGO",
+  );
+
   const canDeactivateProduct = hasPermission(
     "CODIFICACION_DEACTIVATE_PRODUCT",
   );
@@ -52,6 +61,8 @@ export default function CodificacionPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("Todos");
   const [isLoading, setIsLoading] = useState(true);
+  const [isRetryingSiigo, setIsRetryingSiigo] =
+    useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedRequest, setSelectedRequest] =
     useState<ItemCodeRequest | null>(null);
@@ -96,7 +107,17 @@ export default function CodificacionPage() {
         );
       }
 
-      setRequests(payload.requests ?? []);
+      const updatedRequests: ItemCodeRequest[] =
+        payload.requests ?? [];
+
+      setRequests(updatedRequests);
+      setSelectedRequest((previous) =>
+        previous
+          ? updatedRequests.find(
+              (item) => item.id === previous.id,
+            ) ?? null
+          : null,
+      );
     } catch (error) {
       setErrorMessage(
         error instanceof Error
@@ -105,6 +126,74 @@ export default function CodificacionPage() {
       );
     } finally {
       setIsLoading(false);
+    }
+  }
+
+  async function handleRetrySiigo() {
+    if (
+      !selectedRequest ||
+      !session?.access_token ||
+      !canRetrySiigo ||
+      isRetryingSiigo
+    ) {
+      return;
+    }
+
+    const requestId = selectedRequest.id;
+
+    const confirmed = window.confirm(
+      "CLAP consultará primero si el producto existe en SIIGO. " +
+      "Si no existe, intentará crearlo. " +
+      "¿Deseas reintentar la sincronización?",
+    );
+
+    if (!confirmed) return;
+
+    setIsRetryingSiigo(true);
+
+    try {
+      const response = await fetch(
+        "/api/sistema-gestion-calidad/codificacion/solicitudes/reintentar-siigo",
+        {
+          method: "POST",
+          headers: {
+            Authorization:
+              `Bearer ${session.access_token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            request_id: requestId,
+          }),
+        },
+      );
+
+      const payload = await response.json();
+
+      if (!response.ok || payload?.success !== true) {
+        throw new Error(
+          payload?.siigo_sync?.message ||
+          payload?.error ||
+          "No se pudo completar la sincronización.",
+        );
+      }
+
+      await fetchRequests();
+
+      alert(
+        "Producto sincronizado correctamente con SIIGO.",
+      );
+    } catch (error) {
+      // Consultar el estado persistido incluso si
+      // SIIGO devolvió un error o revisión requerida.
+      await fetchRequests();
+
+      alert(
+        error instanceof Error
+          ? error.message
+          : "No se pudo completar la sincronización.",
+      );
+    } finally {
+      setIsRetryingSiigo(false);
     }
   }
 
@@ -626,18 +715,110 @@ export default function CodificacionPage() {
               )}
 
               {selectedRequest.created_product_code && (
-                <DetailSection title="Código creado">
-                  <DetailItem
-                    label="Código"
-                    value={selectedRequest.created_product_code}
-                  />
-                  <DetailItem
-                    label="Producto"
-                    value={
-                      selectedRequest.created_product_name || "N/A"
-                    }
-                  />
-                </DetailSection>
+                <>
+                  <DetailSection title="Código creado">
+                    <DetailItem
+                      label="Código"
+                      value={selectedRequest.created_product_code}
+                    />
+                    <DetailItem
+                      label="Producto"
+                      value={
+                        selectedRequest.created_product_name || "N/A"
+                      }
+                    />
+                  </DetailSection>
+
+                  <section className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+                    <h3 className="mb-3 text-lg font-semibold text-[#07076b]">
+                      Sincronización con SIIGO
+                    </h3>
+
+                    <div className="space-y-3 text-sm">
+                      <div>
+                        <span className="font-semibold text-gray-700">
+                          Estado:{" "}
+                        </span>
+                        <span
+                          className={
+                            selectedRequest.siigo_sync_status ===
+                              "Sincronizada"
+                              ? "font-semibold text-green-700"
+                              : selectedRequest.siigo_sync_status ===
+                                  "Error"
+                                ? "font-semibold text-red-700"
+                                : "font-semibold text-amber-700"
+                          }
+                        >
+                          {selectedRequest.siigo_sync_status ||
+                            (selectedRequest.siigo_product_id
+                              ? "Vinculada - verificar estado"
+                              : "Pendiente")}
+                        </span>
+                      </div>
+
+                      <div>
+                        <span className="font-semibold text-gray-700">
+                          Último intento:{" "}
+                        </span>
+                        {selectedRequest.siigo_last_sync_at
+                          ? formatDate(
+                              selectedRequest.siigo_last_sync_at,
+                            )
+                          : "Sin registro histórico"}
+                      </div>
+
+                      {selectedRequest.siigo_sync_error && (
+                        <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-red-800">
+                          <p className="font-semibold">
+                            Motivo del error
+                          </p>
+                          <p className="mt-1 whitespace-pre-wrap break-words">
+                            {selectedRequest.siigo_sync_error}
+                          </p>
+                        </div>
+                      )}
+
+                      {selectedRequest.siigo_sync_status ===
+                        "Error" && (
+                        <p className="text-amber-800">
+                          El producto existe en CLAP, pero
+                          requiere revisar su sincronización
+                          con SIIGO. No lo crees nuevamente.
+                        </p>
+                      )}
+
+                      {selectedRequest.siigo_sync_status ===
+                        "Revisión requerida" && (
+                        <p className="font-medium text-amber-800">
+                          El resultado de la creación en SIIGO
+                          no pudo confirmarse. Debe conciliarse
+                          antes de realizar otro intento.
+                        </p>
+                      )}
+
+                      {canRetrySiigo &&
+                        selectedRequest.siigo_sync_enabled === true &&
+                        !selectedRequest.siigo_product_id &&
+                        ["Error", "Pendiente"].includes(
+                          selectedRequest.siigo_sync_status ?? "",
+                        ) && (
+                          <div className="flex justify-end pt-2">
+                            <button
+                              type="button"
+                              onClick={handleRetrySiigo}
+                              disabled={isRetryingSiigo}
+                              className="rounded-xl bg-[#07076b] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#07076b]/90 disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                              {isRetryingSiigo
+                                ? "Sincronizando..."
+                                : "Reintentar sincronización"}
+                            </button>
+                          </div>
+                        )}
+                    </div>
+                  </section>
+                </>
               )}
 
               <section className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
